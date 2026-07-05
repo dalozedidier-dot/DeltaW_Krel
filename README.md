@@ -1,34 +1,39 @@
 # DeltaW/K_rel reproducibility repository
 
-This repository is a GitHub-ready implementation scaffold for the ΔW/K_rel manuscript. It includes the toy/geometric Monte Carlo bench, a micro-tomography proof-of-concept, baseline process-matrix projectors, a minimal causal-SDP scaffold, tests, CI, and reproducibility templates.
+This repository is a GitHub-ready implementation scaffold for the ΔW/K_rel manuscript. It contains the toy/geometric Monte Carlo bench, a micro-tomography proof-of-concept, explicit bipartite process-matrix projectors, a minimal K_CS causal-SDP validation block, tests, CI, and reproducibility templates.
 
 ## Current scientific status
 
-What is ready:
+### Implemented and testable
 
-- linearized Monte Carlo control script for Annex C bis;
-- micro-tomography proof-of-concept / upper-bound stress test;
-- baseline trace-and-replace maps and projector superoperators for `L_V`, `L_AB`, `L_BA`;
-- executable SDP scaffold using `K_CS = C_AB + C_BA` on simple causally separable validation targets;
-- unit/smoke tests and GitHub Actions CI.
+- Linearized Monte Carlo control script for Annex C bis.
+- Micro-tomography proof-of-concept / upper-bound stress test.
+- Explicit trace-and-replace maps for the `[AI, AO, BI, BO]` convention.
+- Projectors `L_V`, `L_AB`, `L_BA` with idempotence tests.
+- Exact validation targets:
+  - white-noise process;
+  - fixed-order `A≺B` identity-channel process;
+  - fixed-order `B≺A` identity-channel process;
+  - causally separable convex mixtures.
+- Minimal SDP over `K_CS = C_AB + C_BA` validating zero robustness on causally separable targets when `cvxpy/CLARABEL` is available.
+- Unit/smoke tests and GitHub Actions CI.
 
-What is **not** yet claim-complete:
+### Still not submission-ready
 
-- published-convention audit of `L_V`, `L_AB`, `L_BA` against the target equations;
-- construction of the ideal quantum switch process matrix;
-- reproduction of a published ideal-switch robustness benchmark.
+The ideal quantum-switch process matrix is **not implemented**. The function `ideal_quantum_switch_process()` raises `NotImplementedError` by design. This prevents accidental claims that the published ideal-switch benchmark has been reproduced.
 
-Do not present the SDP validation as complete until `notebooks/validation_switch_ideal.ipynb` reproduces a known benchmark and the corresponding source/reference convention is fixed.
+The repository becomes submission-ready only when `notebooks/validation_switch_ideal.ipynb` constructs the chosen ideal quantum-switch process, solves the SDP, and reproduces a published robustness benchmark with documented conventions.
 
 ## Repository layout
 
 ```text
 .github/workflows/ci.yml              GitHub Actions tests
-src/deltawkrel/projectors.py          trace-replace maps and baseline projectors
-src/deltawkrel/sdp.py                 minimal causal-SDP scaffold
-src/deltawkrel/switch_models.py       safe placeholders for switch models
+src/deltawkrel/projectors.py          trace-replace maps and process projectors
+src/deltawkrel/sdp.py                 minimal K_CS causal-SDP validation routine
+src/deltawkrel/switch_models.py       white-noise/fixed-order targets + safe ideal-switch blocker
 scripts/monte_carlo_control_supplement.py
 scripts/micro_tomography_simulation.py
+scripts/run_sdp_validation.py
 notebooks/projectors_definitions.ipynb
 notebooks/validation_switch_ideal.ipynb
 config/config_preregistration.json
@@ -53,7 +58,13 @@ python scripts/micro_tomography_simulation.py --outdir outputs --n-sim 1000 --n-
 python scripts/monte_carlo_control_supplement.py --n-sim 200 --n-null 500 --dim 4 --n-noise 1 --lambda-values 0,0.005 --n-values 1000 --no-plots
 ```
 
-Run the notebooks after installing Jupyter:
+Run the SDP infrastructure validation after installing `cvxpy` and `clarabel`:
+
+```bash
+python scripts/run_sdp_validation.py
+```
+
+Run the notebooks:
 
 ```bash
 jupyter lab notebooks/projectors_definitions.ipynb
