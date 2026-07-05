@@ -13,8 +13,24 @@ def load_json(path: Path) -> dict | None:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def status_line(label: str, path: Path) -> str:
-    return f"- {label}: {'present' if path.exists() else 'missing'} (`{path.as_posix()}`)"
+def status_line(label: str, path: Path, legacy_paths: tuple[Path, ...] = ()) -> str:
+    """Return a stable artifact-status line.
+
+    The canonical location is reported first.  Legacy locations are only used as
+    a transition aid so older CI bundles remain readable without hiding that the
+    repository standard has moved to ``results/``.
+    """
+    if path.exists():
+        status = "present"
+    elif any(legacy.exists() for legacy in legacy_paths):
+        status = "legacy-present"
+    else:
+        status = "missing"
+    line = f"- {label}: {status} (`{path.as_posix()}`)"
+    if status == "legacy-present":
+        found = [legacy.as_posix() for legacy in legacy_paths if legacy.exists()]
+        line += f"; legacy artifact found at `{found[0]}`"
+    return line
 
 
 def main() -> int:
@@ -38,8 +54,16 @@ def main() -> int:
         status_line("Preregistration config", Path("config/config_preregistration.json")),
         status_line("Preregistration lock", Path("results/preregistration_lock.json")),
         status_line("SDP validation report", Path("results/sdp_validation_report.json")),
-        status_line("Monte Carlo smoke output", Path("results/mc_smoke/monte_carlo_power_results.json")),
-        status_line("Micro-tomography smoke output", Path("results/micro_smoke/micro_tomography_power.csv")),
+        status_line(
+            "Monte Carlo smoke output",
+            Path("results/mc_smoke/monte_carlo_power_results.json"),
+            legacy_paths=(Path("monte_carlo_outputs_control/monte_carlo_power_results.json"),),
+        ),
+        status_line(
+            "Micro-tomography smoke output",
+            Path("results/micro_smoke/micro_tomography_power.csv"),
+            legacy_paths=(Path("outputs/micro_tomography_power.csv"),),
+        ),
         status_line("Claim/evidence matrix", Path("docs/CLAIM_EVIDENCE_MATRIX.md")),
         "",
         "## Preregistration lock",

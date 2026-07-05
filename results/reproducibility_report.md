@@ -32,7 +32,9 @@ implemented evidence from explicit submission blockers.
 
 ## Manifest
 
+
 - manifest entries: 44
+- manifest entries: 42
 - validation command: `python scripts/validate_manifest.py`
 
 ## Submission status

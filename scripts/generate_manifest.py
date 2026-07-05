@@ -11,6 +11,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -22,17 +24,46 @@ EXCLUDED_PREFIXES = (
 EXCLUDED_FILES = {"MANIFEST.sha256.json"}
 
 
+def git_executable() -> str:
+    """Return a usable Git executable across local Codex and standard CI."""
+    env_git = os.environ.get("GIT_EXE")
+    if env_git and Path(env_git).exists():
+        return env_git
+
+    path_git = shutil.which("git")
+    if path_git:
+        return path_git
+
+    bundled = (
+        Path.home()
+        / ".cache"
+        / "codex-runtimes"
+        / "codex-primary-runtime"
+        / "dependencies"
+        / "native"
+        / "git"
+        / "cmd"
+        / "git.exe"
+    )
+    if bundled.exists():
+        return str(bundled)
+
+    raise RuntimeError(
+        "Git executable not found. Install Git, add it to PATH, or set GIT_EXE."
+    )
+
+
 def sha256_file(path: Path) -> str:
     digest = hashlib.sha256()
     with path.open("rb") as handle:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
-            digest.update(chunk)
+            digest.update(chunk.replace(b"\r\n", b"\n"))
     return digest.hexdigest()
 
 
 def list_tracked_files(root: Path) -> list[str]:
     output = subprocess.run(
-        ["git", "ls-files", "-z"],
+        [git_executable(), "ls-files", "-z"],
         cwd=root,
         check=True,
         capture_output=True,

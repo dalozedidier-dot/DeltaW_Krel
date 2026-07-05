@@ -109,6 +109,15 @@ def test_sha256_file_matches_hashlib(tmp_path):
     assert validate_manifest.sha256_file(target) == hashlib.sha256(payload).hexdigest()
 
 
+def test_sha256_file_normalizes_crlf(tmp_path):
+    lf = tmp_path / "lf.txt"
+    crlf = tmp_path / "crlf.txt"
+    lf.write_bytes(b"a\nb\n")
+    crlf.write_bytes(b"a\r\nb\r\n")
+    assert validate_manifest.sha256_file(lf) == validate_manifest.sha256_file(crlf)
+    assert generate_manifest.sha256_file(lf) == generate_manifest.sha256_file(crlf)
+
+
 def test_validate_manifest_success(tmp_path, monkeypatch, capsys):
     target = tmp_path / "a.txt"
     target.write_text("hello", encoding="utf-8")
@@ -144,12 +153,13 @@ def test_validate_manifest_detects_hash_mismatch(tmp_path, monkeypatch, capsys):
 def _init_git_repo(root: Path, files: dict[str, str]) -> None:
     import subprocess
 
-    subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+    git = generate_manifest.git_executable()
+    subprocess.run([git, "init", "-q"], cwd=root, check=True)
     for rel_path, content in files.items():
         target = root / rel_path
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(content, encoding="utf-8")
-    subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+    subprocess.run([git, "add", "-A"], cwd=root, check=True)
 
 
 def test_generate_manifest_covers_tracked_files_and_excludes_volatile(tmp_path, monkeypatch):
@@ -272,6 +282,21 @@ def test_report_with_present_artifacts(tmp_path, monkeypatch):
     assert "config sha256: `abc123`" in report
     assert "white_noise: optimal" in report
     assert "manifest entries: 1" in report
+
+
+def test_report_marks_legacy_smoke_artifacts(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    legacy_mc = tmp_path / "monte_carlo_outputs_control"
+    legacy_micro = tmp_path / "outputs"
+    legacy_mc.mkdir()
+    legacy_micro.mkdir()
+    (legacy_mc / "monte_carlo_power_results.json").write_text("[]", encoding="utf-8")
+    (legacy_micro / "micro_tomography_power.csv").write_text("power\n", encoding="utf-8")
+    monkeypatch.setattr("sys.argv", ["generate_reproducibility_report.py"])
+    assert generate_reproducibility_report.main() == 0
+    report = (tmp_path / "results" / "reproducibility_report.md").read_text(encoding="utf-8")
+    assert "Monte Carlo smoke output: legacy-present" in report
+    assert "Micro-tomography smoke output: legacy-present" in report
 
 
 # ------------------------------------------------------------------

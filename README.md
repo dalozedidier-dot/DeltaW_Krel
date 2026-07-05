@@ -69,11 +69,11 @@ python -m pip install -e .
 pytest -q
 ```
 
-Run the proof-of-concept scripts:
+Run the proof-of-concept scripts.  The smoke outputs are written under `results/` so the generated reproducibility report can find them without path translation:
 
 ```bash
-python scripts/micro_tomography_simulation.py --outdir outputs --n-sim 1000 --n-null 3000
-python scripts/monte_carlo_control_supplement.py --n-sim 200 --n-null 500 --dim 4 --n-noise 1 --lambda-values 0,0.005 --n-values 1000 --no-plots
+python scripts/micro_tomography_simulation.py --outdir results/micro_smoke --n-sim 1000 --n-null 3000
+python scripts/monte_carlo_control_supplement.py --n-sim 200 --n-null 500 --dim 4 --n-noise 1 --lambda-values 0,0.005 --n-values 1000 --output-dir results/mc_smoke --no-plots
 ```
 
 Freeze the preregistration configuration and generate the reproducibility

@@ -31,16 +31,16 @@ jobs:
         run: pytest -q tests
 
       - name: Run micro-tomography smoke test
-        run: python scripts/micro_tomography_simulation.py --outdir outputs --n-sim 100 --n-null 200
+        run: python scripts/micro_tomography_simulation.py --outdir results/micro_smoke --n-sim 100 --n-null 200
 
       - name: Run Monte Carlo control smoke test
-        run: python scripts/monte_carlo_control_supplement.py --n-sim 50 --n-null 100 --dim 4 --n-noise 1 --lambda-values 0,0.005 --n-values 200 --no-plots
+        run: python scripts/monte_carlo_control_supplement.py --n-sim 50 --n-null 100 --dim 4 --n-noise 1 --lambda-values 0,0.005 --n-values 200 --output-dir results/mc_smoke --no-plots
 
       - name: Upload generated smoke outputs
         uses: actions/upload-artifact@v4
         with:
           name: smoke-outputs
           path: |
-            outputs/
-            monte_carlo_outputs_control/
+            results/micro_smoke/
+            results/mc_smoke/
           if-no-files-found: ignore
