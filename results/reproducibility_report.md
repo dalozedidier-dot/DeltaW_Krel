@@ -8,8 +8,8 @@ implemented evidence from explicit submission blockers.
 - Preregistration config: present (`config/config_preregistration.json`)
 - Preregistration lock: present (`results/preregistration_lock.json`)
 - SDP validation report: present (`results/sdp_validation_report.json`)
-- Monte Carlo smoke output: missing (`results/mc_smoke/monte_carlo_power_results.json`)
-- Micro-tomography smoke output: missing (`results/micro_smoke/micro_tomography_power.csv`)
+- Monte Carlo smoke output: present (`results/mc_smoke/monte_carlo_power_results.json`)
+- Micro-tomography smoke output: present (`results/micro_smoke/micro_tomography_power.csv`)
 - Claim/evidence matrix: present (`docs/CLAIM_EVIDENCE_MATRIX.md`)
 
 ## Preregistration lock
@@ -32,9 +32,7 @@ implemented evidence from explicit submission blockers.
 
 ## Manifest
 
-
 - manifest entries: 44
-- manifest entries: 42
 - validation command: `python scripts/validate_manifest.py`
 
 ## Submission status
