@@ -1,0 +1,57 @@
+{
+  "scenario": "quantum_switch_bipartite_d2",
+  "W_QM": "switch_ideal_d2_reference",
+  "trace_convention": "Tr(W)=d_O",
+  "normalization_note": "All projectors and SDP constraints must be validated under the same trace convention before confirmatory use.",
+  "noise_model": {
+    "N_i": ["depolarization", "control_dephasing", "path_loss", "amplitude_damping", "crosstalk"],
+    "N_cal_source": "independent_fixed_order_calibrations",
+    "calibration_precision_rule": "projected_uncertainty_per_noise_direction <= lambda_ref/10 in whitened space",
+    "quasi_orthogonality": {
+      "enabled": true,
+      "gamma_rule": "calibration_only_pre_registered"
+    }
+  },
+  "solver": {
+    "primary": "CLARABEL_open_source",
+    "optional_crosscheck": "MOSEK_v10",
+    "tolerance_primal": 1e-8,
+    "tolerance_dual": 1e-8,
+    "dual_gap_threshold": 1e-6,
+    "max_iter": 10000,
+    "random_seed": 42,
+    "environment_locked": true
+  },
+  "thresholds": {
+    "alpha": 0.01,
+    "eps_R": 0.001,
+    "eps_num": 0.01,
+    "lambda_sens": 0.005,
+    "lambda_sens_aspirational_if_Neff_ge_1e6": 0.003,
+    "lambda_ref": 0.001,
+    "lambda_disc": 0.005,
+    "cos_theta_sigma_min": 0.80,
+    "omega_white_alert": 0.50,
+    "visibility_min": 0.97,
+    "refutation_rule": "lambda_hat + 2*sigma_boot < lambda_ref"
+  },
+  "statistics": {
+    "bootstrap_H0_confirmatory": 10000,
+    "bootstrap_H0_proof_of_concept": 1000,
+    "covariance": "shrinkage_pre_registered",
+    "rho_rule": "calibration_only",
+    "LR_threshold": "empirical_quantile_0.99"
+  },
+  "witness": {
+    "selection_rule": "minimum_HS_norm_on_dual_face",
+    "stability_metric": "continuous_cosine_report",
+    "stability_warning_below": 0.90,
+    "post_hoc_redefinition_allowed": false
+  },
+  "reproducibility_artifacts": {
+    "projectors": "notebooks/projectors_definitions.ipynb",
+    "switch_validation": "notebooks/validation_switch_ideal.ipynb",
+    "micro_tomography_script": "scripts/micro_tomography_simulation.py",
+    "environment": "environment.yml"
+  }
+}

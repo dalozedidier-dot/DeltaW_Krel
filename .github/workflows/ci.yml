@@ -1,0 +1,46 @@
+name: DeltaW/K_rel CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11"]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .
+
+      - name: Run unit tests
+        run: pytest -q tests
+
+      - name: Run micro-tomography smoke test
+        run: python scripts/micro_tomography_simulation.py --outdir outputs --n-sim 100 --n-null 200
+
+      - name: Run Monte Carlo control smoke test
+        run: python scripts/monte_carlo_control_supplement.py --n-sim 50 --n-null 100 --dim 4 --n-noise 1 --lambda-values 0,0.005 --n-values 200 --no-plots
+
+      - name: Upload generated smoke outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-outputs
+          path: |
+            outputs/
+            monte_carlo_outputs_control/
+          if-no-files-found: ignore
