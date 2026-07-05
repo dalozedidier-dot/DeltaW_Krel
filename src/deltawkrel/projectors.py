@@ -198,20 +198,28 @@ def L_valid_bipartite(W: np.ndarray, dims: ProcessDims | Sequence[int]) -> np.nd
 def L_A_before_B(W: np.ndarray, dims: ProcessDims | Sequence[int]) -> np.ndarray:
     """Projector for the fixed-order subspace A≺B.
 
-    A before B is represented by processes satisfying W=_B_O W and the
-    remaining fixed-order process constraints.
+    A before B is represented by processes satisfying W = _B_O W together with
+    the no-signalling-to-A constraint [1-A_O] B_I B_O W = 0.  The composition
+    below expands to the standard projective characterization
+
+        L_AB(W) = _B_O W - _B_I B_O W + _A_O B_I B_O W,
+
+    whose image lies inside the bipartite valid-process subspace.
     """
-    X = _P_no_future_B(W, dims)
+    X = _P_no_future_A(W, dims)
     return trace_replace(X, dims, [BO])
 
 
 def L_B_before_A(W: np.ndarray, dims: ProcessDims | Sequence[int]) -> np.ndarray:
     """Projector for the fixed-order subspace B≺A.
 
-    B before A is represented by processes satisfying W=_A_O W and the
-    remaining fixed-order process constraints.
+    B before A is represented by processes satisfying W = _A_O W together with
+    the no-signalling-to-B constraint [1-B_O] A_I A_O W = 0.  The composition
+    below expands to
+
+        L_BA(W) = _A_O W - _A_I A_O W + _A_I A_O B_O W.
     """
-    X = _P_no_future_A(W, dims)
+    X = _P_no_future_B(W, dims)
     return trace_replace(X, dims, [AO])
 
 
