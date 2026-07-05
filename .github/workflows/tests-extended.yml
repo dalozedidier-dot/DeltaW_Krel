@@ -77,7 +77,7 @@ jobs:
         run: python scripts/run_sdp_validation.py
 
       - name: Run micro-tomography stress test
-        run: python scripts/micro_tomography_simulation.py --outdir outputs --n-sim 200 --n-null 500
+        run: python scripts/micro_tomography_simulation.py --outdir results/micro_smoke --n-sim 200 --n-null 500
 
       - name: Run Monte Carlo control bench (with SDP proxy and witness stability)
         run: >
@@ -87,7 +87,7 @@ jobs:
           --threshold-mode empirical
           --include-M0 --subsystem-dim 3
           --sdp-check --witness-stability
-          --output-dir monte_carlo_outputs_control
+          --output-dir results/mc_smoke
 
       - name: Generate reproducibility report
         run: python scripts/generate_reproducibility_report.py
@@ -101,6 +101,6 @@ jobs:
           name: reproducibility-pipeline-outputs
           path: |
             results/
-            outputs/
-            monte_carlo_outputs_control/
+            results/micro_smoke/
+            results/mc_smoke/
           if-no-files-found: ignore

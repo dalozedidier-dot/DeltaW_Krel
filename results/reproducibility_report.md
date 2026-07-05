@@ -25,13 +25,13 @@ implemented evidence from explicit submission blockers.
 - ideal quantum switch implemented: False
 - ideal quantum switch submission blocker: True
 - white_noise: optimal (objective=0.0, solver=CLARABEL)
-- fixed_order_A_before_B: optimal (objective=2.1788668880357739e-10, solver=CLARABEL)
-- fixed_order_B_before_A: optimal (objective=2.178892392531748e-10, solver=CLARABEL)
+- fixed_order_A_before_B: optimal (objective=2.1788500930243524e-10, solver=CLARABEL)
+- fixed_order_B_before_A: optimal (objective=2.1788366435426067e-10, solver=CLARABEL)
 - causally_separable_mixture_q037: optimal (objective=0.0, solver=CLARABEL)
 
 ## Manifest
 
-- manifest entries: 57
+- manifest entries: 42
 - validation command: `python scripts/validate_manifest.py`
 
 ## Submission status

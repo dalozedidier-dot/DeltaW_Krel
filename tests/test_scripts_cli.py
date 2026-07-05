@@ -284,6 +284,21 @@ def test_report_with_present_artifacts(tmp_path, monkeypatch):
     assert "manifest entries: 1" in report
 
 
+def test_report_marks_legacy_smoke_artifacts(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    legacy_mc = tmp_path / "monte_carlo_outputs_control"
+    legacy_micro = tmp_path / "outputs"
+    legacy_mc.mkdir()
+    legacy_micro.mkdir()
+    (legacy_mc / "monte_carlo_power_results.json").write_text("[]", encoding="utf-8")
+    (legacy_micro / "micro_tomography_power.csv").write_text("power\n", encoding="utf-8")
+    monkeypatch.setattr("sys.argv", ["generate_reproducibility_report.py"])
+    assert generate_reproducibility_report.main() == 0
+    report = (tmp_path / "results" / "reproducibility_report.md").read_text(encoding="utf-8")
+    assert "Monte Carlo smoke output: legacy-present" in report
+    assert "Micro-tomography smoke output: legacy-present" in report
+
+
 # ------------------------------------------------------------------
 # run_sdp_validation (requires cvxpy)
 # ------------------------------------------------------------------

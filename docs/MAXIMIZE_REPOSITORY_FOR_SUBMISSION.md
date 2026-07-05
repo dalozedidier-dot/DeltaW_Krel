@@ -48,7 +48,7 @@ Recommended additions:
 2. Keep the manifest validation command green: `python scripts/validate_manifest.py`.
 3. Keep `make reproduce-full` green; it runs preregistration lock, tests, SDP,
    micro-tomography smoke, Monte Carlo smoke, and manifest validation.
-4. Store generated smoke outputs under `results/` with deterministic seeds.
+4. Store generated smoke outputs under the canonical directories `results/micro_smoke/` and `results/mc_smoke/` with deterministic seeds.
 5. Keep `CITATION.cff` ready for the archive.
 6. Archive a release through Zenodo and add the DOI to the README and article.
 
@@ -107,8 +107,8 @@ notebooks/
   validation_switch_ideal.ipynb
 results/
   sdp_validation_report.json
-  mc_smoke/
-  micro_smoke/
+  mc_smoke/        canonical Monte Carlo smoke outputs
+  micro_smoke/     canonical micro-tomography smoke outputs
 scripts/
 src/deltawkrel/
 tests/
