@@ -109,6 +109,15 @@ def test_sha256_file_matches_hashlib(tmp_path):
     assert validate_manifest.sha256_file(target) == hashlib.sha256(payload).hexdigest()
 
 
+def test_sha256_file_normalizes_crlf(tmp_path):
+    lf = tmp_path / "lf.txt"
+    crlf = tmp_path / "crlf.txt"
+    lf.write_bytes(b"a\nb\n")
+    crlf.write_bytes(b"a\r\nb\r\n")
+    assert validate_manifest.sha256_file(lf) == validate_manifest.sha256_file(crlf)
+    assert generate_manifest.sha256_file(lf) == generate_manifest.sha256_file(crlf)
+
+
 def test_validate_manifest_success(tmp_path, monkeypatch, capsys):
     target = tmp_path / "a.txt"
     target.write_text("hello", encoding="utf-8")
