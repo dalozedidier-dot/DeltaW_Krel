@@ -1,0 +1,52 @@
+# Claim/evidence matrix for the DeltaW/K_rel manuscript
+
+This file maps the manuscript claims to concrete repository artifacts.  Its
+purpose is to make the supplement auditable: every strong statement in the
+article should point either to executable evidence, a preregistered criterion,
+or an explicit blocker.
+
+## Evidence levels
+
+| Level | Meaning | Appropriate manuscript language |
+| --- | --- | --- |
+| E0 | Conceptual / mathematical statement only | "We propose", "we define", "we motivate" |
+| E1 | Toy or geometric simulation implemented | "proof of concept", "linearized control bench" |
+| E2 | Process-matrix infrastructure implemented and tested | "projector/SDP infrastructure validation" |
+| E3 | Ideal-switch benchmark implemented and reproduced | "submission-grade switch validation" |
+| E4 | Experimental/tomographic validation on calibrated data | "experimental test" |
+
+## Current claim status
+
+| Manuscript claim | Current evidence | Repository artifact | Status |
+| --- | --- | --- | --- |
+| The admissible direction must be fixed before data. | E1 | `scripts/monte_carlo_control_supplement.py`, `config/config_preregistration.json` | Supported as a toy/geometric control rule. |
+| The admissible space excludes calibrated noise and marginal/signalling directions. | E1 | `scripts/monte_carlo_control_supplement.py`, tests for orthogonality diagnostics | Supported in the linearized bench only. |
+| The applicability lock prevents unstable normalization when the projected witness is too small. | E1 | `apply_applicability_lock`, `tests/test_monte_carlo_control_supplement.py` | Supported. |
+| The finite-count Monte Carlo chain estimates sensitivity for lambda values. | E1 | `monte_carlo_outputs_control/`, `results/mc_smoke/` | Supported as proof of concept; not an experimental forecast. |
+| A micro-tomography proof of concept is provided. | E1 | `scripts/micro_tomography_simulation.py`, `outputs/`, `results/micro_smoke/` | Supported as simplified upper-bound stress test. |
+| Bipartite process-matrix trace/replace projectors are executable. | E2 | `src/deltawkrel/projectors.py`, `tests/test_projectors.py` | Supported, pending external convention audit. |
+| The causal-SDP wiring over K_CS validates known causally separable targets. | E2 | `src/deltawkrel/sdp.py`, `scripts/run_sdp_validation.py`, `results/sdp_validation_report.json` | Supported for infrastructure validation. |
+| The ideal quantum-switch benchmark is reproduced. | E3 | `src/deltawkrel/switch_models.py`, `notebooks/validation_switch_ideal.ipynb` | Not supported yet; explicit submission blocker. |
+| The package is ready for a formal confirmatory submission. | E3/E4 required | `docs/SUBMISSION_CHECKLIST.md` | Not ready until the ideal switch and diagnostics are complete. |
+
+## Rules for using this matrix
+
+1. Claims labelled E1 must use cautious language: "toy", "linearized",
+   "proof of concept", "upper-bound", or "smoke".
+2. Claims labelled E2 can support software/infrastructure statements, not a
+   completed physical benchmark.
+3. No claim should be promoted to E3 until the ideal quantum-switch process is
+   implemented, benchmarked against a published reference, and exported with
+   solver diagnostics.
+4. No claim should be promoted to E4 until calibrated experimental/tomographic
+   data are available with the preregistered thresholds locked.
+
+## Immediate upgrade targets
+
+| Target | Evidence gain | Acceptance criterion |
+| --- | --- | --- |
+| Ideal quantum-switch implementation | E2 -> E3 | Published robustness benchmark reproduced within documented tolerance. |
+| Convention audit notebook | E2 -> stronger E2/E3 | Equations, tensor order, trace convention, and normalization mapped line by line. |
+| Solver diagnostics export | Required for E3 | Status, objective, dual gap if available, residuals, omega_white, complementarity checks. |
+| Manifest validation command | Reproducibility hardening | `python scripts/validate_manifest.py` verifies that tracked artifacts match `MANIFEST.sha256.json`. |
+| Zenodo release checklist | Publication hardening | DOI added to README/manuscript after archive. |

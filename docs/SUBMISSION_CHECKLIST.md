@@ -7,6 +7,8 @@
 - [ ] Implement the ideal quantum-switch process matrix.
 - [ ] Run `notebooks/validation_switch_ideal.ipynb` against a published robustness benchmark.
 - [ ] Export SDP diagnostics: solver, status, objective, duality gap when available, `R_rel`, `omega_white`, complementarity checks.
+- [ ] Update `docs/CLAIM_EVIDENCE_MATRIX.md` so every manuscript claim has an artifact, status, or blocker.
+- [ ] Complete the hardening steps in `docs/MAXIMIZE_REPOSITORY_FOR_SUBMISSION.md`.
 - [ ] Run `pytest -q` locally and in GitHub Actions.
 - [ ] Archive the final GitHub repository on Zenodo and include DOI in the manuscript.
 

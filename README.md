@@ -93,6 +93,9 @@ The repository must be considered submission-ready only when all of the followin
 3. Solver diagnostics are exported: status, objective value, duality gap if available, `R_rel`, `omega_white`, and complementarity checks.
 4. The final repository is archived with a DOI, for example via Zenodo.
 
+For a claim-by-claim audit trail, see `docs/CLAIM_EVIDENCE_MATRIX.md`.
+For the hardening roadmap, see `docs/MAXIMIZE_REPOSITORY_FOR_SUBMISSION.md`.
+
 ## Important methodological note
 
 The scripts in this repository are useful for development and reproducibility, but the manuscript's confirmatory claim depends on the completed SDP/tomography validation. The micro-tomography and binomial simulations should be read as proof-of-concept / upper-bound stress tests, not full experimental predictions.
