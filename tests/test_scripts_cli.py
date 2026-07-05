@@ -144,12 +144,13 @@ def test_validate_manifest_detects_hash_mismatch(tmp_path, monkeypatch, capsys):
 def _init_git_repo(root: Path, files: dict[str, str]) -> None:
     import subprocess
 
-    subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+    git = generate_manifest.git_executable()
+    subprocess.run([git, "init", "-q"], cwd=root, check=True)
     for rel_path, content in files.items():
         target = root / rel_path
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(content, encoding="utf-8")
-    subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+    subprocess.run([git, "add", "-A"], cwd=root, check=True)
 
 
 def test_generate_manifest_covers_tracked_files_and_excludes_volatile(tmp_path, monkeypatch):
