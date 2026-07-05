@@ -24,6 +24,19 @@ The ideal quantum-switch process matrix is **not implemented**. The function `id
 
 The repository becomes submission-ready only when `notebooks/validation_switch_ideal.ipynb` constructs the chosen ideal quantum-switch process, solves the SDP, and reproduces a published robustness benchmark with documented conventions.
 
+
+## Installation status
+
+This package has been installed and smoke-tested in the sandbox using:
+
+```bash
+python -m pip install -e .
+pytest -q
+python scripts/run_sdp_validation.py
+```
+
+See `docs/INSTALL_AND_TEST_REPORT.md` for the exact validation commands and status. A local `.venv/` is intentionally **not** shipped in the ZIP, because virtual environments should not be committed to GitHub.
+
 ## Repository layout
 
 ```text
