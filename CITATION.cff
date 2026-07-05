@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this reproducibility scaffold, please cite it as below."
+title: "DeltaW/K_rel reproducibility scaffold"
+authors:
+  - family-names: "Daloze"
+    given-names: "Didier"
+version: "0.1.0-alpha"
+date-released: "2026-07-05"
+repository-code: "https://github.com/dalozedidier-dot/DeltaW_Krel"
+abstract: >
+  Reproducibility scaffold for the DeltaW/K_rel manuscript, including
+  toy/geometric Monte Carlo controls, micro-tomography proof of concept,
+  process-matrix projectors, a minimal K_CS SDP validation layer, tests,
+  preregistration configuration, and reproducibility documentation.
+keywords:
+  - process matrices
+  - indefinite causal order
+  - quantum switch
+  - causal nonseparability
+  - reproducibility

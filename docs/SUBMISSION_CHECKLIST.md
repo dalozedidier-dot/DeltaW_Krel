@@ -7,6 +7,8 @@
 - [ ] Implement the ideal quantum-switch process matrix.
 - [ ] Run `notebooks/validation_switch_ideal.ipynb` against a published robustness benchmark.
 - [ ] Export SDP diagnostics: solver, status, objective, duality gap when available, `R_rel`, `omega_white`, complementarity checks.
+- [ ] Freeze `config/config_preregistration.json` with `python scripts/freeze_preregistration.py`.
+- [ ] Generate `results/reproducibility_report.md` with `python scripts/generate_reproducibility_report.py`.
 - [ ] Update `docs/CLAIM_EVIDENCE_MATRIX.md` so every manuscript claim has an artifact, status, or blocker.
 - [ ] Complete the hardening steps in `docs/MAXIMIZE_REPOSITORY_FOR_SUBMISSION.md`.
 - [ ] Run `pytest -q` locally and in GitHub Actions.

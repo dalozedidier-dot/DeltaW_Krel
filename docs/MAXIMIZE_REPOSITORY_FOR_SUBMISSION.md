@@ -44,12 +44,13 @@ This protects the work from overclaiming and makes peer review easier.
 
 Recommended additions:
 
-1. Keep the manifest validation command green: `python scripts/validate_manifest.py`.
-2. Keep a single `make reproduce` target that runs tests,
+1. Keep the preregistration lock green: `python scripts/freeze_preregistration.py`.
+2. Keep the manifest validation command green: `python scripts/validate_manifest.py`.
+3. Keep `make reproduce-full` green; it runs preregistration lock, tests, SDP,
    micro-tomography smoke, Monte Carlo smoke, and manifest validation.
-3. Store generated smoke outputs under `results/` with deterministic seeds.
-4. Add a short `CITATION.cff`.
-5. Archive a release through Zenodo and add the DOI to the README and article.
+4. Store generated smoke outputs under `results/` with deterministic seeds.
+5. Keep `CITATION.cff` ready for the archive.
+6. Archive a release through Zenodo and add the DOI to the README and article.
 
 ## Priority 4: improve numerical credibility
 
