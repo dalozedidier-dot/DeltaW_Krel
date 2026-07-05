@@ -1,4 +1,4 @@
-.PHONY: install test smoke micro montecarlo sdp prereg report manifest reproduce reproduce-full clean
+.PHONY: install test coverage smoke micro montecarlo sdp prereg report manifest reproduce reproduce-full clean
 
 install:
 	python -m pip install --upgrade pip
@@ -6,6 +6,9 @@ install:
 
 test:
 	pytest -q tests
+
+coverage:
+	pytest tests --cov=src/deltawkrel --cov=scripts --cov-report=term-missing --cov-fail-under=90
 
 micro:
 	python scripts/micro_tomography_simulation.py --outdir outputs --n-sim 200 --n-null 500

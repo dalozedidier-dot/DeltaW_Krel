@@ -158,13 +158,13 @@ def gram_schmidt_add(
 def partial_trace_A(M: np.ndarray, dA: int, dB: int) -> np.ndarray:
     """Trace partielle sur A pour une matrice sur H_A ⊗ H_B."""
     T = M.reshape(dA, dB, dA, dB)
-    return np.einsum("iajb->ab", T)
+    return np.einsum("iaib->ab", T)
 
 
 def partial_trace_B(M: np.ndarray, dA: int, dB: int) -> np.ndarray:
     """Trace partielle sur B pour une matrice sur H_A ⊗ H_B."""
     T = M.reshape(dA, dB, dA, dB)
-    return np.einsum("iajb->ij", T)
+    return np.einsum("iaja->ij", T)
 
 
 def marginal_constraint_matrices(dim: int, subsystem_dim: Optional[int] = None) -> List[np.ndarray]:
