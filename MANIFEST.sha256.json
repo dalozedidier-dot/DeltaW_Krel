@@ -1,6 +1,6 @@
 {
   ".github/workflows/ci.yml": "955dea776bf8ce4b5e49a0473c86a610cebc6864018f8bb56b56c62bda3f9faa",
-  ".gitignore": "fa9db86afeb19877fe604e6686b0c8275854547fc9ca3817fb80535c764f6898",
+  ".gitignore": "3dac14e7c80bbaeee153df90959adf673a1dc70a6152cb7e61f2c2871e16fd64",
   "CITATION.cff": "387822d78ebb8f01ea94ad62f28081ee2d51000dbf3c70e1485f166595fa74a7",
   "Makefile": "fc16904bed70428f1bc6765c71e719718aeeb1799c7a7abd08cac19438cc3f2d",
   "README.md": "448332dfe43473649fb21780f299aaf59c2d03152a56a97d1ed48a1fb8a60bca",

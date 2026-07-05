@@ -1,0 +1,37 @@
+{
+  "config_path": "config/config_preregistration.json",
+  "config_sha256": "21a6e4cce29fcc3069c43bc597a8101053fa6cba46aa6893dd4485af515d0a77",
+  "confirmatory_note": "A confirmatory analysis should verify this hash before using the thresholds or witness-selection rules.",
+  "scenario": "quantum_switch_bipartite_d2",
+  "solver": {
+    "dual_gap_threshold": 1e-06,
+    "environment_locked": true,
+    "max_iter": 10000,
+    "optional_crosscheck": "MOSEK_v10",
+    "primary": "CLARABEL_open_source",
+    "random_seed": 42,
+    "tolerance_dual": 1e-08,
+    "tolerance_primal": 1e-08
+  },
+  "status": "locked",
+  "thresholds": {
+    "alpha": 0.01,
+    "cos_theta_sigma_min": 0.8,
+    "eps_R": 0.001,
+    "eps_num": 0.01,
+    "lambda_disc": 0.005,
+    "lambda_ref": 0.001,
+    "lambda_sens": 0.005,
+    "lambda_sens_aspirational_if_Neff_ge_1e6": 0.003,
+    "omega_white_alert": 0.5,
+    "refutation_rule": "lambda_hat + 2*sigma_boot < lambda_ref",
+    "visibility_min": 0.97
+  },
+  "trace_convention": "Tr(W)=d_O",
+  "witness": {
+    "post_hoc_redefinition_allowed": false,
+    "selection_rule": "minimum_HS_norm_on_dual_face",
+    "stability_metric": "continuous_cosine_report",
+    "stability_warning_below": 0.9
+  }
+}

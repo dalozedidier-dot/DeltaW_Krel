@@ -29,7 +29,7 @@ outputs/*.png
 outputs/*.csv
 outputs/*.json
 monte_carlo_outputs_control/
-results/
+results/*
 
 # Keep output directory structure
 !outputs/.gitkeep
