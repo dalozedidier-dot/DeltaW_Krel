@@ -1,6 +1,6 @@
 [project]
 name = "deltaw-krel-reproducibility"
-version = "0.0.0"
+version = "0.1.0-alpha"
 description = "Reproducibility scaffold for the ΔW/K_rel process-matrix test program"
 readme = "README.md"
 requires-python = ">=3.10"

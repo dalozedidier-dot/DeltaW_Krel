@@ -1185,6 +1185,23 @@ def run_monte_carlo_control(
 # ============================================================
 
 
+def _json_safe(obj):
+    """Replace non-finite floats recursively so exported JSON is strict."""
+    import math
+
+    if isinstance(obj, dict):
+        return {k: _json_safe(v) for k, v in obj.items()}
+    if isinstance(obj, (list, tuple)):
+        return [_json_safe(v) for v in obj]
+    if isinstance(obj, float) and not math.isfinite(obj):
+        return None
+    return obj
+
+
+def _dump_json_strict(obj, handle) -> None:
+    json.dump(_json_safe(obj), handle, indent=2, ensure_ascii=False, allow_nan=False)
+
+
 def export_results(
     results: Sequence[ResultRow],
     basis: Basis,
@@ -1212,21 +1229,21 @@ def export_results(
         writer.writerows(rows)
 
     with json_file.open("w", encoding="utf-8") as f:
-        json.dump(rows, f, indent=2, ensure_ascii=False)
+        _dump_json_strict(rows, f)
 
     with basis_file.open("w", encoding="utf-8") as f:
-        json.dump(basis_diagnostics(basis), f, indent=2, ensure_ascii=False)
+        _dump_json_strict(basis_diagnostics(basis), f)
 
     with config_file.open("w", encoding="utf-8") as f:
-        json.dump(config, f, indent=2, ensure_ascii=False)
+        _dump_json_strict(config, f)
 
     if sdp_diagnostics is not None:
         with sdp_file.open("w", encoding="utf-8") as f:
-            json.dump(asdict(sdp_diagnostics), f, indent=2, ensure_ascii=False)
+            _dump_json_strict(asdict(sdp_diagnostics), f)
 
     if witness_diagnostics is not None:
         with witness_file.open("w", encoding="utf-8") as f:
-            json.dump(witness_diagnostics, f, indent=2, ensure_ascii=False)
+            _dump_json_strict(witness_diagnostics, f)
 
     print("\nExports :")
     print(f"- {csv_file}")

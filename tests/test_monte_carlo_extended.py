@@ -470,6 +470,56 @@ def test_export_results_rejects_empty(tmp_path):
         mc.export_results(results=[], basis=basis, output_path=tmp_path, config={})
 
 
+def test_export_results_writes_strict_json_for_nan_diagnostics(tmp_path):
+    basis = _small_basis()
+    row = mc.ResultRow(
+        lambda_true=0.0,
+        n_samples=10,
+        power=0.0,
+        power_ci_low=0.0,
+        power_ci_high=0.0,
+        detections=0,
+        n_sim=1,
+        lambda_fit_mean=0.0,
+        lambda_fit_std=0.0,
+        lambda_fit_q05=0.0,
+        lambda_fit_q50=0.0,
+        lambda_fit_q95=0.0,
+        beta_fit_norm_mean=0.0,
+        beta_fit_norm_std=0.0,
+        LR_mean=0.0,
+        LR_q50=0.0,
+        LR_q95=0.0,
+        p_value_mean=1.0,
+        LR_threshold=0.0,
+        alpha_level=0.01,
+        sigma_obs=1.0,
+        alpha_true=0.0,
+        dim=4,
+        n_noise=1,
+        A_dim=basis.A_dim,
+        projection_norm=basis.projection_norm,
+        witness_coupling=basis.witness_coupling,
+        max_inner_N_K_rel=0.0,
+        proj_norm_relative_to_random=1.0,
+        eps_num=basis.eps_num,
+        omega_white=float("nan"),
+        omega_white_alert=False,
+        sdp_status="not_run",
+        lambda_positive_only=True,
+        threshold_mode="chi2",
+        include_M0=False,
+    )
+    sdp = mc.not_run_robustness_diagnostics()
+    witness = mc.witness_stability_diagnostics(basis, np.random.default_rng(0), n_samples=0)
+    mc.export_results([row], basis, tmp_path, {}, sdp_diagnostics=sdp, witness_diagnostics=witness)
+
+    for path in tmp_path.glob("*.json"):
+        text = path.read_text(encoding="utf-8")
+        assert "NaN" not in text
+        json.loads(text)
+
+
 # ------------------------------------------------------------------
 # CLI layer
 # ------------------------------------------------------------------

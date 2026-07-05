@@ -25,9 +25,9 @@ or an explicit blocker.
 | The finite-count Monte Carlo chain estimates sensitivity for lambda values. | E1 | `monte_carlo_outputs_control/`, `results/mc_smoke/` | Supported as proof of concept; not an experimental forecast. |
 | A micro-tomography proof of concept is provided. | E1 | `scripts/micro_tomography_simulation.py`, `outputs/`, `results/micro_smoke/` | Supported as simplified upper-bound stress test. |
 | Bipartite process-matrix trace/replace projectors are executable. | E2 | `src/deltawkrel/projectors.py`, `tests/test_projectors.py` | Supported, pending external convention audit. |
-| The causal-SDP wiring over K_CS validates known causally separable targets. | E2 | `src/deltawkrel/sdp.py`, `scripts/run_sdp_validation.py`, `results/sdp_validation_report.json` | Supported for infrastructure validation. |
-| The ideal quantum-switch benchmark is reproduced. | E3 | `src/deltawkrel/switch_models.py`, `notebooks/validation_switch_ideal.ipynb` | Not supported yet; explicit submission blocker. |
-| The package is ready for a formal confirmatory submission. | E3/E4 required | `docs/SUBMISSION_CHECKLIST.md` | Not ready until the ideal switch and diagnostics are complete. |
+| The causal-SDP wiring over K_CS validates known causally separable targets. | E2 | `src/deltawkrel/sdp.py`, `scripts/run_sdp_validation.py`, CI `reproducibility-pipeline-outputs` | Supported for infrastructure validation. |
+| The ideal quantum-switch benchmark is reproduced. | E3 | `src/deltawkrel/switch_models.py`, `src/deltawkrel/sdp.py`, `scripts/run_sdp_validation.py`, CI `sdp_validation_report.json` | Supported: generalized robustness reproduces the published value near 0.5454 within tolerance. |
+| The package is ready for a formal confirmatory submission. | E3 plus editorial cleanup | `docs/SUBMISSION_CHECKLIST.md` | Technically close; final submission still requires synchronized manuscript/notebook wording and archive DOI. |
 
 ## Rules for using this matrix
 
@@ -35,9 +35,9 @@ or an explicit blocker.
    "proof of concept", "upper-bound", or "smoke".
 2. Claims labelled E2 can support software/infrastructure statements, not a
    completed physical benchmark.
-3. No claim should be promoted to E3 until the ideal quantum-switch process is
-   implemented, benchmarked against a published reference, and exported with
-   solver diagnostics.
+3. E3 claims about the ideal switch must cite the implemented convention,
+   benchmark tolerance, solver diagnostics, and the control-dephased negative
+   control.
 4. No claim should be promoted to E4 until calibrated experimental/tomographic
    data are available with the preregistered thresholds locked.
 
@@ -45,8 +45,7 @@ or an explicit blocker.
 
 | Target | Evidence gain | Acceptance criterion |
 | --- | --- | --- |
-| Ideal quantum-switch implementation | E2 -> E3 | Published robustness benchmark reproduced within documented tolerance. |
-| Convention audit notebook | E2 -> stronger E2/E3 | Equations, tensor order, trace convention, and normalization mapped line by line. |
+| Convention audit notebook | Stronger E3 | Equations, tensor order, trace convention, and normalization mapped line by line. |
 | Solver diagnostics export | Required for E3 | Status, objective, dual gap if available, residuals, omega_white, complementarity checks. |
 | Manifest validation command | Reproducibility hardening | `python scripts/validate_manifest.py` verifies that tracked artifacts match `MANIFEST.sha256.json`. |
 | Zenodo release checklist | Publication hardening | DOI added to README/manuscript after archive. |

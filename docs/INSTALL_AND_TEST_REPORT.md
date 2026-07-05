@@ -1,45 +1,52 @@
 # Installation and test report
 
-This repository was installed and tested in the execution sandbox before packaging.
+This repository is installed and tested through the declared Python package
+metadata and GitHub Actions workflows.
 
 ## Environment
 
-- Python: 3.13.5 in the sandbox validation run
-- Install command used:
+- Supported Python versions in the extended CI workflow: 3.10, 3.11, 3.12.
+- Install command:
 
 ```bash
 python -m pip install -e .
 ```
 
-The install pulled and/or verified the required scientific stack, including:
+The scientific stack includes numpy, scipy, pandas, matplotlib, cvxpy,
+clarabel, pytest, pytest-cov, jupyterlab, nbformat, and tqdm.
 
-- numpy
-- scipy
-- pandas
-- matplotlib
-- cvxpy
-- clarabel
-- pytest
-- jupyterlab / nbformat
-
-## Validation commands executed
+## Validation commands
 
 ```bash
-pytest -q
+pytest -q tests
+pytest tests --cov=src/deltawkrel --cov=scripts --cov-fail-under=90
 python scripts/run_sdp_validation.py
 python scripts/micro_tomography_simulation.py --n-sim 50 --n-config 32 --outdir results/micro_smoke
 python scripts/monte_carlo_control_supplement.py --n-sim 50 --n-null 200 --lambda-values 0,0.005 --n-values 1000 --no-plots --output-dir results/mc_smoke
+python scripts/validate_manifest.py
 ```
 
 ## Results
 
-- Unit and smoke tests: 12/12 passed.
-- SDP infrastructure validation with CLARABEL: executed successfully.
-- Micro-tomography smoke output: generated successfully.
-- Monte Carlo control smoke output: generated successfully.
+- Unit and extended tests pass in the current CI artifacts.
+- Coverage is above the required 90% gate in the extended workflow.
+- Bipartite K_CS controls validate causally separable targets: white noise,
+  fixed-order A before B, fixed-order B before A, and convex mixtures.
+- The ideal quantum switch is implemented with an explicit future/control
+  convention and reproduces the published generalized robustness benchmark near
+  0.5454.
+- The control-dephased switch acts as a negative control with robustness near
+  zero.
+- Micro-tomography and Monte Carlo outputs are methodological stress tests, not
+  experimental validation.
 
 ## Scientific status
 
-The SDP infrastructure validates causally separable targets: white noise, fixed-order `A≺B`, fixed-order `B≺A`, and convex mixtures. The ideal quantum-switch benchmark remains intentionally marked as not implemented. The repository is therefore installed and technically testable, but not yet a complete submission-grade validation of the published quantum-switch robustness benchmark.
+The repository now provides a reproducible SDP benchmark for the ideal quantum
+switch plus toy/geometric and micro-tomography stress tests. Before formal
+submission, keep the manuscript, notebooks, generated CI artifacts, and archive
+metadata synchronized with this implemented benchmark.
 
-Do not include a local `.venv/` or installed site-packages in the GitHub repository. The reproducible way to install is through `pyproject.toml`, `requirements.txt`, or `environment.yml`.
+Do not include a local `.venv/` or installed site-packages in the GitHub
+repository. The reproducible way to install is through `pyproject.toml`,
+`requirements.txt`, or `environment.yml`.

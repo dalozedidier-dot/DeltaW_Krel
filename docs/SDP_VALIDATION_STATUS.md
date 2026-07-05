@@ -12,15 +12,22 @@
   - convex mixture of both fixed orders.
 - Minimal SDP over `K_CS = C_AB + C_BA` validating that those causally separable targets have zero robustness, when `cvxpy/CLARABEL` is available.
 
-## Still a submission blocker
+## Ideal quantum-switch benchmark
 
-The ideal quantum switch process is **not** implemented. The function `ideal_quantum_switch_process()` raises `NotImplementedError` on purpose. This prevents the repository from accidentally claiming a completed benchmark.
+The ideal quantum switch is implemented in `src/deltawkrel/switch_models.py`
+using the Araújo, Branciard, Costa, Feix, Giarmatzi, Brukner convention
+(New J. Phys. 17, 102001 (2015)): systems `[AI, AO, BI, BO, F]`, with
+`F = F_target ⊗ F_control`, target state `|0>`, and control state `|+>`.
 
-Before formal submission, the repository must add:
+`scripts/run_sdp_validation.py` exports:
 
-1. explicit ideal-switch process matrix in the selected convention, including the future/control system if used;
-2. comparison against a published benchmark;
-3. exported solver diagnostics for that benchmark;
-4. documented convention mapping between the manuscript equations and the implementation.
+1. the bipartite causally separable controls listed above;
+2. generalized robustness for the ideal switch, benchmarked against the
+   published reference value near `0.5454`;
+3. random-robustness diagnostics;
+4. a control-dephased switch negative control with robustness near zero;
+5. solver/version, residual, eigenvalue, and witness-certificate diagnostics.
 
-Until then, the repository is suitable for implementation/testing, but not yet a final submission supplement.
+The remaining submission work is editorial and archival: keep the notebook,
+manuscript wording, generated CI artifacts, and DOI metadata synchronized with
+this implemented benchmark.

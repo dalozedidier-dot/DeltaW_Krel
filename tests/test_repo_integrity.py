@@ -74,3 +74,24 @@ def test_citation_file_present_and_nonempty():
     citation = REPO_ROOT / "CITATION.cff"
     text = citation.read_text(encoding="utf-8")
     assert "title" in text.lower()
+
+
+def test_docs_do_not_revert_switch_benchmark_status():
+    checked = [
+        REPO_ROOT / "docs" / "CLAIM_EVIDENCE_MATRIX.md",
+        REPO_ROOT / "docs" / "SDP_VALIDATION_STATUS.md",
+        REPO_ROOT / "docs" / "MAXIMIZE_REPOSITORY_FOR_SUBMISSION.md",
+        REPO_ROOT / "docs" / "INSTALL_AND_TEST_REPORT.md",
+        REPO_ROOT / "src" / "deltawkrel" / "__init__.py",
+        REPO_ROOT / "src" / "deltawkrel" / "sdp.py",
+    ]
+    forbidden = (
+        "ideal quantum switch process is **not** implemented",
+        "ideal quantum-switch benchmark remains intentionally marked as not implemented",
+        "ideal_quantum_switch_process()` raises `NotImplementedError`",
+        "not completed quantum-switch benchmark",
+    )
+    for path in checked:
+        text = path.read_text(encoding="utf-8").lower()
+        for phrase in forbidden:
+            assert phrase.lower() not in text, f"stale switch status in {path}"

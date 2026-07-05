@@ -6,26 +6,22 @@ CI, preregistration parameters, and a SHA manifest.  The next step is not to add
 volume.  The next step is to turn the repository into an auditable evidence
 package for the manuscript.
 
-## Priority 1: close the scientific blocker
+## Priority 1: keep the switch benchmark auditable
 
-The main blocker is explicit and healthy: `ideal_quantum_switch_process()` is
-not implemented by design.
+The main scientific benchmark is now implemented: `ideal_quantum_switch_process()`
+constructs the ideal switch in the Araújo et al. convention, and
+`scripts/run_sdp_validation.py` reproduces the published generalized robustness
+near `0.5454` within the declared tolerance.
 
-To make the repository submission-grade:
+To keep this submission-grade:
 
-1. Select one published ideal quantum-switch convention.
-2. Document the Hilbert-space order, trace convention, normalization, and
-   future/control system.
-3. Implement the process in `src/deltawkrel/switch_models.py`.
-4. Add tests for shape, Hermiticity, PSD, trace convention, and projector
-   compatibility.
-5. Run the causal-SDP routine on the ideal switch.
-6. Reproduce a published robustness value within a declared numerical tolerance.
-7. Export the complete diagnostics to `results/sdp_validation_report.json`.
-
-Until this is done, the manuscript should keep the current wording: proof of
-concept / infrastructure validation / roadmap, not completed quantum-switch
-benchmark.
+1. Keep the convention visible in code, docs, and notebook.
+2. Keep tests for shape, Hermiticity, PSD, trace convention, projectors, and
+   benchmark tolerance.
+3. Keep the control-dephased switch as a negative control with robustness near
+   zero.
+4. Export complete diagnostics through the CI pipeline artifacts.
+5. Avoid committing stale generated reports that refer to absent artifacts.
 
 ## Priority 2: make the manuscript auditable
 
@@ -78,14 +74,15 @@ The article can safely say:
 - the micro-tomography script is a simplified proof of concept;
 - the process-matrix and K_CS SDP infrastructure validate known causally
   separable targets;
-- the ideal quantum-switch benchmark remains the decisive completion step.
+- the ideal quantum-switch benchmark is reproduced against the published
+  generalized robustness reference near 0.5454.
 
-The article should not yet say:
+The article should not say:
 
-- the ideal quantum switch has been reproduced;
 - the reported Monte Carlo power is an experimental prediction;
-- the current SDP proves non-separability of an implemented switch process;
-- the repository is a final confirmatory supplement.
+- the micro-tomography stress test is an experimental validation;
+- the repository has a final archival DOI until Zenodo or an equivalent archive
+  has minted one.
 
 ## Suggested final repository shape
 
@@ -122,7 +119,7 @@ from a clean clone, run one documented command, and see:
 1. all tests pass;
 2. toy and micro-tomography smoke outputs regenerate;
 3. the SDP validates known CS targets;
-4. the ideal quantum switch benchmark is reproduced or explicitly marked as
-   absent;
+4. the ideal quantum switch benchmark is reproduced and the dephased-switch
+   negative control remains near zero;
 5. every manuscript claim maps to an artifact in
    `docs/CLAIM_EVIDENCE_MATRIX.md`.

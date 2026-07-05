@@ -8,9 +8,9 @@ The routine below solves the primal conic scaffold used in the manuscript:
          W_AB ∈ L_AB, W_BA ∈ L_BA
          t_i >= 0, t_white >= 0.
 
-This is now a genuine K_CS wiring test, not merely a PSD proxy.  It is still not
-an ideal quantum-switch benchmark: that benchmark needs the explicit switch
-process with future/control convention.
+This is a genuine K_CS wiring test, not merely a PSD proxy.  The same module
+also provides the ideal quantum-switch generalized-robustness benchmark with a
+global future/control space.
 """
 from __future__ import annotations
 
@@ -108,8 +108,8 @@ def solve_cs_robustness(
 
     The linear subspace constraints are imposed using the vectorized projectors
     L_A_before_B and L_B_before_A.  This validates the cone wiring on known CS
-    targets.  For full submission, call this on an implemented ideal quantum
-    switch and compare against a published benchmark.
+    targets.  Use solve_switch_generalized_robustness for the implemented ideal
+    quantum-switch benchmark with future/control space.
     """
     if cp is None:
         raise RuntimeError("cvxpy is required for SDP validation. Install requirements.txt.")
