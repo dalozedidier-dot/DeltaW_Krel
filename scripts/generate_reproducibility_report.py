@@ -85,9 +85,11 @@ def main() -> int:
     lines.extend(["", "## SDP validation", ""])
     if sdp is None:
         lines.append("- status: missing")
+        benchmark_passed = False
     else:
         lines.append(f"- status: {sdp.get('status')}")
         blocker = sdp.get("ideal_quantum_switch_benchmark", {})
+        benchmark_passed = bool(blocker.get("benchmark_passed", False))
         lines.append(
             "- ideal quantum switch implemented: "
             f"{bool(blocker.get('implemented', False))}"
@@ -96,6 +98,13 @@ def main() -> int:
             "- ideal quantum switch submission blocker: "
             f"{bool(blocker.get('submission_blocker', True))}"
         )
+        if "computed_generalized_robustness" in blocker:
+            lines.append(
+                "- switch generalized robustness: "
+                f"{blocker.get('computed_generalized_robustness')} "
+                f"(reference {blocker.get('reference_generalized_robustness')}, "
+                f"passed={benchmark_passed})"
+            )
         targets = sdp.get("targets", {})
         for name, diag in targets.items():
             lines.append(
@@ -113,11 +122,15 @@ def main() -> int:
             "",
             "## Submission status",
             "",
-            "The repository currently supports toy/geometric simulations,",
-            "micro-tomography proof of concept, process-matrix projector tests,",
-            "and K_CS infrastructure validation. The ideal quantum-switch",
-            "benchmark remains the decisive submission blocker until implemented",
-            "and compared with a published reference value.",
+            "The repository supports toy/geometric simulations (methodological",
+            "control bench, NOT experimental validation), the micro-tomography",
+            "proof of concept, process-matrix projector tests, and K_CS SDP",
+            "validation. The ideal quantum switch is implemented in the",
+            "Araújo et al. (NJP 17, 102001 (2015)) convention; its generalized",
+            "robustness benchmark (reference 0.5454) is "
+            + ("REPRODUCED" if benchmark_passed else "NOT YET REPRODUCED — submission blocker")
+            + ". See docs/CONVENTIONS.md for the official convention and the",
+            "equation-to-code audit table.",
             "",
         ]
     )

@@ -158,6 +158,117 @@ def trrep(W: np.ndarray, dims: ProcessDims | Sequence[int], systems: Iterable[in
     return trace_replace(W, dims, systems)
 
 
+def trace_replace_nd(W: np.ndarray, dims: Sequence[int], systems: Iterable[int]) -> np.ndarray:
+    """Fast trace-and-replace _S W = (I_S/d_S) ⊗ Tr_S(W) for any number of systems.
+
+    Vectorized einsum implementation, agnostic in the number of tensor factors.
+    On the 4-partite case it must agree with the explicit audited
+    :func:`trace_replace`; this equality is enforced by the test suite.
+    """
+    dims_tuple = tuple(int(d) for d in dims)
+    if any(d <= 0 for d in dims_tuple):
+        raise ValueError("all subsystem dimensions must be positive.")
+    n = len(dims_tuple)
+    D = 1
+    for d in dims_tuple:
+        D *= d
+    W = np.asarray(W)
+    if W.shape != (D, D):
+        raise ValueError(f"W must have shape {(D, D)}, got {W.shape}.")
+    systems_tuple = sorted(set(int(s) for s in systems))
+    if any(s < 0 or s >= n for s in systems_tuple):
+        raise ValueError("systems contains an invalid subsystem index.")
+    if not systems_tuple:
+        return W.copy()
+
+    kept = [i for i in range(n) if i not in systems_tuple]
+    dS = 1
+    for s in systems_tuple:
+        dS *= dims_tuple[s]
+
+    T = W.reshape(*dims_tuple, *dims_tuple)
+    row_labels = list(range(n))
+    col_labels = [i if i in systems_tuple else n + i for i in range(n)]
+    out_labels = [i for i in kept] + [n + i for i in kept]
+    M = np.einsum(T, row_labels + col_labels, out_labels)
+    dK = 1
+    for i in kept:
+        dK *= dims_tuple[i]
+    M = M.reshape(dK, dK)
+
+    K = np.kron(M, np.eye(dS, dtype=M.dtype) / dS)  # order [kept..., systems...]
+    src_order = kept + systems_tuple
+    axes = [src_order.index(i) for i in range(n)]
+    dims_src = [dims_tuple[i] for i in src_order]
+    Kt = K.reshape(*dims_src, *dims_src)
+    perm = axes + [n + a for a in axes]
+    return np.transpose(Kt, perm).reshape(D, D)
+
+
+# ------------------------------------------------------------------
+# Bipartite processes with a global future space F
+# ------------------------------------------------------------------
+#
+# System order [AI, AO, BI, BO, F].  F is a final, input-only system (the
+# global future); for the ideal quantum switch F = F_target ⊗ F_control with
+# dimension 4.  All subspaces below are written with the projective
+# characterization of Wechs–Abbott–Branciard (NJP 21, 013027, 2019): each
+# constraint [∏(1-τ_XO)] τ_(others) W = 0 is an orthogonal projector built
+# from commuting single-system trace-and-replace maps τ, and the projector
+# onto the intersection of their kernels is 1 minus their sum.
+
+F_SYS = 4
+SWITCH_DIMS_WITH_FUTURE: tuple[int, int, int, int, int] = (2, 2, 2, 2, 4)
+
+
+def _dims5(dims: Sequence[int]) -> tuple[int, ...]:
+    dims_tuple = tuple(int(d) for d in dims)
+    if len(dims_tuple) != 5:
+        raise ValueError("dims must have length 5 in order [AI, AO, BI, BO, F].")
+    return dims_tuple
+
+
+def L_A_before_B_with_future(W: np.ndarray, dims: Sequence[int] = SWITCH_DIMS_WITH_FUTURE) -> np.ndarray:
+    """Projector onto A≺B≺F combs on [AI, AO, BI, BO, F].
+
+    Kernel conditions: (1-τ_BO)τ_F W = 0 and (1-τ_AO)τ_{BI,BO,F} W = 0, i.e.
+
+        L(W) = W - τ_F W + τ_{BO,F} W - τ_{BI,BO,F} W + τ_{AO,BI,BO,F} W.
+
+    With a trivial future (d_F = 1) this reduces to the bipartite
+    :func:`L_A_before_B`.
+    """
+    d = _dims5(dims)
+    t = lambda s: trace_replace_nd(W, d, s)  # noqa: E731
+    return W - t([F_SYS]) + t([BO, F_SYS]) - t([BI, BO, F_SYS]) + t([AO, BI, BO, F_SYS])
+
+
+def L_B_before_A_with_future(W: np.ndarray, dims: Sequence[int] = SWITCH_DIMS_WITH_FUTURE) -> np.ndarray:
+    """Projector onto B≺A≺F combs on [AI, AO, BI, BO, F] (mirror of A≺B≺F)."""
+    d = _dims5(dims)
+    t = lambda s: trace_replace_nd(W, d, s)  # noqa: E731
+    return W - t([F_SYS]) + t([AO, F_SYS]) - t([AI, AO, F_SYS]) + t([AI, AO, BO, F_SYS])
+
+
+def L_valid_with_future(W: np.ndarray, dims: Sequence[int] = SWITCH_DIMS_WITH_FUTURE) -> np.ndarray:
+    """Projector onto valid bipartite processes with a global future F.
+
+    Kernel conditions (F has no output, so subsets containing F are trivial):
+
+        (1-τ_AO) τ_{BI,BO,F} W = 0,
+        (1-τ_BO) τ_{AI,AO,F} W = 0,
+        (1-τ_AO)(1-τ_BO) τ_F W = 0.
+
+    Both fixed-order comb subspaces are contained in this subspace.
+    """
+    d = _dims5(dims)
+    t = lambda s: trace_replace_nd(W, d, s)  # noqa: E731
+    Q_A = t([BI, BO, F_SYS]) - t([AO, BI, BO, F_SYS])
+    Q_B = t([AI, AO, F_SYS]) - t([AI, AO, BO, F_SYS])
+    Q_AB = t([F_SYS]) - t([AO, F_SYS]) - t([BO, F_SYS]) + t([AO, BO, F_SYS])
+    return W - Q_A - Q_B - Q_AB
+
+
 def _P_no_future_B(W: np.ndarray, dims: ProcessDims | Sequence[int]) -> np.ndarray:
     """Projector imposing [1-B_O] A_I A_O W = 0."""
     return W - trace_replace(W, dims, [AI, AO]) + trace_replace(W, dims, [AI, AO, BO])

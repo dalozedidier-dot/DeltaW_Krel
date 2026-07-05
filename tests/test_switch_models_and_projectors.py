@@ -36,9 +36,11 @@ def test_causally_separable_mixture_is_valid_and_psd():
     assert np.allclose(L_valid_bipartite(W, dims), W, atol=1e-8)
 
 
-def test_ideal_quantum_switch_is_not_faked():
-    try:
-        ideal_quantum_switch_process(ProcessDims())
-    except NotImplementedError:
-        return
-    raise AssertionError("ideal_quantum_switch_process must not silently return a placeholder.")
+def test_ideal_quantum_switch_is_a_real_process_matrix():
+    """The switch is implemented for real: pure, normalized, PSD at D=64."""
+    W = ideal_quantum_switch_process()
+    assert W.shape == (64, 64)
+    assert np.isclose(np.trace(W), 4.0)
+    assert is_psd(W)
+    eigenvalues = np.linalg.eigvalsh(W)
+    assert eigenvalues[-1] > 3.99  # rank-one with <w|w> = 4

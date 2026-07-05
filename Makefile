@@ -1,4 +1,4 @@
-.PHONY: install test coverage smoke micro montecarlo sdp prereg report manifest manifest-update reproduce reproduce-full clean
+.PHONY: install test coverage smoke micro montecarlo sdp prereg report manifest manifest-update reproduce reproduce-full reproduce-core clean
 
 SMOKE_MICRO_DIR ?= results/micro_smoke
 SMOKE_MC_DIR ?= results/mc_smoke
@@ -6,13 +6,13 @@ export PYTHONPATH := src:scripts:$(PYTHONPATH)
 
 install:
 	python -m pip install --upgrade pip
-	python -m pip install -r requirements.txt
+	python -m pip install -e .
 
 test:
-	pytest -q tests
+	python -m pytest -q tests
 
 coverage:
-	pytest tests --cov=src/deltawkrel --cov=scripts --cov-report=term-missing --cov-fail-under=90
+	python -m pytest tests --cov=src/deltawkrel --cov=scripts --cov-report=term-missing --cov-fail-under=90
 
 micro:
 	python scripts/micro_tomography_simulation.py --outdir $(SMOKE_MICRO_DIR) --n-sim 200 --n-null 500
@@ -39,7 +39,12 @@ smoke: test micro montecarlo
 
 reproduce: smoke manifest
 
+# Chaîne complète (requiert cvxpy + un solveur SDP : SCS/CLARABEL).
 reproduce-full: prereg test sdp micro montecarlo report manifest
+
+# Chaîne sans SDP, pour les environnements où cvxpy n'est pas installable.
+# Les tests SDP sont automatiquement sautés (pytest.importorskip).
+reproduce-core: prereg test micro montecarlo report manifest
 
 clean:
 	rm -rf .pytest_cache __pycache__ scripts/__pycache__ tests/__pycache__ monte_carlo_outputs_control
