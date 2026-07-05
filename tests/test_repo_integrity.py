@@ -48,6 +48,18 @@ def test_manifest_is_well_formed():
         assert hex_sha.match(digest), f"invalid sha256 for {rel_path}: {digest}"
 
 
+def test_manifest_matches_repository_content(monkeypatch):
+    """The committed manifest must validate against the checkout.
+
+    If this fails after editing tracked files, regenerate the manifest with
+    `make manifest-update` (python scripts/generate_manifest.py).
+    """
+    import validate_manifest
+
+    monkeypatch.setattr("sys.argv", ["validate_manifest.py", "--root", str(REPO_ROOT)])
+    assert validate_manifest.main() == 0, "manifest drift — run `make manifest-update`"
+
+
 def test_notebooks_parse_as_nbformat_v4():
     nbformat = pytest.importorskip("nbformat")
     notebooks = sorted((REPO_ROOT / "notebooks").glob("*.ipynb"))

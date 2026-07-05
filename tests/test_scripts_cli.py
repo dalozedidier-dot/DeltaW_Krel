@@ -14,6 +14,7 @@ import numpy as np
 import pytest
 
 import freeze_preregistration
+import generate_manifest
 import generate_reproducibility_report
 import micro_tomography_simulation as micro
 import validate_manifest
@@ -133,6 +134,49 @@ def test_validate_manifest_detects_hash_mismatch(tmp_path, monkeypatch, capsys):
     out = capsys.readouterr().out
     assert "Hash mismatches" in out
     assert "expected" in out
+
+
+# ------------------------------------------------------------------
+# generate_manifest
+# ------------------------------------------------------------------
+
+
+def _init_git_repo(root: Path, files: dict[str, str]) -> None:
+    import subprocess
+
+    subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+    for rel_path, content in files.items():
+        target = root / rel_path
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(content, encoding="utf-8")
+    subprocess.run(["git", "add", "-A"], cwd=root, check=True)
+
+
+def test_generate_manifest_covers_tracked_files_and_excludes_volatile(tmp_path, monkeypatch):
+    _init_git_repo(
+        tmp_path,
+        {
+            "src/module.py": "x = 1\n",
+            "results/report.md": "volatile\n",
+            "outputs/data.csv": "volatile\n",
+            "MANIFEST.sha256.json": "{}",
+        },
+    )
+    monkeypatch.setattr("sys.argv", ["generate_manifest.py", "--root", str(tmp_path)])
+    assert generate_manifest.main() == 0
+    manifest = json.loads((tmp_path / "MANIFEST.sha256.json").read_text(encoding="utf-8"))
+    assert "src/module.py" in manifest
+    assert not any(p.startswith(("results/", "outputs/")) for p in manifest)
+    assert "MANIFEST.sha256.json" not in manifest
+    assert manifest["src/module.py"] == generate_manifest.sha256_file(tmp_path / "src/module.py")
+
+
+def test_generated_manifest_passes_validation(tmp_path, monkeypatch):
+    _init_git_repo(tmp_path, {"a.txt": "hello\n", "docs/b.md": "world\n"})
+    monkeypatch.setattr("sys.argv", ["generate_manifest.py", "--root", str(tmp_path)])
+    assert generate_manifest.main() == 0
+    monkeypatch.setattr("sys.argv", ["validate_manifest.py", "--root", str(tmp_path)])
+    assert validate_manifest.main() == 0
 
 
 # ------------------------------------------------------------------

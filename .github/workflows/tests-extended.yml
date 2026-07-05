@@ -92,10 +92,8 @@ jobs:
       - name: Generate reproducibility report
         run: python scripts/generate_reproducibility_report.py
 
-      - name: Check manifest format (non-blocking content drift report)
-        run: |
-          python -c "import json,re;m=json.load(open('MANIFEST.sha256.json'));assert all(re.match(r'^[0-9a-f]{64}$',v) for v in m.values());print(f'{len(m)} manifest entries well-formed')"
-          python scripts/validate_manifest.py || echo "::warning::Manifest content drift detected — regenerate MANIFEST.sha256.json before release."
+      - name: Validate manifest against tracked sources
+        run: python scripts/validate_manifest.py
 
       - name: Upload pipeline artifacts
         uses: actions/upload-artifact@v4
