@@ -1,4 +1,4 @@
-.PHONY: install test coverage smoke micro montecarlo sdp prereg report manifest reproduce reproduce-full clean
+.PHONY: install test coverage smoke micro montecarlo sdp prereg report manifest manifest-update reproduce reproduce-full clean
 
 install:
 	python -m pip install --upgrade pip
@@ -27,6 +27,9 @@ report:
 
 manifest:
 	python scripts/validate_manifest.py
+
+manifest-update:
+	python scripts/generate_manifest.py
 
 smoke: test micro montecarlo
 

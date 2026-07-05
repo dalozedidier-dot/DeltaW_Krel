@@ -833,7 +833,9 @@ def solve_regularized_sdp_proxy(
     W_white = symmetrize(np.asarray(W_white, dtype=float))
 
     k = len(N_cal_basis)
-    t_cal = cp.Variable(k, nonneg=True, name="t_cal")
+    # cp.Variable((0,)) est rejeté par certaines versions de cvxpy : ne créer
+    # t_cal que si des directions de bruit calibré sont fournies.
+    t_cal = cp.Variable(k, nonneg=True, name="t_cal") if k else None
     t_white = cp.Variable(nonneg=True, name="t_white")
 
     X = W + t_white * W_white
@@ -841,7 +843,7 @@ def solve_regularized_sdp_proxy(
         X = X + t_cal[i] * symmetrize(np.asarray(N_i, dtype=float))
 
     constraints = [X >> 0]
-    objective = cp.Minimize(cp.sum(t_cal) + t_white)
+    objective = cp.Minimize((cp.sum(t_cal) if k else 0.0) + t_white)
     problem = cp.Problem(objective, constraints)
 
     chosen_solver = solver or "CLARABEL"
@@ -872,7 +874,9 @@ def solve_regularized_sdp_proxy(
         )
 
     t_white_value = max(0.0, float(t_white.value))
-    t_cal_values = np.maximum(0.0, np.asarray(t_cal.value, dtype=float)) if k else np.zeros(0)
+    t_cal_values = (
+        np.maximum(0.0, np.asarray(t_cal.value, dtype=float)) if t_cal is not None else np.zeros(0)
+    )
     t_cal_sum = float(np.sum(t_cal_values))
     denom = t_white_value + t_cal_sum
     omega_white = float(t_white_value / denom) if denom > 1e-15 else 0.0
