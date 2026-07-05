@@ -8,8 +8,8 @@ implemented evidence from explicit submission blockers.
 - Preregistration config: present (`config/config_preregistration.json`)
 - Preregistration lock: present (`results/preregistration_lock.json`)
 - SDP validation report: present (`results/sdp_validation_report.json`)
-- Monte Carlo smoke output: present (`results/mc_smoke/monte_carlo_power_results.json`)
-- Micro-tomography smoke output: present (`results/micro_smoke/micro_tomography_power.csv`)
+- Monte Carlo smoke output: missing (`results/mc_smoke/monte_carlo_power_results.json`)
+- Micro-tomography smoke output: missing (`results/micro_smoke/micro_tomography_power.csv`)
 - Claim/evidence matrix: present (`docs/CLAIM_EVIDENCE_MATRIX.md`)
 
 ## Preregistration lock
@@ -21,23 +21,26 @@ implemented evidence from explicit submission blockers.
 
 ## SDP validation
 
-- status: infrastructure_validation_only
-- ideal quantum switch implemented: False
-- ideal quantum switch submission blocker: True
+- status: sdp_validation_with_switch_benchmark
+- ideal quantum switch implemented: True
+- ideal quantum switch submission blocker: False
+- switch generalized robustness: 0.5453510590583036 (reference 0.5454, passed=True)
 - white_noise: optimal (objective=0.0, solver=CLARABEL)
-- fixed_order_A_before_B: optimal (objective=2.1788668880357739e-10, solver=CLARABEL)
-- fixed_order_B_before_A: optimal (objective=2.178892392531748e-10, solver=CLARABEL)
+- fixed_order_A_before_B: optimal (objective=2.1788500930243524e-10, solver=CLARABEL)
+- fixed_order_B_before_A: optimal (objective=2.1788366435426067e-10, solver=CLARABEL)
 - causally_separable_mixture_q037: optimal (objective=0.0, solver=CLARABEL)
 
 ## Manifest
 
-- manifest entries: 57
+- manifest entries: 44
 - validation command: `python scripts/validate_manifest.py`
 
 ## Submission status
 
-The repository currently supports toy/geometric simulations,
-micro-tomography proof of concept, process-matrix projector tests,
-and K_CS infrastructure validation. The ideal quantum-switch
-benchmark remains the decisive submission blocker until implemented
-and compared with a published reference value.
+The repository supports toy/geometric simulations (methodological
+control bench, NOT experimental validation), the micro-tomography
+proof of concept, process-matrix projector tests, and K_CS SDP
+validation. The ideal quantum switch is implemented in the
+Araújo et al. (NJP 17, 102001 (2015)) convention; its generalized
+robustness benchmark (reference 0.5454) is REPRODUCED. See docs/CONVENTIONS.md for the official convention and the
+equation-to-code audit table.

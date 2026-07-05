@@ -15,14 +15,19 @@ This repository is a GitHub-ready implementation scaffold for the ΔW/K_rel manu
   - fixed-order `A≺B` identity-channel process;
   - fixed-order `B≺A` identity-channel process;
   - causally separable convex mixtures.
-- Minimal SDP over `K_CS = C_AB + C_BA` validating zero robustness on causally separable targets when `cvxpy/CLARABEL` is available.
-- Unit/smoke tests and GitHub Actions CI.
+- Minimal SDP over `K_CS = C_AB + C_BA` validating zero robustness on causally separable targets when `cvxpy` is available.
+- **Ideal quantum switch implemented** in the Araújo–Branciard–Costa–Feix–Giarmatzi–Brukner convention (NJP 17, 102001 (2015)): rank-one process on `[AI, AO, BI, BO, F]` with `F = F_target ⊗ F_control` (D = 64), plus the with-future projectors `L_{A≺B≺F}`, `L_{B≺A≺F}` and `L_V^F`.
+- **Published benchmark reproduced**: the generalized robustness of the ideal switch computed by `solve_switch_generalized_robustness` is `0.545351` (SCS, eps 1e-8), matching the published `0.5454`; the control-dephased switch is causally separable (robustness 0). See `docs/CONVENTIONS.md` for the official convention and the equation-to-code audit table.
+- Full SDP diagnostics exported (solver + versions, iterations, solve time, residuals, minimal eigenvalues, dual witness certificate) by `scripts/run_sdp_validation.py`.
+- Unit/smoke tests and GitHub Actions CI (multi-Python coverage gate + reproducibility pipeline).
 
-### Still not submission-ready
+### Interpretation guardrails
 
-The ideal quantum-switch process matrix is **not implemented**. The function `ideal_quantum_switch_process()` raises `NotImplementedError` by design. This prevents accidental claims that the published ideal-switch benchmark has been reproduced.
-
-The repository becomes submission-ready only when `notebooks/validation_switch_ideal.ipynb` constructs the chosen ideal quantum-switch process, solves the SDP, and reproduces a published robustness benchmark with documented conventions.
+The Monte Carlo control bench and the micro-tomography script are a
+**methodological/geometric control level and a simplified stress test**. They
+are useful and reproducible, but they must not be presented as experimental
+validation or as physical simulations of the switch. Only the SDP level
+carries the external published benchmark.
 
 
 ## Installation status
@@ -43,7 +48,7 @@ See `docs/INSTALL_AND_TEST_REPORT.md` for the exact validation commands and stat
 .github/workflows/ci.yml              GitHub Actions tests
 src/deltawkrel/projectors.py          trace-replace maps and process projectors
 src/deltawkrel/sdp.py                 minimal K_CS causal-SDP validation routine
-src/deltawkrel/switch_models.py       white-noise/fixed-order targets + safe ideal-switch blocker
+src/deltawkrel/switch_models.py       white-noise/fixed-order targets + ideal quantum switch
 scripts/monte_carlo_control_supplement.py
 scripts/micro_tomography_simulation.py
 scripts/run_sdp_validation.py
@@ -80,10 +85,19 @@ python scripts/generate_reproducibility_report.py
 python scripts/validate_manifest.py
 ```
 
-Run the SDP infrastructure validation after installing `cvxpy` and `clarabel`:
+Run the SDP validation (bipartite targets + ideal-switch benchmark) after
+installing `cvxpy` (solvers: SCS for the switch benchmark, CLARABEL for the
+bipartite targets):
 
 ```bash
 python scripts/run_sdp_validation.py
+```
+
+Full reproducibility from a clean clone:
+
+```bash
+make reproduce-full   # everything, requires cvxpy (SDP included)
+make reproduce-core   # same chain without the SDP step (cvxpy-free environments)
 ```
 
 Run the notebooks:

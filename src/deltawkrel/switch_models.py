@@ -1,9 +1,13 @@
-"""Small process-matrix validation targets.
+"""Process-matrix validation targets, including the ideal quantum switch.
 
-The ideal quantum switch is not faked.  This module supplies exact fixed-order
-and white-noise processes that are sufficient to validate the projectors and the
-causally separable SDP wiring.  The ideal-switch benchmark must still be added
-from a selected published convention before a formal submission.
+Fixed-order and white-noise processes validate the bipartite projectors and the
+causally separable SDP wiring.  The ideal quantum switch is implemented in the
+convention of Araújo, Branciard, Costa, Feix, Giarmatzi, Brukner,
+"Witnessing causal nonseparability", New J. Phys. 17, 102001 (2015):
+a rank-one process matrix on [AI, AO, BI, BO, F] with global future
+F = F_target ⊗ F_control, target initial state |ψ⟩ and control state |+⟩.
+Its generalized robustness (≈ 0.5454) is the external benchmark reproduced by
+:func:`deltawkrel.sdp.solve_switch_generalized_robustness`.
 """
 from __future__ import annotations
 
@@ -12,6 +16,7 @@ import numpy as np
 from .projectors import (
     AI, AO, BI, BO,
     ProcessDims,
+    SWITCH_DIMS_WITH_FUTURE,
     _as_dims,
     d_output,
     hilbert_dim,
@@ -78,18 +83,92 @@ def causally_separable_mixture(dims: ProcessDims = ProcessDims(), q: float = 0.5
     return q * fixed_order_A_before_B_process(dims) + (1.0 - q) * fixed_order_B_before_A_process(dims)
 
 
-def ideal_quantum_switch_process(*args, **kwargs):
-    """Not implemented by design.
+def _switch_branch_vector(order: str, psi: np.ndarray) -> np.ndarray:
+    """Pure comb vector |w_{X≺Y}⟩ on [AI, AO, BI, BO, Ft, Fc] (all qubits).
 
-    The ideal quantum switch requires an explicit convention with a future global
-    system/control degree of freedom.  It must be implemented from the selected
-    literature convention and benchmarked before the repository can be labelled
-    submission-ready.
+    Convention (Araújo et al., NJP 17, 102001 (2015)):
+
+        |w_{A≺B}⟩ = |ψ⟩_AI |1⟩⟩_{AO,BI} |1⟩⟩_{BO,Ft} |0⟩_Fc,
+        |w_{B≺A}⟩ = |ψ⟩_BI |1⟩⟩_{BO,AI} |1⟩⟩_{AO,Ft} |1⟩_Fc,
+
+    with |1⟩⟩ = Σ_j |jj⟩ the unnormalized maximally entangled vector (the
+    Choi vector of the identity channel).
     """
-    raise NotImplementedError(
-        "ideal_quantum_switch_process is not implemented yet. Complete from the "
-        "chosen quantum-switch convention and validate against a published benchmark."
-    )
+    d = 2
+
+    def idx(ai: int, ao: int, bi: int, bo: int, ft: int, fc: int) -> int:
+        return ((((ai * d + ao) * d + bi) * d + bo) * d + ft) * d + fc
+
+    w = np.zeros(d ** 6, dtype=float)
+    if order == "AB":
+        for a in range(d):
+            for j in range(d):
+                for k in range(d):
+                    w[idx(a, j, j, k, k, 0)] += float(psi[a])
+    elif order == "BA":
+        for b in range(d):
+            for j in range(d):
+                for k in range(d):
+                    w[idx(j, k, b, j, k, 1)] += float(psi[b])
+    else:
+        raise ValueError("order must be 'AB' or 'BA'.")
+    return w
+
+
+def _validate_switch_target_state(psi: np.ndarray | None) -> np.ndarray:
+    if psi is None:
+        psi = np.array([1.0, 0.0])
+    psi = np.asarray(psi, dtype=float)
+    if psi.shape != (2,):
+        raise ValueError("psi must be a real qubit state vector of shape (2,).")
+    norm = float(np.linalg.norm(psi))
+    if norm < 1e-12:
+        raise ValueError("psi must be a nonzero state vector.")
+    return psi / norm
+
+
+def ideal_quantum_switch_process(psi: np.ndarray | None = None) -> np.ndarray:
+    """Ideal quantum switch process matrix W = |w⟩⟨w| on [AI, AO, BI, BO, F].
+
+    Convention: Araújo, Branciard, Costa, Feix, Giarmatzi, Brukner,
+    "Witnessing causal nonseparability", New J. Phys. 17, 102001 (2015).
+    All party systems are qubits; the global future F = F_target ⊗ F_control
+    has dimension 4 (tensor order: target first, control second); the control
+    starts in |+⟩ and the target in |ψ⟩ (default |0⟩, real amplitudes so that
+    W is real symmetric):
+
+        |w⟩ = (|w_{A≺B}⟩|0⟩_Fc + |w_{B≺A}⟩|1⟩_Fc)/√2.
+
+    The result is a rank-one PSD matrix of dimension 64 with Tr(W) = d_O = 4.
+    Its generalized robustness against causally separable processes is the
+    published benchmark value ≈ 0.5454.
+    """
+    psi = _validate_switch_target_state(psi)
+    w = (_switch_branch_vector("AB", psi) + _switch_branch_vector("BA", psi)) / np.sqrt(2.0)
+    return np.outer(w, w)
+
+
+def switch_branch_process(order: str, psi: np.ndarray | None = None) -> np.ndarray:
+    """Normalized fixed-order branch W_{X≺Y≺F} = |w_{X≺Y}⟩⟨w_{X≺Y}| of the switch.
+
+    Each branch is a valid A≺B≺F (resp. B≺A≺F) comb with Tr(W) = 4; it lies in
+    the corresponding fixed-order subspace L_A_before_B_with_future /
+    L_B_before_A_with_future.
+    """
+    psi = _validate_switch_target_state(psi)
+    w = _switch_branch_vector(order, psi)
+    return np.outer(w, w)
+
+
+def dephased_switch_process(psi: np.ndarray | None = None) -> np.ndarray:
+    """Control-dephased switch: the causally separable mixture of both branches.
+
+    Dephasing the control qubit of the ideal switch removes all coherence
+    between the two orders and yields (W_{A≺B≺F} + W_{B≺A≺F})/2, which is
+    causally separable by construction (generalized robustness 0).
+    """
+    psi = _validate_switch_target_state(psi)
+    return 0.5 * (switch_branch_process("AB", psi) + switch_branch_process("BA", psi))
 
 
 def white_noise_validation_process(dims: ProcessDims = ProcessDims()) -> np.ndarray:

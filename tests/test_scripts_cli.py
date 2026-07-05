@@ -287,9 +287,7 @@ def test_run_sdp_validation_writes_report(tmp_path, monkeypatch):
     run_sdp_validation.main()
     report_path = tmp_path / "results" / "sdp_validation_report.json"
     report = json.loads(report_path.read_text(encoding="utf-8"))
-    assert report["status"] == "infrastructure_validation_only"
-    assert report["ideal_quantum_switch_benchmark"]["implemented"] is False
-    assert "message" in report["ideal_quantum_switch_benchmark"]
+    assert report["status"] == "sdp_validation_with_switch_benchmark"
     assert set(report["targets"]) == {
         "white_noise",
         "fixed_order_A_before_B",
@@ -299,3 +297,16 @@ def test_run_sdp_validation_writes_report(tmp_path, monkeypatch):
     for diag in report["targets"].values():
         assert diag["status"] in {"optimal", "optimal_inaccurate"}
         assert diag["objective_value"] < 1e-5
+
+    benchmark = report["ideal_quantum_switch_benchmark"]
+    assert benchmark["implemented"] is True
+    assert benchmark["benchmark_passed"] is True
+    assert benchmark["submission_blocker"] is False
+    assert benchmark["reference_generalized_robustness"] == pytest.approx(0.5454)
+    assert benchmark["computed_generalized_robustness"] == pytest.approx(0.5454, abs=2e-3)
+    assert abs(benchmark["dephased_switch_diagnostics"]["objective_value"]) < 1e-6
+    gen_diag = benchmark["generalized_robustness_diagnostics"]
+    assert gen_diag["witness_certificate_gap"] < 1e-6
+    assert gen_diag["solver_version"]
+    # Strict JSON: NaN fields must have been converted to null.
+    assert "NaN" not in report_path.read_text(encoding="utf-8")

@@ -66,7 +66,7 @@ def test_diagnostics_serialization_round_trip():
     diag = solve_cs_robustness(white_noise_process(DIMS), dims=DIMS)
     payload = diag.to_dict()
     assert isinstance(payload, dict)
-    expected_keys = {
+    required_keys = {
         "status",
         "objective_value",
         "t_white",
@@ -75,10 +75,21 @@ def test_diagnostics_serialization_round_trip():
         "solver",
         "equality_residual_fro",
         "note",
+        # extended reproducibility diagnostics
+        "solver_version",
+        "cvxpy_version",
+        "num_iters",
+        "solve_time_s",
+        "min_eig_W_AB",
+        "min_eig_W_BA",
+        "witness_value",
+        "witness_certificate_gap",
+        "subspace_residual_fro",
     }
-    assert set(payload.keys()) == expected_keys
+    assert required_keys <= set(payload.keys())
     rebuilt = SdpDiagnostics(**payload)
     assert rebuilt.status == diag.status
+    assert diag.cvxpy_version  # populated on successful solves
 
 
 def test_backward_compatible_scaffold_alias():

@@ -78,9 +78,15 @@ def test_mixture_rejects_q_outside_unit_interval():
         causally_separable_mixture(DIMS, q=1.01)
 
 
-def test_ideal_quantum_switch_raises_not_implemented():
-    with pytest.raises(NotImplementedError):
-        ideal_quantum_switch_process(DIMS)
+def test_ideal_quantum_switch_lives_outside_bipartite_scaffold():
+    """The full switch is a 64×64 with-future process, distinct per target state."""
+    W0 = ideal_quantum_switch_process()
+    W1 = ideal_quantum_switch_process(np.array([1.0, 1.0]) / np.sqrt(2.0))
+    assert W0.shape == W1.shape == (64, 64)
+    assert not np.allclose(W0, W1)
+    for W in (W0, W1):
+        assert np.isclose(np.trace(W), 4.0)
+        assert is_psd(W)
 
 
 def test_white_noise_validation_process_alias():
