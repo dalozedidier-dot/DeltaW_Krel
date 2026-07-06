@@ -171,5 +171,23 @@ def dephased_switch_process(psi: np.ndarray | None = None) -> np.ndarray:
     return 0.5 * (switch_branch_process("AB", psi) + switch_branch_process("BA", psi))
 
 
+def partially_dephased_switch_process(lambda_dephasing: float, psi: np.ndarray | None = None) -> np.ndarray:
+    """Switch with partial dephasing of the control qubit.
+
+    ``lambda_dephasing = 0`` gives the ideal coherent switch.  ``lambda_dephasing
+    = 1`` gives the fully control-dephased, causally separable branch mixture.
+    Intermediate values damp only the off-diagonal order-coherence block:
+
+        W(lambda) = (1 - lambda) W_switch + lambda W_dephased.
+
+    This one-parameter family is the natural falsification curve between the
+    published ideal-switch benchmark and the classical fixed-order mixture.
+    """
+    lam = float(lambda_dephasing)
+    if not (0.0 <= lam <= 1.0):
+        raise ValueError("lambda_dephasing must lie in [0, 1].")
+    return (1.0 - lam) * ideal_quantum_switch_process(psi) + lam * dephased_switch_process(psi)
+
+
 def white_noise_validation_process(dims: ProcessDims = ProcessDims()) -> np.ndarray:
     return white_noise_process(dims)

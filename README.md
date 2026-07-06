@@ -49,6 +49,9 @@ control with robustness near zero.
   switch computed by `solve_switch_generalized_robustness` is approximately
   `0.545351` with SCS, matching the published `0.5454`; the control-dephased
   switch is causally separable within tolerance.
+- **Partial-dephasing falsification scan available**: `scripts/run_switch_dephasing_scan.py`
+  evaluates `W(lambda) = (1 - lambda) W_switch + lambda W_dephased` and exports
+  the generalized-robustness curve with dual witness gaps and residuals.
 - Full SDP diagnostics exported by `scripts/run_sdp_validation.py`: solver and
   package versions, iterations, solve time, residuals, minimal eigenvalues, and
   dual witness certificate.
@@ -130,6 +133,12 @@ Run the SDP validation after installing `cvxpy`:
 
 ```bash
 python scripts/run_sdp_validation.py
+```
+
+Run the partial control-dephasing scan for the switch:
+
+```bash
+python scripts/run_switch_dephasing_scan.py --lambdas 0,0.25,0.5,0.65,0.7,0.75,1
 ```
 
 Full reproducibility from a clean clone:
