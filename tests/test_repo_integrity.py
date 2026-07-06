@@ -95,6 +95,10 @@ def test_github_pages_site_is_present():
     assert "data/full_tomography/full_tomography_report.json" in html
     assert "data/full_tomography/full_tomography_power.csv" in html
     assert "data/full_tomography/full_tomography_power.png" in html
+    assert "Certified witness layer" in html
+    assert "data/certified_witness/certified_witness_landscape.json" in html
+    assert "data/certified_witness/certified_witness_landscape.csv" in html
+    assert "data/certified_witness/certified_witness_landscape.png" in html
     assert "Ultimate roadmap" in html
     assert "docs/ULTIMATE_VISION_ROADMAP.md" in html
     assert "Control dephasing" in html
@@ -111,7 +115,9 @@ def test_github_pages_and_ci_reference_realistic_tomography_bridge():
 
     assert "realistic_tomography_pipeline.py" in html
     assert "full_realistic_tomography.py" in html
+    assert "run_certified_witness_landscape.py" in html
     assert "fetch(\"data/switch_robustness_landscape.json\")" in app
+    assert "fetch(\"data/certified_witness/certified_witness_landscape.json\")" in app
     assert "fetch(\"data/full_tomography/full_tomography_report.json\")" in app
     for text in (ci, extended, makefile):
         assert "realistic_tomography_pipeline.py" in text
@@ -144,6 +150,35 @@ def test_github_pages_landscape_data_is_complete_and_strict():
     with csv_path.open(newline="", encoding="utf-8") as handle:
         csv_rows = list(csv.DictReader(handle))
     assert len(csv_rows) == len(rows)
+
+
+def test_github_pages_certified_witness_data_is_complete_and_strict():
+    json_path = REPO_ROOT / "site" / "data" / "certified_witness" / "certified_witness_landscape.json"
+    csv_path = REPO_ROOT / "site" / "data" / "certified_witness" / "certified_witness_landscape.csv"
+    png_path = REPO_ROOT / "site" / "data" / "certified_witness" / "certified_witness_landscape.png"
+    assert json_path.exists(), "published certified witness JSON missing"
+    assert csv_path.exists(), "published certified witness CSV missing"
+    assert png_path.exists(), "published certified witness PNG missing"
+    assert png_path.stat().st_size > 10_000
+    text = json_path.read_text(encoding="utf-8")
+    assert "NaN" not in text
+    report = json.loads(text)
+    families = report["families"]
+    assert set(families) == {"control_dephasing", "white_visibility", "order_bias"}
+    assert report["reference_witness"]["R_g"] == pytest.approx(0.545351, abs=5e-4)
+    assert families["control_dephasing"]["is_affine"] is True
+    assert families["white_visibility"]["is_affine"] is True
+    assert families["order_bias"]["is_affine"] is False
+    for family in families.values():
+        assert family["tight_at_reference"] is True
+        assert family["lower_bound_holds_on_grid"] is True
+        lo, hi = family["certified_nonseparable_region"]
+        assert 0.0 <= lo < hi <= 1.0
+        assert family["verification_grid"]
+
+    with csv_path.open(newline="", encoding="utf-8") as handle:
+        csv_rows = list(csv.DictReader(handle))
+    assert len(csv_rows) == sum(len(family["verification_grid"]) for family in families.values())
 
 
 def test_github_pages_full_tomography_data_is_complete_and_strict():

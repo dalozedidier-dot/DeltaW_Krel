@@ -1,4 +1,4 @@
-.PHONY: install test coverage smoke micro realistic fulltomography montecarlo sdp prereg report manifest manifest-update reproduce reproduce-full reproduce-core clean
+.PHONY: install test coverage smoke micro realistic fulltomography montecarlo sdp certified prereg report manifest manifest-update reproduce reproduce-full reproduce-core clean
 
 SMOKE_MICRO_DIR ?= results/micro_smoke
 SMOKE_REALISTIC_DIR ?= results/realistic_tomography_smoke
@@ -30,6 +30,10 @@ montecarlo:
 
 sdp:
 	python scripts/run_sdp_validation.py
+
+certified:
+	python scripts/run_certified_witness_analysis.py
+	python scripts/run_certified_witness_landscape.py
 
 prereg:
 	python scripts/freeze_preregistration.py

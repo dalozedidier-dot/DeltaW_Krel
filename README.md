@@ -72,7 +72,9 @@ control with robustness near zero.
   `scripts/run_certified_witness_analysis.py` extract the dual-optimal witness
   `S*` at the ideal switch, certify the affine lower-bound curve along control
   dephasing, and instantiate the preregistered `K_rel` projection against
-  calibrated nuisance directions. See
+  calibrated nuisance directions. `scripts/run_certified_witness_landscape.py`
+  applies the same fixed witness across control dephasing, white visibility,
+  and order bias. See
   `docs/CERTIFIED_WITNESS_RESULT.md` for the E3+ result summary.
 - Full SDP diagnostics exported by `scripts/run_sdp_validation.py`: solver and
   package versions, iterations, solve time, residuals, minimal eigenvalues, and
@@ -122,6 +124,8 @@ scripts/realistic_tomography_pipeline.py
 scripts/full_tomography_simulation.py
 scripts/full_realistic_tomography.py
 scripts/run_sdp_validation.py
+scripts/run_certified_witness_analysis.py
+scripts/run_certified_witness_landscape.py
 notebooks/projectors_definitions.ipynb
 notebooks/validation_switch_ideal.ipynb
 config/config_preregistration.json
@@ -193,6 +197,7 @@ Run the certified single-direction witness analysis:
 
 ```bash
 python scripts/run_certified_witness_analysis.py
+python scripts/run_certified_witness_landscape.py
 pytest tests/test_certified_witness.py -q
 ```
 

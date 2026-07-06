@@ -60,9 +60,35 @@ preregistered refutation rule on real or archival data, per
 `docs/CLAIM_EVIDENCE_MATRIX.md` and the acceptance criteria in
 `docs/ULTIMATE_VISION_ROADMAP.md`.
 
+## Multi-family landscape
+
+The **same** fixed witness `S*`, extracted once at the ideal switch, certifies
+all three E3 perturbation families. This is the strength of preregistration: one
+direction, chosen before data, works across the landscape.
+
+| Family | Type | Certified region | Single scalar recovers |
+| --- | --- | --- | --- |
+| `control_dephasing` `W(lambda)` | affine (ref `lambda=0`) | `lambda in (0, 0.706)` | `lambda` exactly (one-sided) |
+| `white_visibility` `W(v)` | affine (ref `v=1`) | `v in (0.507, 1)` | `v` exactly (one-sided) |
+| `order_bias` `W(q)` | nonlinear (ref `q=1/2`) | `q in (0.024, 0.976)` | order-coherence magnitude only |
+
+Affinity residual is near machine precision for the two convex-mixture families
+and large for the pure-state order-bias family; the map is genuinely nonlinear
+there. The lower bound `Tr(S* W) <= R_g(W)` holds on every verification grid for
+all three families, because `S*` is dual-feasible regardless of `W`.
+
+The honest structural finding: for the amplitude-biased order family the
+witness is symmetric about `q=1/2`, so one scalar `<S*>` measures how balanced
+the order superposition is but not which order dominates. Resolving direction
+requires a second, order-asymmetric witness.
+
+Artifacts: `scripts/run_certified_witness_landscape.py`,
+`site/data/certified_witness/certified_witness_landscape.json`, `.csv`, `.png`.
+
 ## Reproduce
 
 ```bash
 python scripts/run_certified_witness_analysis.py
+python scripts/run_certified_witness_landscape.py
 pytest tests/test_certified_witness.py -q
 ```

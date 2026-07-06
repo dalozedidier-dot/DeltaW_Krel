@@ -1,0 +1,186 @@
+{
+  "title": "One preregistered witness certifies three switch families",
+  "reference_witness": {
+    "R_g": 0.5453510583483718,
+    "published_reference": 0.5454,
+    "benchmark_error": 4.8941651628164884e-05,
+    "tightness_gap": 5.3677839950694306e-11
+  },
+  "families": {
+    "control_dephasing": {
+      "is_affine": true,
+      "affinity_residual": 3.3306690738754696e-16,
+      "reference_param": 0.0,
+      "reference_value": 0.5453510584020497,
+      "tight_at_reference": true,
+      "slope": -0.7719559624926189,
+      "certified_crossings": [
+        0.7064535866024403
+      ],
+      "certified_nonseparable_region": [
+        0.0,
+        0.7064535866024403
+      ],
+      "single_scalar_injective": true,
+      "lower_bound_holds_on_grid": true,
+      "note": "affine family: single-scalar inversion is exact and the threshold is one-sided.",
+      "verification_grid": [
+        {
+          "param": 0.0,
+          "witness_S": 0.5453510584020497,
+          "R_g_sdp": 0.5453510589245683,
+          "gap": 5.225185839563551e-10
+        },
+        {
+          "param": 0.2,
+          "witness_S": 0.39095986590352577,
+          "R_g_sdp": 0.3911171787756692,
+          "gap": 0.0001573128721434336
+        },
+        {
+          "param": 0.4,
+          "witness_S": 0.236568673405002,
+          "R_g_sdp": 0.23796739353303203,
+          "gap": 0.0013987201280300232
+        },
+        {
+          "param": 0.6,
+          "witness_S": 0.08217748090647815,
+          "R_g_sdp": 0.10893301387607489,
+          "gap": 0.026755532969596735
+        },
+        {
+          "param": 0.8,
+          "witness_S": -0.07221371159204576,
+          "R_g_sdp": 0.02838723323452362,
+          "gap": 0.10060094482656938
+        },
+        {
+          "param": 1.0,
+          "witness_S": -0.22660490409056955,
+          "R_g_sdp": 3.3269841188226794e-10,
+          "gap": 0.22660490442326797
+        }
+      ]
+    },
+    "white_visibility": {
+      "is_affine": true,
+      "affinity_residual": 3.3306690738754696e-16,
+      "reference_param": 1.0,
+      "reference_value": 0.5453510584020497,
+      "tight_at_reference": true,
+      "slope": 1.105370748952039,
+      "certified_crossings": [
+        0.5066351638858938
+      ],
+      "certified_nonseparable_region": [
+        0.5066351638858938,
+        1.0
+      ],
+      "single_scalar_injective": true,
+      "lower_bound_holds_on_grid": true,
+      "note": "affine family: single-scalar inversion is exact and the threshold is one-sided.",
+      "verification_grid": [
+        {
+          "param": 1.0,
+          "witness_S": 0.5453510584020497,
+          "R_g_sdp": 0.5453510589245683,
+          "gap": 5.225185839563551e-10
+        },
+        {
+          "param": 0.8,
+          "witness_S": 0.32427690861164177,
+          "R_g_sdp": 0.343194727875091,
+          "gap": 0.01891781926344921
+        },
+        {
+          "param": 0.6,
+          "witness_S": 0.10320275882123388,
+          "R_g_sdp": 0.15018169914501206,
+          "gap": 0.04697894032377818
+        },
+        {
+          "param": 0.4,
+          "witness_S": -0.11787139096917396,
+          "R_g_sdp": 0.024481281669055215,
+          "gap": 0.14235267263822918
+        },
+        {
+          "param": 0.2,
+          "witness_S": -0.33894554075958183,
+          "R_g_sdp": -7.022786182731567e-10,
+          "gap": 0.3389455400573032
+        },
+        {
+          "param": 0.0,
+          "witness_S": -0.5600196905499897,
+          "R_g_sdp": -1.305428227731902e-13,
+          "gap": 0.5600196905498591
+        }
+      ]
+    },
+    "order_bias": {
+      "is_affine": false,
+      "affinity_residual": 0.5890334432623445,
+      "reference_param": 0.5,
+      "reference_value": 0.5453510584020499,
+      "tight_at_reference": true,
+      "slope": null,
+      "certified_crossings": [
+        0.02350252261251823,
+        0.9764974773790621
+      ],
+      "certified_nonseparable_region": [
+        0.02350252261251823,
+        0.9764974773790621
+      ],
+      "single_scalar_injective": false,
+      "lower_bound_holds_on_grid": true,
+      "note": "nonlinear/symmetric family: the witness certifies a two-sided interval and resolves order-coherence magnitude, not its direction (one extra asymmetric witness is needed to resolve direction).",
+      "verification_grid": [
+        {
+          "param": 0.0,
+          "witness_S": -0.2266049040479774,
+          "R_g_sdp": 1.8236617683797026e-08,
+          "gap": 0.22660492228459508
+        },
+        {
+          "param": 0.2,
+          "witness_S": 0.39095986592908116,
+          "R_g_sdp": 0.39351463794997854,
+          "gap": 0.002554772020897378
+        },
+        {
+          "param": 0.4,
+          "witness_S": 0.5297543807203435,
+          "R_g_sdp": 0.5298100631923282,
+          "gap": 5.56824719846194e-05
+        },
+        {
+          "param": 0.5,
+          "witness_S": 0.5453510584020499,
+          "R_g_sdp": 0.5453510589245848,
+          "gap": 5.225349042348171e-10
+        },
+        {
+          "param": 0.6,
+          "witness_S": 0.5297543807033067,
+          "R_g_sdp": 0.5298100583722889,
+          "gap": 5.5677668982179185e-05
+        },
+        {
+          "param": 0.8,
+          "witness_S": 0.3909598658779706,
+          "R_g_sdp": 0.39351464568018435,
+          "gap": 0.002554779802213747
+        },
+        {
+          "param": 1.0,
+          "witness_S": -0.2266049041331617,
+          "R_g_sdp": 1.8227026312608557e-08,
+          "gap": 0.226604922360188
+        }
+      ]
+    }
+  }
+}

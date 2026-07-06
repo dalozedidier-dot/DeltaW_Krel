@@ -9,13 +9,16 @@ cp = pytest.importorskip("cvxpy")
 from deltawkrel.certified_witness import (
     admissible_direction,
     affine_witness_curve,
+    certify_family,
     switch_generalized_robustness_witness,
 )
 from deltawkrel.switch_models import (
+    biased_coherent_switch_process,
     dephased_switch_process,
     ideal_quantum_switch_process,
     partially_dephased_switch_process,
     switch_white_noise_process,
+    white_visibility_switch_process,
 )
 
 
@@ -59,3 +62,34 @@ def test_krel_is_immune_to_calibrated_noise(certificate):
         assert abs(leak) < 1e-9          # first-order blind to nuisance directions
     assert adm.signal_response != 0.0    # still detects the falsification axis
     assert 0.0 < adm.retained_fraction <= 1.0
+
+
+def test_white_visibility_family_is_affine_and_certified(certificate):
+    fc = certify_family(
+        certificate.S,
+        white_visibility_switch_process,
+        np.linspace(0, 1, 21),
+        reference_param=1.0,
+        R_g_ref=certificate.R_g,
+    )
+    assert fc.is_affine
+    assert fc.affinity_residual < 1e-9
+    assert abs(fc.reference_value - certificate.R_g) < 1e-6
+    lo, hi = fc.certified_region
+    assert hi == 1.0 and 0.0 < lo < 1.0
+
+
+def test_order_bias_family_is_nonlinear_two_sided(certificate):
+    fc = certify_family(
+        certificate.S,
+        biased_coherent_switch_process,
+        np.linspace(0, 1, 21),
+        reference_param=0.5,
+        R_g_ref=certificate.R_g,
+    )
+    assert not fc.is_affine
+    assert abs(fc.reference_value - certificate.R_g) < 1e-6
+    lo, hi = fc.certified_region
+    assert lo > 0.0 and hi < 1.0
+    assert abs((lo + hi) - 1.0) < 0.05
+    assert not fc.single_scalar_injective

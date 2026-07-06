@@ -6,6 +6,12 @@
   const fullGridNode = document.getElementById("full-grid-count");
   const fullApplicabilityNode = document.getElementById("full-applicability-count");
   const fullMaxFprNode = document.getElementById("full-max-fpr");
+  const certStatusNode = document.getElementById("cert-data-status");
+  const certRowsNode = document.getElementById("cert-data-rows");
+  const certRgNode = document.getElementById("cert-rg");
+  const certFamilyCountNode = document.getElementById("cert-family-count");
+  const certAffineCountNode = document.getElementById("cert-affine-count");
+  const certBoundCountNode = document.getElementById("cert-bound-count");
 
   function formatNumber(value, digits) {
     const number = Number(value);
@@ -30,6 +36,13 @@
       .join(" ");
   }
 
+  function renderRegion(region) {
+    if (!Array.isArray(region) || region.length !== 2) {
+      return "not reported";
+    }
+    return `[${Number(region[0]).toFixed(3)}, ${Number(region[1]).toFixed(3)}]`;
+  }
+
   function renderLandscape(data) {
     const rows = data.rows || [];
     const maxGap = Math.max(...rows.map((row) => Math.abs(Number(row.witness_certificate_gap))));
@@ -47,6 +60,50 @@
           </tr>
         `
       )
+      .join("");
+  }
+
+  function renderCertifiedWitness(data) {
+    if (!certStatusNode || !certRowsNode) {
+      return;
+    }
+    const families = data.families || {};
+    const entries = Object.entries(families);
+    if (entries.length === 0) {
+      return;
+    }
+
+    const affineCount = entries.filter(([, family]) => family.is_affine).length;
+    const boundCount = entries.filter(([, family]) => family.lower_bound_holds_on_grid).length;
+    const reference = Number(data.reference_witness && data.reference_witness.R_g);
+
+    if (certRgNode) {
+      certRgNode.textContent = formatNumber(reference, 6);
+    }
+    if (certFamilyCountNode) {
+      certFamilyCountNode.textContent = String(entries.length);
+    }
+    if (certAffineCountNode) {
+      certAffineCountNode.textContent = `${affineCount}/${entries.length}`;
+    }
+    if (certBoundCountNode) {
+      certBoundCountNode.textContent = `${boundCount}/${entries.length}`;
+    }
+
+    certStatusNode.textContent =
+      `${entries.length} certified families loaded; ${affineCount} affine ` +
+      `single-scalar families and ${boundCount} lower-bound verification grids passed.`;
+
+    certRowsNode.innerHTML = entries
+      .map(([name, family]) => `
+        <tr>
+          <td>${labelFamily(name)}</td>
+          <td>${family.is_affine ? "affine / one-sided" : "nonlinear / two-sided"}</td>
+          <td>${renderRegion(family.certified_nonseparable_region)}</td>
+          <td>${formatNumber(family.reference_value, 6)}</td>
+          <td>${family.lower_bound_holds_on_grid ? "passed" : "review"}</td>
+        </tr>
+      `)
       .join("");
   }
 
@@ -112,6 +169,20 @@
     .then(renderLandscape)
     .catch((error) => {
       statusNode.textContent = `Landscape data could not be loaded: ${error.message}.`;
+    });
+
+  fetch("data/certified_witness/certified_witness_landscape.json")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(renderCertifiedWitness)
+    .catch((error) => {
+      if (certStatusNode) {
+        certStatusNode.textContent = `Certified witness data could not be loaded: ${error.message}.`;
+      }
     });
 
   fetch("data/full_tomography/full_tomography_report.json")

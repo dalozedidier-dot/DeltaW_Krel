@@ -16,6 +16,7 @@
       <a class="brand" href="#top" aria-label="DeltaW/K_rel results home">DeltaW/K_rel</a>
       <nav aria-label="Page sections">
         <a href="#benchmark">Benchmark</a>
+        <a href="#certified">Certified</a>
         <a href="#advanced">Advanced</a>
         <a href="#landscape">Landscape</a>
         <a href="#evidence">Evidence</a>
@@ -99,6 +100,92 @@
             <tbody id="landscape-data-rows">
               <tr>
                 <td colspan="5">Data will load from site/data/switch_robustness_landscape.json.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="certified" class="band light">
+        <div class="section-title">
+          <p class="eyebrow">Certified witness layer</p>
+          <h2>One preregistered scalar across three switch families</h2>
+          <p>
+            The dual-optimal witness S* is extracted once at the ideal switch
+            and reused as a fixed certified lower bound across dephasing,
+            white-noise visibility, and coherent order bias. This is E3+:
+            mathematical certification on the physical switch, not an
+            experimental claim.
+          </p>
+        </div>
+
+        <div class="metrics-grid validation-metrics">
+          <article class="metric">
+            <span>Reference R_g</span>
+            <strong id="cert-rg">0.545351</strong>
+            <p>Dual witness tight at the ideal switch benchmark.</p>
+          </article>
+          <article class="metric">
+            <span>Families</span>
+            <strong id="cert-family-count">3</strong>
+            <p>Control dephasing, white visibility, and order bias.</p>
+          </article>
+          <article class="metric">
+            <span>Affine families</span>
+            <strong id="cert-affine-count">2/3</strong>
+            <p>Single-scalar inversion is exact for convex mixtures.</p>
+          </article>
+          <article class="metric">
+            <span>Lower-bound checks</span>
+            <strong id="cert-bound-count">3/3</strong>
+            <p>Verified against full SDP grids in the installed artifact.</p>
+          </article>
+        </div>
+
+        <div class="validation-layout">
+          <article class="validation-copy">
+            <h3>Certified nonseparable regions</h3>
+            <p id="cert-data-status">
+              Loading the certified witness landscape data served with this
+              GitHub Pages site.
+            </p>
+            <p>
+              The order-bias family is intentionally reported as nonlinear and
+              two-sided: the same scalar measures order-coherence magnitude but
+              does not identify which order dominates.
+            </p>
+            <div class="data-links" aria-label="Download certified witness data">
+              <a href="data/certified_witness/certified_witness_landscape.json">JSON</a>
+              <a href="data/certified_witness/certified_witness_landscape.csv">CSV</a>
+              <a href="data/certified_witness/certified_witness_landscape.png">PNG</a>
+            </div>
+          </article>
+          <figure class="power-figure">
+            <img
+              src="data/certified_witness/certified_witness_landscape.png"
+              alt="Certified fixed-witness landscape across three quantum-switch families"
+            >
+            <figcaption>
+              Same fixed S* witness: certified bound curves and full-SDP
+              verification points.
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="table-wrap" aria-label="Certified witness family table">
+          <table class="wide-table">
+            <thead>
+              <tr>
+                <th>Family</th>
+                <th>Type</th>
+                <th>Certified region</th>
+                <th>Reference value</th>
+                <th>Bound checks</th>
+              </tr>
+            </thead>
+            <tbody id="cert-data-rows">
+              <tr>
+                <td colspan="5">Data will load from site/data/certified_witness/certified_witness_landscape.json.</td>
               </tr>
             </tbody>
           </table>
