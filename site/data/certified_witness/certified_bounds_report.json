@@ -1,0 +1,51 @@
+{
+  "status": "certified_bounds",
+  "title": "Certified interval for ideal-switch generalized robustness",
+  "R_g_interval": {
+    "lower": 0.5453510588601193,
+    "upper": 0.5453510593921896,
+    "width": 5.320703877487176e-10,
+    "published_reference": 0.5454,
+    "contains_published_reference": true
+  },
+  "solver_consensus_spread": 0.0,
+  "solver_table": [
+    {
+      "solver": "SCS",
+      "available": true,
+      "status": "optimal",
+      "R_g_lower": 0.5453510593921896,
+      "R_g_upper": 0.5453510588601193,
+      "interval_width": 5.320703877487176e-10,
+      "equality_residual": 2.118835564267484e-11,
+      "dual_subspace_residual": 2.618935453391217e-11,
+      "min_eig_primal": -9.007957490365763e-09,
+      "note": "verified interval [dual LB, primal UB]"
+    },
+    {
+      "solver": "CLARABEL",
+      "available": true,
+      "status": "error",
+      "R_g_lower": null,
+      "R_g_upper": null,
+      "interval_width": null,
+      "equality_residual": null,
+      "dual_subspace_residual": null,
+      "min_eig_primal": null,
+      "note": "solver raised: SolverError: Solver 'CLARABEL' failed. Try another solver, or solve with verbose=True for more information."
+    },
+    {
+      "solver": "MOSEK",
+      "available": false,
+      "status": "unavailable",
+      "R_g_lower": null,
+      "R_g_upper": null,
+      "interval_width": null,
+      "equality_residual": null,
+      "dual_subspace_residual": null,
+      "min_eig_primal": null,
+      "note": "solver not installed"
+    }
+  ],
+  "interpretation": "This is a numerical certificate bracket, not only an 'optimal' flag: the dual value lower-bounds R_g, the primal value upper-bounds R_g, and the displayed width is the remaining primal-dual uncertainty."
+}

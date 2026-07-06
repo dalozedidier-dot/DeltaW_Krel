@@ -1,96 +1,125 @@
-# Certificate lemmas (task A2)
+# Certificate Lemmas
 
-The two facts verified numerically to machine precision in
-`docs/CERTIFIED_WITNESS_RESULT.md` are short theorems, not observations. Stated
-at their natural generality they promote the result from "empirical scan" to
-"certificate". Throughout, `H` is the space of Hermitian operators on a
-finite-dimensional Hilbert space, with the real Hilbert-Schmidt inner product
-`<A, B> = Tr(A B)` (operators are Hermitian, so this is real).
+These two facts are the mathematical core behind the certified witness layer in
+`docs/CERTIFIED_WITNESS_RESULT.md`. They turn the numerical SDP output into a
+certificate: one fixed functional is extracted at the ideal switch, then reused
+as a preregistered lower bound on nearby process families.
 
-## Lemma 1 (affinity and single-scalar identifiability)
+Throughout, `H` is the real vector space of Hermitian operators on a
+finite-dimensional Hilbert space, with Hilbert-Schmidt inner product
+`<A, B> = Tr(A B)`.
 
-Let `W : [0,1] -> H` be an **affine family**, `W(l) = W0 + l*D` with
-`D = W(1) - W(0)`. For any fixed `S in H` the witness signal
+## Lemma 1: Affinity and Single-Scalar Identifiability
 
-    g_S(l) := <S, W(l)> = <S, W0> + l * <S, D>
+Let `W : [0,1] -> H` be an affine family,
 
-is affine in `l`. If `<S, D> != 0` the map `l -> g_S(l)` is a bijection onto its
-range and
+```text
+W(lambda) = W0 + lambda * D,    D = W(1) - W(0).
+```
 
-    l = ( g_S(l) - <S, W0> ) / <S, D> ,
+For any fixed `S in H`, the witness signal
 
-so a **single real number** `g_S` determines `l`.
+```text
+g_S(lambda) = <S, W(lambda)> = <S, W0> + lambda * <S, D>
+```
 
-*Proof.* `<S, .>` is linear and `l -> W(l)` is affine, so their composition is
-affine; a non-degenerate affine map of one real variable is invertible. ∎
+is affine in `lambda`. If `<S, D> != 0`, the map `lambda -> g_S(lambda)` is
+invertible on its range:
 
-*Remark.* The estimand is one scalar, independent of `dim H`. For the switch,
-`dim H = 64` and the process has `dim^2 = 4096` real parameters, yet `l` is fixed
-by one functional. This is the tomographic-collapse claim, and it is exact
-(inversion error `~1e-16` in `scripts/run_certified_witness_analysis.py`).
+```text
+lambda = (g_S(lambda) - <S, W0>) / <S, D>.
+```
 
-## Lemma 2 (supporting hyperplane / certified lower bound)
+So one real number `g_S` identifies the one-dimensional mixture parameter.
 
-Let the robustness be written in gauge (primal) form
+Proof: `<S, .>` is linear and `lambda -> W(lambda)` is affine, so their
+composition is affine. A non-degenerate affine map of one real variable is
+invertible. QED.
 
-    R(W) = min { Tr(X) / d_O : X in V,  W + X in C },
+For the switch implementation, the process matrix has `D = 64` and therefore
+`D^2 = 4096` real matrix entries, but the preregistered dephasing parameter is
+identified by one functional along an affine family. The finite-count module
+`src/deltawkrel/finite_count.py` quantifies the resulting one-parameter
+shot-noise scaling.
 
-with `C` the closed convex cone of causally separable processes and `V` the
-valid-process cone. Assume feasibility and a Slater point, so strong duality
-holds. Then the Lagrange dual has the form
+## Lemma 2: Supporting Hyperplane and Certified Lower Bound
 
-    R(W) = max { <S, W> : S in D },
+Write generalized robustness in gauge form:
 
-where the **dual-feasible set `D` depends only on `C`, `V`, `d_O`** — not on `W`
-(the process `W` enters only the linear dual objective). Let `S* in D` attain the
-maximum at a reference `W_ref`, so `<S*, W_ref> = R(W_ref)`. Then
+```text
+R(W) = min { Tr(X) / d_O : X in V, W + X in C },
+```
 
-    <S*, W>  <=  R(W)   for every W in H,   with equality at W = W_ref.
+where `C` is the closed convex cone of causally separable processes and `V` is
+the valid-process cone. Under feasibility and a Slater point, strong duality
+gives the dual form
 
-Hence the affine functional `l_S*(W) = <S*, W>` is a **supporting hyperplane** of
-the convex function `R` at `W_ref` (equivalently `S* in ∂R(W_ref)`).
+```text
+R(W) = max { <S, W> : S in D },
+```
 
-*Proof.* `S*` is one feasible point of the dual maximisation, whose feasible set
-does not depend on `W`; therefore for any `W`,
-`<S*, W> <= max_{S in D} <S, W> = R(W)`. Equality at `W_ref` is strong duality.
-`R` is a pointwise maximum of the linear functionals `<S, .>` over `S in D`, hence
-convex; a linear functional lying below a convex function and touching it at a
-point is a supporting hyperplane there. ∎
+where the dual-feasible set `D` depends on the cones and normalization, not on
+the specific process `W`. If `S* in D` attains the maximum at a reference
+process `W_ref`, then
 
-*Key point.* The lower bound `<S*, W> <= R(W)` needs **no affinity of the family**
-— it holds for every `W`. Affinity (Lemma 1) is an extra property of *convex-
-mixture* families. This is exactly the numerical pattern in
-`run_certified_witness_landscape.py`: the lower bound holds for all three
-families, while affinity holds only for `control_dephasing` and
-`white_visibility` and fails (residual `~0.59`) for the pure-state `order_bias`
-family.
+```text
+<S*, W> <= R(W)          for every W,
+<S*, W_ref> = R(W_ref).
+```
 
-## Corollary (certified nonseparability threshold)
+Thus `W -> <S*, W>` is a supporting affine functional of the convex robustness
+function at `W_ref`.
 
-Take an affine family with `W(0) = W_ref`. By Lemma 1,
-`l_S*(l) = R(W_ref) + l * <S*, D>` is affine, and by Lemma 2 it lower-bounds
-`R(W(l))` with equality at `l = 0`. If `R(W_ref) > 0` and `<S*, D> < 0`, its zero
+Proof: `S*` is dual-feasible for every process because the dual feasible set is
+process-independent. Therefore `<S*, W>` is bounded above by the dual optimum,
+which equals `R(W)` by strong duality. Equality at `W_ref` is the definition of
+optimality at the reference. QED.
 
-    l* = - R(W_ref) / <S*, D>
+This lower-bound property does not require the process family to be affine. The
+affinity claim belongs to Lemma 1; the conic lower bound belongs to Lemma 2.
+This distinction is visible in `scripts/run_certified_witness_landscape.py`:
+control dephasing and white visibility are affine single-scalar families, while
+coherent order bias is nonlinear and two-sided, yet the fixed witness remains a
+valid certified lower bound on the verification grid.
 
-satisfies `R(W(l)) >= l_S*(l) > 0` for all `l < l*`. Since `R(W) = 0` iff
-`W in C` for these robustness measures, every `W(l)` with `l < l*` is **certified
-causally nonseparable by the single fixed functional `S*`**, with no per-point
-SDP and no full tomography. Furthermore `l* <= l_c`, where `l_c` is the true
-boundary `R(W(l_c)) = 0`; the gap `l_c - l*` equals the curvature deficit of the
-convex curve `R(W(l))` relative to its supporting line at `0`, and vanishes iff
-`R` is affine along the family.
+## Corollary: Certified Nonseparability Threshold
 
-For `control_dephasing`: `R(W_ref) = R_g = 0.545351`, `<S*, D> = -0.771956`,
-giving `l* = 0.7065` while `l_c = 1` — the gap `1 - 0.7065` is the price of a
-single preregistered direction versus re-optimising the witness at each point.
+For an affine family with `W(0) = W_ref`, Lemma 1 gives
 
-## What this establishes
+```text
+<S*, W(lambda)> = R(W_ref) + lambda * <S*, D>.
+```
 
-Lemma 1 + Lemma 2 + the corollary are the certificate: a **fixed, preregistered
-affine functional** reproduces the robustness at the reference, lower-bounds it
-everywhere (supporting hyperplane of a convex robustness), and yields a certified
-threshold — all independent of Hilbert-space dimension. The numerics
-(`affinity_residual ~2e-16`, `tightness_gap ~5e-11`, lower bound verified on the
-SDP grid, `l* = 0.7065`) are confirmations of these statements, not the
-statements themselves.
+By Lemma 2 this affine quantity lower-bounds `R(W(lambda))` everywhere. If
+`R(W_ref) > 0` and `<S*, D> < 0`, then
+
+```text
+lambda_star = -R(W_ref) / <S*, D>
+```
+
+is a certified threshold: every `lambda < lambda_star` has
+`R(W(lambda)) > 0`, hence is causally nonseparable for this robustness witness.
+
+For the implemented control-dephasing family:
+
+```text
+R(W_ref) = 0.545351
+<S*, D>  = -0.771956
+lambda_star ~= 0.7065
+```
+
+The true reoptimized SDP boundary for total dephasing is at `lambda = 1`. The
+gap is the price of using one fixed preregistered functional instead of
+retuning the witness at each point.
+
+## Executable Checks
+
+- A2 proofs: this document.
+- A4 finite-count statistics: `src/deltawkrel/finite_count.py`,
+  `scripts/run_finite_count_analysis.py`, and `tests/test_finite_count.py`.
+- A5 certified interval: `src/deltawkrel/certified_bounds.py` and
+  `scripts/run_certified_bounds.py`.
+
+The current A5 report brackets the ideal-switch robustness as
+`R_g in [0.545351058860, 0.545351059392]` using the SCS primal/dual values, with
+CLARABEL and MOSEK status reported explicitly.
