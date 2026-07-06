@@ -18,6 +18,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 88px;
 }
 
 body {
@@ -62,6 +63,10 @@ nav a {
 
 main {
   overflow: hidden;
+}
+
+section {
+  scroll-margin-top: 88px;
 }
 
 .hero {
@@ -426,6 +431,10 @@ code {
 }
 
 @media (max-width: 720px) {
+  html {
+    scroll-padding-top: 138px;
+  }
+
   .topbar {
     align-items: flex-start;
     flex-direction: column;
@@ -442,6 +451,10 @@ code {
   .band {
     padding-left: 20px;
     padding-right: 20px;
+  }
+
+  section {
+    scroll-margin-top: 138px;
   }
 
   h1 {
