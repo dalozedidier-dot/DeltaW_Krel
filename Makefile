@@ -23,7 +23,7 @@ realistic:
 	python scripts/realistic_tomography_pipeline.py --outdir $(SMOKE_REALISTIC_DIR) --n-sim 20 --n-null 40 --n-boot 10 --lambda-values 0,0.05 --n-total-values 1000 --visibility-values 0.95,1 --crosstalk-values 0,0.02 --drift-values 0,0.01
 
 fulltomography:
-	python scripts/full_tomography_simulation.py --outdir $(SMOKE_FULL_TOMO_DIR) --n-sim 8 --n-null 16 --n-boot 6 --lambda-values 0,0.05 --n-total-values 800 --visibility-values 0.95 --dephasing-values 0,0.02 --control-crosstalk-values 0,0.01 --operation-crosstalk-values 0,0.01 --drift-values 0,0.005 --path-loss-values 0,0.02
+	python scripts/full_realistic_tomography.py --outdir $(SMOKE_FULL_TOMO_DIR) --n-sim 8 --n-null 16 --n-boot 6 --lambda-values 0,0.05 --n-total-values 800 --visibility-values 0.95 --dephasing-values 0,0.02 --control-crosstalk-values 0,0.01 --operation-crosstalk-values 0,0.01 --drift-values 0,0.005 --path-loss-values 0,0.02
 
 montecarlo:
 	python scripts/monte_carlo_control_supplement.py --n-sim 100 --n-null 200 --dim 4 --n-noise 1 --lambda-values 0,0.005 --n-values 500 --output-dir $(SMOKE_MC_DIR) --no-plots

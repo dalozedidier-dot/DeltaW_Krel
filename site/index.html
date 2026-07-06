@@ -104,6 +104,100 @@
         </div>
       </section>
 
+      <section id="advanced" class="band">
+        <div class="section-title">
+          <p class="eyebrow">Advanced numerical validation</p>
+          <h2>End-to-end tomography under finite counts and realistic noise</h2>
+          <p>
+            Current status: the SDP causal layer is fully validated on the ideal
+            switch. This layer stress-tests the experimental chain
+            W0 -> tomography counts -> reconstruction -> covariance shrinkage
+            -> bootstrap -> lambda_hat -> empirical LR diagnostics.
+          </p>
+        </div>
+
+        <div class="metrics-grid validation-metrics">
+          <article class="metric">
+            <span>Grid points</span>
+            <strong id="full-grid-count">18</strong>
+            <p>lambda, copy budget, and visibility combinations.</p>
+          </article>
+          <article class="metric">
+            <span>Copies / shots</span>
+            <strong>800-2000</strong>
+            <p>Nominal total copies in the Pages smoke artifact.</p>
+          </article>
+          <article class="metric">
+            <span>Applicability map</span>
+            <strong id="full-applicability-count">18/18</strong>
+            <p>All published smoke points pass the preregistered gates.</p>
+          </article>
+          <article class="metric">
+            <span>Max drift false positive</span>
+            <strong id="full-max-fpr">3.75%</strong>
+            <p>Miscalibrated null with drift, crosstalk, and loss.</p>
+          </article>
+        </div>
+
+        <div class="validation-layout">
+          <article class="validation-copy">
+            <h3>Ready-for-experiment diagnostics</h3>
+            <p id="full-data-status">
+              Loading the finite-count tomography stress-test data served with
+              this GitHub Pages site.
+            </p>
+            <p>
+              This light public artifact is intentionally a reproducible smoke
+              run, not the final sensitivity claim. It already exercises
+              visibility 0.90-0.97, 1% control and operation crosstalk, 0.5%
+              temporal drift, 2% path-dependent loss, interleaved controls,
+              shrinkage covariance, and bootstrap uncertainty.
+            </p>
+            <p>
+              Next numerical milestone: run the same script at 10k-50k Monte
+              Carlo draws and larger copy budgets to publish the lambda_sens
+              surface where empirical LR power crosses 80%.
+            </p>
+            <div class="data-links" aria-label="Download full tomography data">
+              <a href="data/full_tomography/full_tomography_report.json">JSON</a>
+              <a href="data/full_tomography/full_tomography_power.csv">CSV</a>
+              <a href="data/full_tomography/full_tomography_power.png">PNG</a>
+            </div>
+          </article>
+          <figure class="power-figure">
+            <img
+              src="data/full_tomography/full_tomography_power.png"
+              alt="Empirical LR power curves for the full simulated tomography stress test"
+            >
+            <figcaption>
+              Published Pages smoke run: low-copy validation of the full
+              pipeline, with the 80% target shown as a dashed reference.
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="table-wrap" aria-label="Full realistic tomography table">
+          <table class="wide-table">
+            <thead>
+              <tr>
+                <th>lambda</th>
+                <th>N copies</th>
+                <th>Visibility</th>
+                <th>Power</th>
+                <th>False positive</th>
+                <th>lambda_hat mean</th>
+                <th>Applicable</th>
+              </tr>
+            </thead>
+            <tbody id="full-data-rows">
+              <tr>
+                <td colspan="7">Data will load from site/data/full_tomography/full_tomography_report.json.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <section id="landscape" class="band light">
         <div class="section-title">
           <p class="eyebrow">Falsification landscape</p>
@@ -259,7 +353,7 @@ python scripts/run_sdp_validation.py
 python scripts/run_switch_dephasing_scan.py --lambdas 0,0.25,0.5,0.65,0.7,0.75,1
 python scripts/run_switch_robustness_landscape.py
 python scripts/realistic_tomography_pipeline.py --outdir results/realistic_tomography_smoke
-python scripts/full_tomography_simulation.py --outdir results/full_tomography_smoke
+python scripts/full_realistic_tomography.py --outdir results/full_tomography_smoke
 python scripts/validate_manifest.py</code></pre>
         </div>
       </section>

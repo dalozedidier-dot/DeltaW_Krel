@@ -91,6 +91,10 @@ def test_github_pages_site_is_present():
     assert "run_switch_robustness_landscape.py" in html
     assert "data/switch_robustness_landscape.json" in html
     assert "data/switch_robustness_landscape.csv" in html
+    assert "Advanced numerical validation" in html
+    assert "data/full_tomography/full_tomography_report.json" in html
+    assert "data/full_tomography/full_tomography_power.csv" in html
+    assert "data/full_tomography/full_tomography_power.png" in html
     assert "Control dephasing" in html
     assert "White visibility" in html
     assert "Order bias" in html
@@ -104,10 +108,14 @@ def test_github_pages_and_ci_reference_realistic_tomography_bridge():
     makefile = (REPO_ROOT / "Makefile").read_text(encoding="utf-8")
 
     assert "realistic_tomography_pipeline.py" in html
+    assert "full_realistic_tomography.py" in html
     assert "fetch(\"data/switch_robustness_landscape.json\")" in app
+    assert "fetch(\"data/full_tomography/full_tomography_report.json\")" in app
     for text in (ci, extended, makefile):
         assert "realistic_tomography_pipeline.py" in text
         assert "realistic_tomography_smoke" in text
+        assert "full_realistic_tomography.py" in text
+        assert "full_tomography_smoke" in text
 
 
 def test_github_pages_landscape_data_is_complete_and_strict():
@@ -130,6 +138,41 @@ def test_github_pages_landscape_data_is_complete_and_strict():
     assert abs(lookup[("order_bias", 0.0)]["generalized_robustness"]) < 1e-6
     assert abs(lookup[("order_bias", 1.0)]["generalized_robustness"]) < 1e-6
     assert max(abs(row["witness_certificate_gap"]) for row in rows) < 1e-7
+
+    with csv_path.open(newline="", encoding="utf-8") as handle:
+        csv_rows = list(csv.DictReader(handle))
+    assert len(csv_rows) == len(rows)
+
+
+def test_github_pages_full_tomography_data_is_complete_and_strict():
+    json_path = REPO_ROOT / "site" / "data" / "full_tomography" / "full_tomography_report.json"
+    csv_path = REPO_ROOT / "site" / "data" / "full_tomography" / "full_tomography_power.csv"
+    png_path = REPO_ROOT / "site" / "data" / "full_tomography" / "full_tomography_power.png"
+    assert json_path.exists(), "published full tomography JSON missing"
+    assert csv_path.exists(), "published full tomography CSV missing"
+    assert png_path.exists(), "published full tomography PNG missing"
+    assert png_path.stat().st_size > 10_000
+    text = json_path.read_text(encoding="utf-8")
+    assert "NaN" not in text
+    report = json.loads(text)
+    assert report["status"] == "full_tomography_simulation"
+    rows = report["rows"]
+    assert len(rows) == 18
+    assert {row["lambda_true"] for row in rows} == {0.0, 0.02, 0.05}
+    assert {row["n_total"] for row in rows} == {800, 2000}
+    assert {row["visibility"] for row in rows} == {0.9, 0.95, 0.97}
+    assert {row["dephasing"] for row in rows} == {0.01}
+    assert {row["control_crosstalk"] for row in rows} == {0.01}
+    assert {row["operation_crosstalk"] for row in rows} == {0.01}
+    assert {row["drift"] for row in rows} == {0.005}
+    assert {row["path_loss"] for row in rows} == {0.02}
+    for row in rows:
+        assert 0.0 <= row["power"] <= 1.0
+        assert 0.0 <= row["false_positive_miscalibrated"] <= 1.0
+        assert row["applicability_passed"] is True
+        assert row["sigma_lambda_shrunk"] > 0.0
+        assert row["projected_direction_norm"] > 0.0
+    assert max(row["false_positive_miscalibrated"] for row in rows) <= 0.05
 
     with csv_path.open(newline="", encoding="utf-8") as handle:
         csv_rows = list(csv.DictReader(handle))

@@ -41,6 +41,8 @@ control with robustness near zero.
 - Full end-to-end tomography stress test with path-dependent losses, control
   dephasing, operation/control crosstalk, drift, interleaved controls,
   empirical LR calibration, and an applicability map.
+- GitHub Pages dashboard publishing the SDP landscape and a finite-count full
+  tomography smoke artifact for reviewer-facing inspection.
 - Explicit trace-and-replace maps for the `[AI, AO, BI, BO]` convention.
 - Projectors `L_V`, `L_AB`, `L_BA` with idempotence tests.
 - Exact validation targets:
@@ -110,6 +112,7 @@ scripts/monte_carlo_control_supplement.py
 scripts/micro_tomography_simulation.py
 scripts/realistic_tomography_pipeline.py
 scripts/full_tomography_simulation.py
+scripts/full_realistic_tomography.py
 scripts/run_sdp_validation.py
 notebooks/projectors_definitions.ipynb
 notebooks/validation_switch_ideal.ipynb
@@ -146,7 +149,7 @@ python scripts/realistic_tomography_pipeline.py --outdir results/realistic_tomog
 Run the full simulated tomography stress test:
 
 ```bash
-python scripts/full_tomography_simulation.py --outdir results/full_tomography_smoke --n-sim 50 --n-null 100 --n-boot 20
+python scripts/full_realistic_tomography.py --outdir results/full_tomography_smoke --n-sim 50 --n-null 100 --n-boot 20
 ```
 
 Freeze the preregistration configuration and generate the reproducibility

@@ -5,8 +5,13 @@ import json
 import numpy as np
 import pytest
 
+import full_realistic_tomography as full_alias
 import full_tomography_simulation as full
 import realistic_tomography_pipeline as tomo
+
+
+def test_full_realistic_tomography_wrapper_reuses_full_pipeline_entrypoint():
+    assert full_alias.main is full.main
 
 
 def test_effective_noise_parameters_and_path_loss_validate_bounds():

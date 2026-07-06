@@ -89,7 +89,7 @@ jobs:
 
       - name: Run full tomography stress test
         run: >
-          python scripts/full_tomography_simulation.py
+          python scripts/full_realistic_tomography.py
           --outdir results/full_tomography_smoke
           --n-sim 12 --n-null 32 --n-boot 8
           --lambda-values 0,0.02,0.05 --n-total-values 1000
