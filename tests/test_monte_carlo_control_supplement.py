@@ -48,7 +48,7 @@ def test_applicability_lock_rejects_empty_or_too_small_projection() -> None:
         mc.apply_applicability_lock(basis.A_basis, basis.S_opt, eps_num=10.0)
 
 
-def test_monte_carlo_smoke_run_without_outputs() -> None:
+def test_monte_carlo_smoke_run_without_outputs(capsys) -> None:
     rows = mc.run_monte_carlo_control(
         lambda_true_values=[0.0, 0.005],
         n_samples_values=[50],
@@ -64,3 +64,6 @@ def test_monte_carlo_smoke_run_without_outputs() -> None:
     assert len(rows) == 2
     assert {row.lambda_true for row in rows} == {0.0, 0.005}
     assert all(0.0 <= row.power <= 1.0 for row in rows)
+    captured = capsys.readouterr()
+    captured.out.encode("cp1252")
+    assert "lambda_hat=" in captured.out

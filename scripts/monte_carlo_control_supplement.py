@@ -67,9 +67,13 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import os
+import tempfile
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Dict, List, Optional, Sequence, Tuple
+
+os.environ.setdefault("MPLCONFIGDIR", str(Path(tempfile.gettempdir()) / "deltawkrel_matplotlib"))
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -1128,11 +1132,11 @@ def run_monte_carlo_control(
             results.append(row)
 
             print(
-                f"λ={lambda_true: .4f} | "
+                f"lambda={lambda_true: .4f} | "
                 f"N={n_samples:6d} | "
                 f"power={power: .3f} "
                 f"[{ci_low:.3f}, {ci_high:.3f}] | "
-                f"λ_hat={row.lambda_fit_mean:.5f} ± {row.lambda_fit_std:.5f} | "
+                f"lambda_hat={row.lambda_fit_mean:.5f} +/- {row.lambda_fit_std:.5f} | "
                 f"A_dim={basis.A_dim} | "
                 f"proj={basis.projection_norm:.3e} | "
                 f"LR_thr={LR_threshold:.3f}"
