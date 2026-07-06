@@ -118,7 +118,9 @@ notebooks/projectors_definitions.ipynb
 notebooks/validation_switch_ideal.ipynb
 config/config_preregistration.json
 tests/
-docs/
+docs/CLAIM_EVIDENCE_MATRIX.md
+docs/MAXIMIZE_REPOSITORY_FOR_SUBMISSION.md
+docs/ULTIMATE_VISION_ROADMAP.md
 ```
 
 ## Quick start
@@ -210,3 +212,5 @@ following are true:
 
 For a claim-by-claim audit trail, see `docs/CLAIM_EVIDENCE_MATRIX.md`.
 For the hardening roadmap, see `docs/MAXIMIZE_REPOSITORY_FOR_SUBMISSION.md`.
+For the long-horizon research program, see
+`docs/ULTIMATE_VISION_ROADMAP.md`.

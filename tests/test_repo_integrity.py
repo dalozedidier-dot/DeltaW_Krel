@@ -95,6 +95,8 @@ def test_github_pages_site_is_present():
     assert "data/full_tomography/full_tomography_report.json" in html
     assert "data/full_tomography/full_tomography_power.csv" in html
     assert "data/full_tomography/full_tomography_power.png" in html
+    assert "Ultimate roadmap" in html
+    assert "docs/ULTIMATE_VISION_ROADMAP.md" in html
     assert "Control dephasing" in html
     assert "White visibility" in html
     assert "Order bias" in html
@@ -177,6 +179,19 @@ def test_github_pages_full_tomography_data_is_complete_and_strict():
     with csv_path.open(newline="", encoding="utf-8") as handle:
         csv_rows = list(csv.DictReader(handle))
     assert len(csv_rows) == len(rows)
+
+
+def test_ultimate_vision_roadmap_is_present_but_not_overclaimed():
+    roadmap = REPO_ROOT / "docs" / "ULTIMATE_VISION_ROADMAP.md"
+    assert roadmap.exists(), "ultimate vision roadmap missing"
+    text = roadmap.read_text(encoding="utf-8")
+    assert "North star" in text
+    assert "World-class numerical simulation" in text
+    assert "Theoretical expansion" in text
+    assert "Existing data and new experiments" in text
+    assert "Non-negotiable guardrails" in text
+    assert "Do not describe toy or smoke simulations as experimental evidence." in text
+    assert "ambition tracker" in text
 
 
 def test_docs_do_not_revert_switch_benchmark_status():

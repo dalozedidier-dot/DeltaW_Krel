@@ -45,6 +45,11 @@ major claim in the article, keep one of three states:
 
 This protects the work from overclaiming and makes peer review easier.
 
+For the longer research program beyond the submission package, keep
+`docs/ULTIMATE_VISION_ROADMAP.md` synchronized with the claim/evidence matrix.
+That roadmap is an ambition tracker; it must not promote future work to current
+evidence.
+
 ## Priority 3: harden reproducibility
 
 Recommended additions:

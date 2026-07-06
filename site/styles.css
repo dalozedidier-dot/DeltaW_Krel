@@ -176,7 +176,8 @@ h1 {
 
 .metric,
 .chart-card,
-.evidence-grid article {
+.evidence-grid article,
+.roadmap-grid article {
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -191,7 +192,8 @@ h1 {
 }
 
 .metric p,
-.evidence-grid p {
+.evidence-grid p,
+.roadmap-grid p {
   color: var(--muted);
   margin-bottom: 0;
 }
@@ -200,6 +202,45 @@ h1 {
   display: grid;
   gap: 18px;
   grid-template-columns: 1.35fr 1fr 1fr;
+}
+
+.roadmap-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.roadmap-grid span,
+.roadmap-note span {
+  color: var(--green-dark);
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.roadmap-grid h3 {
+  font-size: 20px;
+  line-height: 1.15;
+  margin-bottom: 10px;
+}
+
+.roadmap-panel {
+  margin-top: 16px;
+}
+
+.roadmap-note {
+  background: #eef4f1;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  min-width: 260px;
+  padding: 14px 16px;
+}
+
+.roadmap-note strong {
+  font-size: 14px;
+  overflow-wrap: anywhere;
 }
 
 .chart-head {
@@ -420,6 +461,7 @@ code {
   .hero,
   .chart-grid,
   .validation-layout,
+  .roadmap-grid,
   .metrics-grid,
   .evidence-grid {
     grid-template-columns: 1fr;
