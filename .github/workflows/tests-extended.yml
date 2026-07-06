@@ -87,6 +87,16 @@ jobs:
           --lambda-values 0,0.02,0.05 --n-total-values 1000,3000
           --visibility-values 0.9,1 --crosstalk-values 0,0.02 --drift-values 0,0.01
 
+      - name: Run full tomography stress test
+        run: >
+          python scripts/full_tomography_simulation.py
+          --outdir results/full_tomography_smoke
+          --n-sim 12 --n-null 32 --n-boot 8
+          --lambda-values 0,0.02,0.05 --n-total-values 1000
+          --visibility-values 0.9,1 --dephasing-values 0,0.03
+          --control-crosstalk-values 0,0.01 --operation-crosstalk-values 0,0.01
+          --drift-values 0,0.005 --path-loss-values 0,0.03
+
       - name: Run Monte Carlo control bench (with SDP proxy and witness stability)
         run: >
           python scripts/monte_carlo_control_supplement.py
@@ -111,5 +121,6 @@ jobs:
             results/
             results/micro_smoke/
             results/realistic_tomography_smoke/
+            results/full_tomography_smoke/
             results/mc_smoke/
           if-no-files-found: ignore

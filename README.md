@@ -38,6 +38,9 @@ control with robustness near zero.
 - Realistic finite-count tomography simulation bridge with multinomial/Poisson
   counts, regularized linear reconstruction, optional MLE, Fisher covariance,
   Ledoit-Wolf-style shrinkage, parametric bootstrap, and power maps.
+- Full end-to-end tomography stress test with path-dependent losses, control
+  dephasing, operation/control crosstalk, drift, interleaved controls,
+  empirical LR calibration, and an applicability map.
 - Explicit trace-and-replace maps for the `[AI, AO, BI, BO]` convention.
 - Projectors `L_V`, `L_AB`, `L_BA` with idempotence tests.
 - Exact validation targets:
@@ -106,6 +109,7 @@ src/deltawkrel/switch_models.py       white-noise/fixed-order targets + switch
 scripts/monte_carlo_control_supplement.py
 scripts/micro_tomography_simulation.py
 scripts/realistic_tomography_pipeline.py
+scripts/full_tomography_simulation.py
 scripts/run_sdp_validation.py
 notebooks/projectors_definitions.ipynb
 notebooks/validation_switch_ideal.ipynb
@@ -137,6 +141,12 @@ Run the realistic finite-count tomography bridge:
 
 ```bash
 python scripts/realistic_tomography_pipeline.py --outdir results/realistic_tomography_smoke --n-sim 50 --n-null 100 --n-boot 20
+```
+
+Run the full simulated tomography stress test:
+
+```bash
+python scripts/full_tomography_simulation.py --outdir results/full_tomography_smoke --n-sim 50 --n-null 100 --n-boot 20
 ```
 
 Freeze the preregistration configuration and generate the reproducibility

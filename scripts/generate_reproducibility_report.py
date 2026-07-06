@@ -68,6 +68,10 @@ def main() -> int:
             "Realistic tomography bridge output",
             Path("results/realistic_tomography_smoke/realistic_tomography_report.json"),
         ),
+        status_line(
+            "Full tomography stress output",
+            Path("results/full_tomography_smoke/full_tomography_report.json"),
+        ),
         status_line("Claim/evidence matrix", Path("docs/CLAIM_EVIDENCE_MATRIX.md")),
         "",
         "## Preregistration lock",
@@ -129,7 +133,8 @@ def main() -> int:
             "The repository supports toy/geometric simulations (methodological",
             "control bench, NOT experimental validation), the micro-tomography",
             "proof of concept, a finite-count realistic tomography simulation",
-            "bridge, process-matrix projector tests, and K_CS SDP validation.",
+            "bridge, a full simulated tomography stress test, process-matrix",
+            "projector tests, and K_CS SDP validation.",
             "The ideal quantum switch is implemented in the",
             "Araújo et al. (NJP 17, 102001 (2015)) convention; its generalized",
             "robustness benchmark (reference 0.5454) is "

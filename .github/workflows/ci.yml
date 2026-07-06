@@ -41,6 +41,16 @@ jobs:
           --lambda-values 0,0.05 --n-total-values 800
           --visibility-values 0.95 --crosstalk-values 0,0.02 --drift-values 0,0.01
 
+      - name: Run full tomography stress smoke test
+        run: >
+          python scripts/full_tomography_simulation.py
+          --outdir results/full_tomography_smoke
+          --n-sim 4 --n-null 8 --n-boot 3
+          --lambda-values 0,0.05 --n-total-values 600
+          --visibility-values 0.95 --dephasing-values 0.01
+          --control-crosstalk-values 0.01 --operation-crosstalk-values 0.01
+          --drift-values 0.005 --path-loss-values 0.02
+
       - name: Run Monte Carlo control smoke test
         run: python scripts/monte_carlo_control_supplement.py --n-sim 50 --n-null 100 --dim 4 --n-noise 1 --lambda-values 0,0.005 --n-values 200 --output-dir results/mc_smoke --no-plots
 
@@ -51,5 +61,6 @@ jobs:
           path: |
             results/micro_smoke/
             results/realistic_tomography_smoke/
+            results/full_tomography_smoke/
             results/mc_smoke/
           if-no-files-found: ignore

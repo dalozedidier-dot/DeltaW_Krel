@@ -50,6 +50,13 @@ parametric bootstrap for lambda_hat uncertainty. It remains simulated evidence
 until the measurement tensor and noise parameters are calibrated from a real
 platform.
 
+`scripts/full_tomography_simulation.py` is the heavier stress-test layer. It
+adds path-dependent losses, control dephasing, operation/control crosstalk,
+temporal drift, optional interleaved control correction, empirical LR
+thresholds, false-positive checks under miscalibrated drift, and an
+applicability map. It is designed for feasibility stress testing and for
+preparing a real experimental protocol.
+
 ## Open scientific directions
 
 The current configuration `quantum_switch_d2` is enough to validate the

@@ -28,6 +28,9 @@ To keep this submission-grade:
 7. Use `scripts/realistic_tomography_pipeline.py` for the heavier finite-count
    simulated tomography bridge: multinomial/Poisson counts, reconstruction,
    covariance shrinkage, bootstrap, and power maps.
+8. Use `scripts/full_tomography_simulation.py` for the state-of-the-art
+   simulated stress test: path-dependent loss, dephasing, crosstalk, temporal
+   drift, interleaved controls, empirical LR calibration, and applicability map.
 
 ## Priority 2: make the manuscript auditable
 
@@ -55,6 +58,8 @@ Recommended additions:
 6. Archive a release through Zenodo and add the DOI to the README and article.
 7. Keep a light realistic-tomography smoke run green in CI, with heavier power
    maps generated as release artifacts rather than committed source files.
+8. Keep a light full-tomography stress smoke run green in CI; reserve massive
+   10k-50k bootstrap/null runs for scheduled or release jobs.
 
 ## Priority 4: improve numerical credibility
 
@@ -88,6 +93,9 @@ The article can safely say:
   white-noise visibility, and coherent order-bias perturbations.
 - finite-count simulated tomography now supports counts, reconstruction,
   covariance shrinkage, bootstrap, and power maps under visibility/crosstalk/drift.
+- full simulated tomography stress tests now include path losses, dephasing,
+  crosstalk, temporal drift, interleaved controls, empirical LR calibration,
+  false-positive drift checks, and applicability maps.
 
 The article should not say:
 
@@ -131,8 +139,9 @@ from a clean clone, run one documented command, and see:
 1. all tests pass;
 2. toy and micro-tomography smoke outputs regenerate;
 3. the realistic finite-count tomography bridge regenerates a smoke power map;
-4. the SDP validates known CS targets;
-5. the ideal quantum switch benchmark is reproduced and the dephased-switch
+4. the full tomography stress test regenerates its report and applicability map;
+5. the SDP validates known CS targets;
+6. the ideal quantum switch benchmark is reproduced and the dephased-switch
    negative control remains near zero;
-6. every manuscript claim maps to an artifact in
+7. every manuscript claim maps to an artifact in
    `docs/CLAIM_EVIDENCE_MATRIX.md`.

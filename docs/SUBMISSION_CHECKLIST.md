@@ -10,6 +10,7 @@
 - [ ] Freeze `config/config_preregistration.json` with `python scripts/freeze_preregistration.py`.
 - [ ] Generate `results/reproducibility_report.md` in CI or release artifacts with `python scripts/generate_reproducibility_report.py`.
 - [x] Add realistic finite-count tomography simulation bridge with counts, reconstruction, covariance shrinkage, bootstrap, and power maps.
+- [x] Add full simulated tomography stress test with path losses, dephasing, crosstalk, drift, interleaved controls, LR calibration, and applicability map.
 - [ ] Update `docs/CLAIM_EVIDENCE_MATRIX.md` so every manuscript claim has an artifact, status, or blocker.
 - [ ] Complete the hardening steps in `docs/MAXIMIZE_REPOSITORY_FOR_SUBMISSION.md`.
 - [ ] Run `pytest -q` locally and in GitHub Actions.
@@ -20,6 +21,7 @@
 - [x] Toy/geometric Monte Carlo bench.
 - [x] Micro-tomography proof-of-concept.
 - [x] Realistic finite-count tomography simulation bridge.
+- [x] Full simulated tomography stress test.
 - [x] Baseline trace-and-replace projectors.
 - [x] Causal-SDP validation for CS/white-noise controls.
 - [x] Ideal quantum-switch generalized-robustness benchmark.
