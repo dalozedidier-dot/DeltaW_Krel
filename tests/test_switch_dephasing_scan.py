@@ -72,6 +72,21 @@ def test_summarize_curve_identifies_expected_shape():
     assert summary["classical_endpoint_zero"] is True
 
 
+def test_summarize_curve_detects_failed_shape_checks():
+    rows = [
+        {"lambda_dephasing": 0.0, "generalized_robustness": 0.1},
+        {"lambda_dephasing": 0.5, "generalized_robustness": 0.2},
+    ]
+    summary = scan.summarize_curve(rows)
+    assert summary["monotone_nonincreasing"] is False
+    assert summary["classical_endpoint_zero"] is False
+
+
+def test_json_safe_replaces_nested_nonfinite_values():
+    safe = scan._json_safe({"a": (float("nan"), [float("inf"), 1.0])})
+    assert safe == {"a": [None, [None, 1.0]]}
+
+
 def test_write_outputs_strict_json_and_csv(tmp_path):
     rows = [
         {

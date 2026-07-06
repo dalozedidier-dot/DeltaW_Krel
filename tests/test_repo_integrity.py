@@ -96,6 +96,20 @@ def test_github_pages_site_is_present():
     assert "Order bias" in html
 
 
+def test_github_pages_and_ci_reference_realistic_tomography_bridge():
+    html = (REPO_ROOT / "site" / "index.html").read_text(encoding="utf-8")
+    app = (REPO_ROOT / "site" / "app.js").read_text(encoding="utf-8")
+    ci = (REPO_ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    extended = (REPO_ROOT / ".github" / "workflows" / "tests-extended.yml").read_text(encoding="utf-8")
+    makefile = (REPO_ROOT / "Makefile").read_text(encoding="utf-8")
+
+    assert "realistic_tomography_pipeline.py" in html
+    assert "fetch(\"data/switch_robustness_landscape.json\")" in app
+    for text in (ci, extended, makefile):
+        assert "realistic_tomography_pipeline.py" in text
+        assert "realistic_tomography_smoke" in text
+
+
 def test_github_pages_landscape_data_is_complete_and_strict():
     json_path = REPO_ROOT / "site" / "data" / "switch_robustness_landscape.json"
     csv_path = REPO_ROOT / "site" / "data" / "switch_robustness_landscape.csv"

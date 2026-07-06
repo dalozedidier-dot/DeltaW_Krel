@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 
+import numpy as np
 import pytest
 
 import run_switch_robustness_landscape as landscape
@@ -10,6 +11,14 @@ import run_switch_robustness_landscape as landscape
 def test_process_for_family_rejects_unknown_family():
     with pytest.raises(ValueError):
         landscape.process_for_family("unknown", 0.5)
+
+
+def test_process_for_family_returns_valid_switch_shapes():
+    for family in ("control_dephasing", "white_visibility", "order_bias"):
+        W = landscape.process_for_family(family, 0.5)
+        assert W.shape == (64, 64)
+        assert np.allclose(W, W.T)
+        assert np.isclose(np.trace(W), 4.0)
 
 
 def test_parse_grid_validates_unit_interval():
@@ -55,6 +64,34 @@ def test_summarize_rows_reports_family_shape():
     assert summary["control_dephasing"]["monotone_nonincreasing"] is True
     assert summary["white_visibility"]["monotone_nondecreasing"] is True
     assert summary["white_visibility"]["zero_parameters"] == [0.0]
+
+
+def test_summarize_rows_reports_nonoptimal_and_nonmonotone_cases():
+    rows = [
+        {
+            "family": "white_visibility",
+            "parameter": 0.0,
+            "generalized_robustness": 0.4,
+            "status": "failed",
+            "witness_certificate_gap": -2e-8,
+        },
+        {
+            "family": "white_visibility",
+            "parameter": 1.0,
+            "generalized_robustness": 0.2,
+            "status": "optimal",
+            "witness_certificate_gap": 1e-8,
+        },
+    ]
+    summary = landscape.summarize_rows(rows)
+    assert summary["white_visibility"]["all_status_optimal"] is False
+    assert summary["white_visibility"]["monotone_nondecreasing"] is False
+    assert summary["white_visibility"]["max_witness_gap"] == pytest.approx(2e-8)
+
+
+def test_json_safe_replaces_nested_nonfinite_values():
+    safe = landscape._json_safe({"x": [float("nan"), (float("inf"), 2.0)]})
+    assert safe == {"x": [None, [None, 2.0]]}
 
 
 def test_landscape_write_outputs_strict_json_and_csv(tmp_path):
