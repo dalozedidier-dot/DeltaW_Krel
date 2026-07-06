@@ -51,19 +51,22 @@ FAMILIES = {
         "fn": partially_dephased_switch_process,
         "reference": 0.0,
         "xlabel": r"control dephasing $\lambda$",
-        "verify": [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
+        "verify_endpoints": [0.0, 1.0],
+        "verify_full": [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
     },
     "white_visibility": {
         "fn": white_visibility_switch_process,
         "reference": 1.0,
         "xlabel": r"visibility $v$",
-        "verify": [1.0, 0.8, 0.6, 0.4, 0.2, 0.0],
+        "verify_endpoints": [1.0, 0.0],
+        "verify_full": [1.0, 0.8, 0.6, 0.4, 0.2, 0.0],
     },
     "order_bias": {
         "fn": biased_coherent_switch_process,
         "reference": 0.5,
         "xlabel": r"order bias $q$",
-        "verify": [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0],
+        "verify_endpoints": [0.0, 0.5, 1.0],
+        "verify_full": [0.0, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0],
     },
 }
 
@@ -100,6 +103,18 @@ def parse_args() -> argparse.Namespace:
         default=1e-7,
         help="SCS tolerance for the coarse lower-bound verification grid.",
     )
+    parser.add_argument(
+        "--verify-mode",
+        choices=("endpoints", "full"),
+        default="endpoints",
+        help="Use endpoint/reference grids by default; full reproduces the release artifact grid.",
+    )
+    parser.add_argument(
+        "--max-iters",
+        type=int,
+        default=100_000,
+        help="SCS iteration limit for witness extraction and verification SDPs.",
+    )
     return parser.parse_args()
 
 
@@ -109,7 +124,7 @@ def main() -> int:
     outdir.mkdir(parents=True, exist_ok=True)
 
     W_switch = ideal_quantum_switch_process()
-    cert = switch_generalized_robustness_witness(W_switch, eps=args.eps)
+    cert = switch_generalized_robustness_witness(W_switch, eps=args.eps, max_iters=args.max_iters)
     benchmark_error = abs(cert.R_g - SWITCH_GENERALIZED_ROBUSTNESS_REFERENCE)
     print(
         f"reference witness S*: R_g={cert.R_g:.6f} "
@@ -137,9 +152,14 @@ def main() -> int:
         fc = certify_family(cert.S, fam, dense, spec["reference"], cert.R_g)
 
         verify = []
-        for x in spec["verify"]:
+        verify_grid = spec[f"verify_{args.verify_mode}"]
+        for x in verify_grid:
             process = fam(float(x))
-            rg = solve_switch_generalized_robustness(process, eps=args.verify_eps).objective_value
+            rg = solve_switch_generalized_robustness(
+                process,
+                eps=args.verify_eps,
+                max_iters=args.max_iters,
+            ).objective_value
             wv = float(cert.value(process))
             verify.append(
                 {

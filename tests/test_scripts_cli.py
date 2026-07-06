@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from types import SimpleNamespace
 from pathlib import Path
 
 import numpy as np
@@ -17,6 +18,8 @@ import freeze_preregistration
 import generate_manifest
 import generate_reproducibility_report
 import micro_tomography_simulation as micro
+import run_certified_witness_analysis as certified_analysis
+import run_certified_witness_landscape as certified_landscape
 import validate_manifest
 
 
@@ -187,6 +190,114 @@ def test_generated_manifest_passes_validation(tmp_path, monkeypatch):
     assert generate_manifest.main() == 0
     monkeypatch.setattr("sys.argv", ["validate_manifest.py", "--root", str(tmp_path)])
     assert validate_manifest.main() == 0
+
+
+# ------------------------------------------------------------------
+# certified witness CLI scripts
+# ------------------------------------------------------------------
+
+
+class _FakeWitness:
+    R_g = 0.5
+    S = np.eye(4)
+    tightness_gap = 1e-12
+    equality_residual = 1e-12
+    status = "optimal"
+
+    def value(self, process):
+        return float(np.sum(self.S * process))
+
+
+class _FakeCurve:
+    lambdas = np.array([0.0, 0.5, 1.0])
+    values = np.array([0.5, 0.2, -0.1])
+    slope = -0.6
+    intercept = 0.5
+    affinity_residual = 1e-12
+    zero_crossing = 0.8333333333333334
+
+    def invert(self, observed_value):
+        return (observed_value - self.intercept) / self.slope
+
+
+def _toy_process(parameter=0.0):
+    return (1.0 - float(parameter)) * np.eye(4)
+
+
+def test_certified_witness_analysis_cli_with_fakes(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(certified_analysis, "ideal_quantum_switch_process", lambda: np.eye(4))
+    monkeypatch.setattr(certified_analysis, "partially_dephased_switch_process", _toy_process)
+    monkeypatch.setattr(certified_analysis, "dephased_switch_process", lambda: np.zeros((4, 4)))
+    monkeypatch.setattr(certified_analysis, "switch_white_noise_process", lambda: 0.5 * np.eye(4))
+    monkeypatch.setattr(certified_analysis, "switch_generalized_robustness_witness", lambda *a, **k: _FakeWitness())
+    monkeypatch.setattr(certified_analysis, "affine_witness_curve", lambda *a, **k: _FakeCurve())
+    monkeypatch.setattr(
+        certified_analysis,
+        "solve_switch_generalized_robustness",
+        lambda *a, **k: SimpleNamespace(objective_value=1.0),
+    )
+    monkeypatch.setattr(
+        certified_analysis,
+        "admissible_direction",
+        lambda *a, **k: SimpleNamespace(
+            K_rel=np.eye(4),
+            cos_angle_to_S=0.75,
+            noise_leakage={"N0": 0.0},
+            signal_response=1.0,
+            retained_fraction=0.8,
+        ),
+    )
+    certified_analysis.main()
+    assert (tmp_path / "results" / "certified_witness_report.json").exists()
+    assert (tmp_path / "results" / "certified_witness_curve.csv").exists()
+    report = json.loads((tmp_path / "results" / "certified_witness_report.json").read_text(encoding="utf-8"))
+    assert report["sdp_benchmark"]["R_g"] == 0.5
+
+
+def test_certified_witness_landscape_cli_with_fakes(tmp_path, monkeypatch):
+    monkeypatch.setattr(certified_landscape, "ideal_quantum_switch_process", lambda: np.eye(4))
+    monkeypatch.setattr(certified_landscape, "switch_generalized_robustness_witness", lambda *a, **k: _FakeWitness())
+    monkeypatch.setattr(
+        certified_landscape,
+        "solve_switch_generalized_robustness",
+        lambda *a, **k: SimpleNamespace(objective_value=10.0),
+    )
+    monkeypatch.setattr(
+        certified_landscape,
+        "FAMILIES",
+        {
+            "control_dephasing": {
+                "fn": lambda x: (1.0 - x) * np.eye(4),
+                "reference": 0.0,
+                "xlabel": "control dephasing",
+                "verify_endpoints": [0.0, 1.0],
+                "verify_full": [0.0, 0.5, 1.0],
+            },
+            "white_visibility": {
+                "fn": lambda x: x * np.eye(4),
+                "reference": 1.0,
+                "xlabel": "visibility",
+                "verify_endpoints": [1.0, 0.0],
+                "verify_full": [1.0, 0.5, 0.0],
+            },
+            "order_bias": {
+                "fn": lambda x: (1.0 - (x - 0.5) ** 2) * np.eye(4),
+                "reference": 0.5,
+                "xlabel": "order bias",
+                "verify_endpoints": [0.0, 0.5, 1.0],
+                "verify_full": [0.0, 0.5, 1.0],
+            },
+        },
+    )
+    monkeypatch.setattr(
+        "sys.argv",
+        ["run_certified_witness_landscape.py", "--outdir", str(tmp_path), "--dense-grid", "5"],
+    )
+    assert certified_landscape.main() == 0
+    report = json.loads((tmp_path / "certified_witness_landscape.json").read_text(encoding="utf-8"))
+    assert report["status"] == "certified_witness_landscape"
+    assert set(report["families"]) == {"control_dephasing", "white_visibility", "order_bias"}
 
 
 # ------------------------------------------------------------------
