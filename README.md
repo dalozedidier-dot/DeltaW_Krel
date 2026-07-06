@@ -67,6 +67,13 @@ control with robustness near zero.
   `scripts/run_switch_robustness_landscape.py` scans control dephasing,
   white-noise visibility, and coherent order-bias families with the same SDP
   diagnostics.
+- **Certified single-direction causal-witness layer available**:
+  `src/deltawkrel/certified_witness.py` and
+  `scripts/run_certified_witness_analysis.py` extract the dual-optimal witness
+  `S*` at the ideal switch, certify the affine lower-bound curve along control
+  dephasing, and instantiate the preregistered `K_rel` projection against
+  calibrated nuisance directions. See
+  `docs/CERTIFIED_WITNESS_RESULT.md` for the E3+ result summary.
 - Full SDP diagnostics exported by `scripts/run_sdp_validation.py`: solver and
   package versions, iterations, solve time, residuals, minimal eigenvalues, and
   dual witness certificate.
@@ -108,6 +115,7 @@ site/                                 static public results page
 src/deltawkrel/projectors.py          trace-replace maps and process projectors
 src/deltawkrel/sdp.py                 K_CS and switch robustness SDP routines
 src/deltawkrel/switch_models.py       white-noise/fixed-order targets + switch
+src/deltawkrel/certified_witness.py  certified dual witness + K_rel projection
 scripts/monte_carlo_control_supplement.py
 scripts/micro_tomography_simulation.py
 scripts/realistic_tomography_pipeline.py
@@ -180,6 +188,14 @@ Run the broader robustness landscape:
 ```bash
 python scripts/run_switch_robustness_landscape.py
 ```
+
+Run the certified single-direction witness analysis:
+
+```bash
+python scripts/run_certified_witness_analysis.py
+pytest tests/test_certified_witness.py -q
+```
+
 
 Full reproducibility from a clean clone:
 
