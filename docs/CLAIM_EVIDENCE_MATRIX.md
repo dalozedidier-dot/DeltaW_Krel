@@ -24,6 +24,7 @@ or an explicit blocker.
 | The applicability lock prevents unstable normalization when the projected witness is too small. | E1 | `apply_applicability_lock`, `tests/test_monte_carlo_control_supplement.py` | Supported. |
 | The finite-count Monte Carlo chain estimates sensitivity for lambda values. | E1 | `monte_carlo_outputs_control/`, `results/mc_smoke/` | Supported as proof of concept; not an experimental forecast. |
 | A micro-tomography proof of concept is provided. | E1 | `scripts/micro_tomography_simulation.py`, `outputs/`, `results/micro_smoke/` | Supported as simplified upper-bound stress test. |
+| A realistic finite-count tomography bridge estimates power under instrument perturbations. | E2 | `scripts/realistic_tomography_pipeline.py`, `tests/test_realistic_tomography_pipeline.py` | Supported as simulated tomography bridge: counts, reconstruction, covariance shrinkage, bootstrap, and power maps; not calibrated experimental evidence. |
 | Bipartite process-matrix trace/replace projectors are executable. | E2 | `src/deltawkrel/projectors.py`, `tests/test_projectors.py` | Supported, pending external convention audit. |
 | The causal-SDP wiring over K_CS validates known causally separable targets. | E2 | `src/deltawkrel/sdp.py`, `scripts/run_sdp_validation.py`, CI `reproducibility-pipeline-outputs` | Supported for infrastructure validation. |
 | The ideal quantum-switch benchmark is reproduced. | E3 | `src/deltawkrel/switch_models.py`, `src/deltawkrel/sdp.py`, `scripts/run_sdp_validation.py`, CI `sdp_validation_report.json` | Supported: generalized robustness reproduces the published value near 0.5454 within tolerance. |
@@ -50,6 +51,7 @@ or an explicit blocker.
 | Convention audit notebook | Stronger E3 | Equations, tensor order, trace convention, and normalization mapped line by line. |
 | Partial-dephasing switch scan | Stronger E3 | JSON/CSV curve exported with monotonicity, endpoint, residual, and witness-gap diagnostics. |
 | Multi-family switch landscape | Stronger E3 | Control-dephasing, white-visibility, and order-bias families exported with SDP diagnostics. |
+| Realistic tomography bridge | Stronger E2 toward E4 | Multinomial/Poisson counts, linear/MLE reconstruction, Fisher/shrinkage covariance, bootstrap, and power maps are executable. |
 | Solver diagnostics export | Required for E3 | Status, objective, dual gap if available, residuals, omega_white, complementarity checks. |
 | Manifest validation command | Reproducibility hardening | `python scripts/validate_manifest.py` verifies that tracked artifacts match `MANIFEST.sha256.json`. |
 | Zenodo release checklist | Publication hardening | DOI added to README/manuscript after archive. |

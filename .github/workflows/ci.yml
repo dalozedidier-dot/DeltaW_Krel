@@ -33,6 +33,14 @@ jobs:
       - name: Run micro-tomography smoke test
         run: python scripts/micro_tomography_simulation.py --outdir results/micro_smoke --n-sim 100 --n-null 200
 
+      - name: Run realistic tomography bridge smoke test
+        run: >
+          python scripts/realistic_tomography_pipeline.py
+          --outdir results/realistic_tomography_smoke
+          --n-sim 10 --n-null 20 --n-boot 6
+          --lambda-values 0,0.05 --n-total-values 800
+          --visibility-values 0.95 --crosstalk-values 0,0.02 --drift-values 0,0.01
+
       - name: Run Monte Carlo control smoke test
         run: python scripts/monte_carlo_control_supplement.py --n-sim 50 --n-null 100 --dim 4 --n-noise 1 --lambda-values 0,0.005 --n-values 200 --output-dir results/mc_smoke --no-plots
 
@@ -42,5 +50,6 @@ jobs:
           name: smoke-outputs
           path: |
             results/micro_smoke/
+            results/realistic_tomography_smoke/
             results/mc_smoke/
           if-no-files-found: ignore

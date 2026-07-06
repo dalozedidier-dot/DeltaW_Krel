@@ -275,12 +275,19 @@ def test_report_with_present_artifacts(tmp_path, monkeypatch):
         encoding="utf-8",
     )
     (tmp_path / "MANIFEST.sha256.json").write_text(json.dumps({"a": "0" * 64}), encoding="utf-8")
+    realistic = results / "realistic_tomography_smoke"
+    realistic.mkdir()
+    (realistic / "realistic_tomography_report.json").write_text(
+        json.dumps({"status": "realistic_tomography_simulation"}),
+        encoding="utf-8",
+    )
     monkeypatch.setattr("sys.argv", ["generate_reproducibility_report.py"])
     assert generate_reproducibility_report.main() == 0
     report = (results / "reproducibility_report.md").read_text(encoding="utf-8")
     assert "scenario: toy_scenario" in report
     assert "config sha256: `abc123`" in report
     assert "white_noise: optimal" in report
+    assert "Realistic tomography bridge output: present" in report
     assert "manifest entries: 1" in report
 
 

@@ -35,4 +35,3 @@ results/*
 !outputs/.gitkeep
 !results/.gitkeep
 !results/preregistration_lock.json
-!results/reproducibility_report.md

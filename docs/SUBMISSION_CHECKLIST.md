@@ -9,6 +9,7 @@
 - [x] Export SDP diagnostics: solver, status, objective, residuals, witness certificate, `omega_white`, and switch benchmark diagnostics.
 - [ ] Freeze `config/config_preregistration.json` with `python scripts/freeze_preregistration.py`.
 - [ ] Generate `results/reproducibility_report.md` in CI or release artifacts with `python scripts/generate_reproducibility_report.py`.
+- [x] Add realistic finite-count tomography simulation bridge with counts, reconstruction, covariance shrinkage, bootstrap, and power maps.
 - [ ] Update `docs/CLAIM_EVIDENCE_MATRIX.md` so every manuscript claim has an artifact, status, or blocker.
 - [ ] Complete the hardening steps in `docs/MAXIMIZE_REPOSITORY_FOR_SUBMISSION.md`.
 - [ ] Run `pytest -q` locally and in GitHub Actions.
@@ -18,6 +19,7 @@
 
 - [x] Toy/geometric Monte Carlo bench.
 - [x] Micro-tomography proof-of-concept.
+- [x] Realistic finite-count tomography simulation bridge.
 - [x] Baseline trace-and-replace projectors.
 - [x] Causal-SDP validation for CS/white-noise controls.
 - [x] Ideal quantum-switch generalized-robustness benchmark.

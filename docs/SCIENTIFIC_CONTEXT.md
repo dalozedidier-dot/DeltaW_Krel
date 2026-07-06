@@ -21,6 +21,7 @@ quantum switch.
 | Partially dephased switch family | Falsification landscape between coherent and classical endpoints. | Robustness curve decreasing toward zero at lambda=1. |
 | White-noise visibility family | Robustness under isotropic valid-process noise. | Visibility curve from white noise to the ideal switch. |
 | Coherent order-bias family | Robustness when one causal order dominates the coherent superposition. | Fixed-order endpoints at q=0 or q=1; balanced switch at q=1/2. |
+| Realistic tomography bridge | Finite-count simulated tomography with instrument perturbations. | Power maps vs lambda, copies, visibility, crosstalk, and drift. |
 
 When the SDP status is `optimal`, it means the numerical solver found a
 solution satisfying the cone and equality constraints within its declared
@@ -40,6 +41,15 @@ as methodological controls or proof-of-concept stress tests unless they are
 extended with a physical noise model, calibrated measurement model, and a
 predeclared inference target.
 
+`scripts/realistic_tomography_pipeline.py` is the first bridge toward that
+heavier layer. It simulates full setting/outcome counts from an explicit
+`M[j,o,k]` measurement tensor, supports multinomial or Poisson sampling,
+reconstructs coefficients by regularized linear inversion or constrained MLE,
+exports Fisher and Ledoit-Wolf-style shrinkage covariance diagnostics, and uses
+parametric bootstrap for lambda_hat uncertainty. It remains simulated evidence
+until the measurement tensor and noise parameters are calibrated from a real
+platform.
+
 ## Open scientific directions
 
 The current configuration `quantum_switch_d2` is enough to validate the
@@ -53,8 +63,10 @@ departures from this reference case:
 2. **Dimension and system size**: compare the current qubit-level benchmark
    with higher-dimensional or reduced effective models when the conventions are
    mathematically defined.
-3. **Tomography burden**: document how sample size, measurement design, and
-   reconstruction assumptions affect witness reliability.
+3. **Tomography burden**: document how sample size, measurement design,
+   visibility, crosstalk, drift, reconstruction assumptions, covariance
+   shrinkage, and bootstrap uncertainty affect witness reliability. The
+   realistic tomography bridge now makes this executable.
 4. **Solver cross-checks**: compare SCS with another solver such as MOSEK when
    available, and preserve tolerances, residuals, and version metadata.
 5. **Witness interpretation**: connect each reported robustness value to the

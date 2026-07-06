@@ -35,6 +35,9 @@ control with robustness near zero.
 
 - Linearized Monte Carlo control script for Annex C bis.
 - Micro-tomography proof-of-concept / upper-bound stress test.
+- Realistic finite-count tomography simulation bridge with multinomial/Poisson
+  counts, regularized linear reconstruction, optional MLE, Fisher covariance,
+  Ledoit-Wolf-style shrinkage, parametric bootstrap, and power maps.
 - Explicit trace-and-replace maps for the `[AI, AO, BI, BO]` convention.
 - Projectors `L_V`, `L_AB`, `L_BA` with idempotence tests.
 - Exact validation targets:
@@ -102,6 +105,7 @@ src/deltawkrel/sdp.py                 K_CS and switch robustness SDP routines
 src/deltawkrel/switch_models.py       white-noise/fixed-order targets + switch
 scripts/monte_carlo_control_supplement.py
 scripts/micro_tomography_simulation.py
+scripts/realistic_tomography_pipeline.py
 scripts/run_sdp_validation.py
 notebooks/projectors_definitions.ipynb
 notebooks/validation_switch_ideal.ipynb
@@ -127,6 +131,12 @@ translation:
 ```bash
 python scripts/micro_tomography_simulation.py --outdir results/micro_smoke --n-sim 1000 --n-null 3000
 python scripts/monte_carlo_control_supplement.py --n-sim 200 --n-null 500 --dim 4 --n-noise 1 --lambda-values 0,0.005 --n-values 1000 --output-dir results/mc_smoke --no-plots
+```
+
+Run the realistic finite-count tomography bridge:
+
+```bash
+python scripts/realistic_tomography_pipeline.py --outdir results/realistic_tomography_smoke --n-sim 50 --n-null 100 --n-boot 20
 ```
 
 Freeze the preregistration configuration and generate the reproducibility

@@ -79,6 +79,14 @@ jobs:
       - name: Run micro-tomography stress test
         run: python scripts/micro_tomography_simulation.py --outdir results/micro_smoke --n-sim 200 --n-null 500
 
+      - name: Run realistic tomography bridge
+        run: >
+          python scripts/realistic_tomography_pipeline.py
+          --outdir results/realistic_tomography_smoke
+          --n-sim 30 --n-null 80 --n-boot 15
+          --lambda-values 0,0.02,0.05 --n-total-values 1000,3000
+          --visibility-values 0.9,1 --crosstalk-values 0,0.02 --drift-values 0,0.01
+
       - name: Run Monte Carlo control bench (with SDP proxy and witness stability)
         run: >
           python scripts/monte_carlo_control_supplement.py
@@ -102,5 +110,6 @@ jobs:
           path: |
             results/
             results/micro_smoke/
+            results/realistic_tomography_smoke/
             results/mc_smoke/
           if-no-files-found: ignore

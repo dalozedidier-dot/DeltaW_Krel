@@ -25,6 +25,9 @@ To keep this submission-grade:
 6. Use `scripts/run_switch_robustness_landscape.py` for the stronger
    multi-family SDP landscape: control dephasing, white-noise visibility, and
    coherent order bias.
+7. Use `scripts/realistic_tomography_pipeline.py` for the heavier finite-count
+   simulated tomography bridge: multinomial/Poisson counts, reconstruction,
+   covariance shrinkage, bootstrap, and power maps.
 
 ## Priority 2: make the manuscript auditable
 
@@ -50,6 +53,8 @@ Recommended additions:
 4. Store generated smoke outputs under the canonical directories `results/micro_smoke/` and `results/mc_smoke/` with deterministic seeds.
 5. Keep `CITATION.cff` ready for the archive.
 6. Archive a release through Zenodo and add the DOI to the README and article.
+7. Keep a light realistic-tomography smoke run green in CI, with heavier power
+   maps generated as release artifacts rather than committed source files.
 
 ## Priority 4: improve numerical credibility
 
@@ -81,6 +86,8 @@ The article can safely say:
   generalized robustness reference near 0.5454.
 - sampled SDP robustness landscapes are available for control dephasing,
   white-noise visibility, and coherent order-bias perturbations.
+- finite-count simulated tomography now supports counts, reconstruction,
+  covariance shrinkage, bootstrap, and power maps under visibility/crosstalk/drift.
 
 The article should not say:
 
@@ -123,8 +130,9 @@ from a clean clone, run one documented command, and see:
 
 1. all tests pass;
 2. toy and micro-tomography smoke outputs regenerate;
-3. the SDP validates known CS targets;
-4. the ideal quantum switch benchmark is reproduced and the dephased-switch
+3. the realistic finite-count tomography bridge regenerates a smoke power map;
+4. the SDP validates known CS targets;
+5. the ideal quantum switch benchmark is reproduced and the dephased-switch
    negative control remains near zero;
-5. every manuscript claim maps to an artifact in
+6. every manuscript claim maps to an artifact in
    `docs/CLAIM_EVIDENCE_MATRIX.md`.

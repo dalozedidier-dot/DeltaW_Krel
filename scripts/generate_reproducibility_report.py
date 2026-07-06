@@ -64,6 +64,10 @@ def main() -> int:
             Path("results/micro_smoke/micro_tomography_power.csv"),
             legacy_paths=(Path("outputs/micro_tomography_power.csv"),),
         ),
+        status_line(
+            "Realistic tomography bridge output",
+            Path("results/realistic_tomography_smoke/realistic_tomography_report.json"),
+        ),
         status_line("Claim/evidence matrix", Path("docs/CLAIM_EVIDENCE_MATRIX.md")),
         "",
         "## Preregistration lock",
@@ -124,8 +128,9 @@ def main() -> int:
             "",
             "The repository supports toy/geometric simulations (methodological",
             "control bench, NOT experimental validation), the micro-tomography",
-            "proof of concept, process-matrix projector tests, and K_CS SDP",
-            "validation. The ideal quantum switch is implemented in the",
+            "proof of concept, a finite-count realistic tomography simulation",
+            "bridge, process-matrix projector tests, and K_CS SDP validation.",
+            "The ideal quantum switch is implemented in the",
             "Araújo et al. (NJP 17, 102001 (2015)) convention; its generalized",
             "robustness benchmark (reference 0.5454) is "
             + ("REPRODUCED" if benchmark_passed else "NOT YET REPRODUCED — submission blocker")
