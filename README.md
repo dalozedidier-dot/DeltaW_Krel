@@ -52,6 +52,10 @@ control with robustness near zero.
 - **Partial-dephasing falsification scan available**: `scripts/run_switch_dephasing_scan.py`
   evaluates `W(lambda) = (1 - lambda) W_switch + lambda W_dephased` and exports
   the generalized-robustness curve with dual witness gaps and residuals.
+- **Multi-family robustness landscape available**:
+  `scripts/run_switch_robustness_landscape.py` scans control dephasing,
+  white-noise visibility, and coherent order-bias families with the same SDP
+  diagnostics.
 - Full SDP diagnostics exported by `scripts/run_sdp_validation.py`: solver and
   package versions, iterations, solve time, residuals, minimal eigenvalues, and
   dual witness certificate.
@@ -139,6 +143,12 @@ Run the partial control-dephasing scan for the switch:
 
 ```bash
 python scripts/run_switch_dephasing_scan.py --lambdas 0,0.25,0.5,0.65,0.7,0.75,1
+```
+
+Run the broader robustness landscape:
+
+```bash
+python scripts/run_switch_robustness_landscape.py
 ```
 
 Full reproducibility from a clean clone:

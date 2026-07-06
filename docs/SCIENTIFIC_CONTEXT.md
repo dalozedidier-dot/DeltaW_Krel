@@ -19,6 +19,8 @@ quantum switch.
 | Ideal quantum switch | Published nonseparable benchmark. | Generalized robustness near `0.5454`. |
 | Control-dephased switch | Negative control removing coherent order superposition. | Robustness near zero. |
 | Partially dephased switch family | Falsification landscape between coherent and classical endpoints. | Robustness curve decreasing toward zero at lambda=1. |
+| White-noise visibility family | Robustness under isotropic valid-process noise. | Visibility curve from white noise to the ideal switch. |
+| Coherent order-bias family | Robustness when one causal order dominates the coherent superposition. | Fixed-order endpoints at q=0 or q=1; balanced switch at q=1/2. |
 
 When the SDP status is `optimal`, it means the numerical solver found a
 solution satisfying the cone and equality constraints within its declared
@@ -45,8 +47,9 @@ published ideal-switch benchmark. Going further means exploring controlled
 departures from this reference case:
 
 1. **Noise families**: white noise, control dephasing, target depolarization,
-   coherent phase errors, and biased order probabilities. The control-dephasing
-   family is now executable with `scripts/run_switch_dephasing_scan.py`.
+   coherent phase errors, and biased order probabilities. Control dephasing,
+   white-noise visibility, and coherent order bias are now executable with
+   `scripts/run_switch_robustness_landscape.py`.
 2. **Dimension and system size**: compare the current qubit-level benchmark
    with higher-dimensional or reduced effective models when the conventions are
    mathematically defined.
@@ -89,3 +92,18 @@ full SDP robustness computation on the switch process family. The generated
 summary states monotonicity and endpoint checks on the sampled grid. It should
 be worded as an empirical SDP scan unless a separate analytic proof is added
 for the full continuum.
+
+## Multi-family robustness landscape
+
+The broader scan script covers three E3-level families:
+
+1. `control_dephasing`: coherence between the two causal orders is continuously
+   removed.
+2. `white_visibility`: the ideal switch is mixed with normalized valid white
+   noise.
+3. `order_bias`: the pure coherent switch vector is biased toward one order,
+   with fixed-order endpoints at `q=0` and `q=1`.
+
+Each row is exported with the same SDP diagnostics as the benchmark:
+generalized robustness, solver versions, residuals, minimal cone eigenvalues,
+dual witness value, and witness certificate gap.

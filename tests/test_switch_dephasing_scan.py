@@ -7,9 +7,13 @@ import pytest
 
 import run_switch_dephasing_scan as scan
 from deltawkrel.switch_models import (
+    biased_coherent_switch_process,
     dephased_switch_process,
     ideal_quantum_switch_process,
     partially_dephased_switch_process,
+    switch_branch_process,
+    switch_white_noise_process,
+    white_visibility_switch_process,
 )
 
 
@@ -29,6 +33,23 @@ def test_partially_dephased_switch_damps_only_coherence_block():
         partially_dephased_switch_process(-0.1)
     with pytest.raises(ValueError):
         partially_dephased_switch_process(1.1)
+
+
+def test_white_visibility_switch_interpolates_white_noise_and_ideal_switch():
+    assert np.allclose(white_visibility_switch_process(0.0), switch_white_noise_process())
+    assert np.allclose(white_visibility_switch_process(1.0), ideal_quantum_switch_process())
+    assert np.isclose(np.trace(white_visibility_switch_process(0.42)), 4.0)
+    with pytest.raises(ValueError):
+        white_visibility_switch_process(-0.01)
+
+
+def test_biased_coherent_switch_interpolates_fixed_order_endpoints():
+    assert np.allclose(biased_coherent_switch_process(1.0), switch_branch_process("AB"))
+    assert np.allclose(biased_coherent_switch_process(0.0), switch_branch_process("BA"))
+    assert np.allclose(biased_coherent_switch_process(0.5), ideal_quantum_switch_process())
+    assert np.isclose(np.trace(biased_coherent_switch_process(0.2)), 4.0)
+    with pytest.raises(ValueError):
+        biased_coherent_switch_process(1.01)
 
 
 def test_parse_lambdas_validates_bounds():

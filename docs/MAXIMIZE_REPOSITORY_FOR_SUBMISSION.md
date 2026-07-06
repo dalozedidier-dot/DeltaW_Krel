@@ -22,6 +22,9 @@ To keep this submission-grade:
    zero.
 4. Export complete diagnostics through the CI pipeline artifacts.
 5. Avoid committing stale generated reports that refer to absent artifacts.
+6. Use `scripts/run_switch_robustness_landscape.py` for the stronger
+   multi-family SDP landscape: control dephasing, white-noise visibility, and
+   coherent order bias.
 
 ## Priority 2: make the manuscript auditable
 
@@ -76,6 +79,8 @@ The article can safely say:
   separable targets;
 - the ideal quantum-switch benchmark is reproduced against the published
   generalized robustness reference near 0.5454.
+- sampled SDP robustness landscapes are available for control dephasing,
+  white-noise visibility, and coherent order-bias perturbations.
 
 The article should not say:
 

@@ -148,6 +148,24 @@ def ideal_quantum_switch_process(psi: np.ndarray | None = None) -> np.ndarray:
     return np.outer(w, w)
 
 
+def biased_coherent_switch_process(probability_A_before_B: float, psi: np.ndarray | None = None) -> np.ndarray:
+    """Coherent switch with biased order amplitudes.
+
+    ``probability_A_before_B`` is the branch weight q in the pure vector
+
+        |w(q)> = sqrt(q) |w_AB> + sqrt(1-q) |w_BA>.
+
+    The endpoints q=0 and q=1 are fixed-order combs; q=1/2 is the ideal
+    balanced switch.  The trace convention remains Tr(W)=4 for all q.
+    """
+    q = float(probability_A_before_B)
+    if not (0.0 <= q <= 1.0):
+        raise ValueError("probability_A_before_B must lie in [0, 1].")
+    psi = _validate_switch_target_state(psi)
+    w = np.sqrt(q) * _switch_branch_vector("AB", psi) + np.sqrt(1.0 - q) * _switch_branch_vector("BA", psi)
+    return np.outer(w, w)
+
+
 def switch_branch_process(order: str, psi: np.ndarray | None = None) -> np.ndarray:
     """Normalized fixed-order branch W_{X≺Y≺F} = |w_{X≺Y}⟩⟨w_{X≺Y}| of the switch.
 
@@ -187,6 +205,29 @@ def partially_dephased_switch_process(lambda_dephasing: float, psi: np.ndarray |
     if not (0.0 <= lam <= 1.0):
         raise ValueError("lambda_dephasing must lie in [0, 1].")
     return (1.0 - lam) * ideal_quantum_switch_process(psi) + lam * dephased_switch_process(psi)
+
+
+def switch_white_noise_process(dims: tuple[int, int, int, int, int] = SWITCH_DIMS_WITH_FUTURE) -> np.ndarray:
+    """White-noise process with future space and Tr(W)=d_AO*d_BO=4."""
+    dims = tuple(int(d) for d in dims)
+    if len(dims) != 5 or any(d <= 0 for d in dims):
+        raise ValueError("dims must have length 5 with positive entries.")
+    D = int(np.prod(dims))
+    d_O = int(dims[AO] * dims[BO])
+    return np.eye(D, dtype=float) * (d_O / D)
+
+
+def white_visibility_switch_process(visibility: float, psi: np.ndarray | None = None) -> np.ndarray:
+    """Switch mixed with valid white noise.
+
+    ``visibility=1`` is the ideal switch and ``visibility=0`` is the normalized
+    white-noise process.  This family is useful for visibility-threshold SDP
+    scans.
+    """
+    v = float(visibility)
+    if not (0.0 <= v <= 1.0):
+        raise ValueError("visibility must lie in [0, 1].")
+    return v * ideal_quantum_switch_process(psi) + (1.0 - v) * switch_white_noise_process()
 
 
 def white_noise_validation_process(dims: ProcessDims = ProcessDims()) -> np.ndarray:
