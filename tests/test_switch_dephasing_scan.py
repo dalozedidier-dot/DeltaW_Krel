@@ -113,3 +113,41 @@ def test_write_outputs_strict_json_and_csv(tmp_path):
     report = json.loads(text)
     assert report["summary"]["classical_endpoint_zero"] is True
     assert csv_path.read_text(encoding="utf-8").startswith("lambda_dephasing,")
+
+
+def test_dephasing_main_uses_cli_lambdas_and_writes_outputs(tmp_path, monkeypatch):
+    def fake_scan_dephasing_curve(lambdas, solver="SCS", eps=1e-8, max_iters=200_000):
+        return [
+            {
+                "lambda_dephasing": lam,
+                "generalized_robustness": 1.0 - lam,
+                "status": "optimal",
+                "solver": solver,
+                "solver_version": "x",
+                "cvxpy_version": "y",
+                "num_iters": 1.0,
+                "solve_time_s": 0.1,
+                "equality_residual_fro": 1e-11,
+                "subspace_residual_fro": 1e-11,
+                "min_eig_W_AB": -1e-10,
+                "min_eig_W_BA": -1e-10,
+                "witness_value": 1.0 - lam,
+                "witness_certificate_gap": 1e-10,
+            }
+            for lam in lambdas
+        ]
+
+    monkeypatch.setattr(scan, "scan_dephasing_curve", fake_scan_dephasing_curve)
+    code = scan.main(
+        [
+            "--lambdas",
+            "0,1",
+            "--outdir",
+            str(tmp_path),
+            "--solver",
+            "FAKE",
+        ]
+    )
+    assert code == 0
+    report = json.loads((tmp_path / "switch_dephasing_scan.json").read_text(encoding="utf-8"))
+    assert [row["lambda_dephasing"] for row in report["rows"]] == [0.0, 1.0]

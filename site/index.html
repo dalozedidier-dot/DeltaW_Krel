@@ -9,6 +9,7 @@
       content="Submission-oriented SDP validation dashboard for the DeltaW/K_rel reproducibility repository."
     >
     <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
   </head>
   <body>
     <header class="topbar">
@@ -66,6 +67,38 @@
             <strong>149</strong>
             <p>Passing tests with 93.77% coverage locally.</p>
           </article>
+        </div>
+
+        <div class="data-panel">
+          <div>
+            <h3>Published landscape data</h3>
+            <p id="data-status">
+              Loading the SDP landscape data served with this GitHub Pages site.
+            </p>
+          </div>
+          <div class="data-links" aria-label="Download landscape data">
+            <a href="data/switch_robustness_landscape.json">JSON</a>
+            <a href="data/switch_robustness_landscape.csv">CSV</a>
+          </div>
+        </div>
+
+        <div class="table-wrap" aria-label="Full SDP landscape table">
+          <table class="wide-table">
+            <thead>
+              <tr>
+                <th>Family</th>
+                <th>Parameter</th>
+                <th>R_g</th>
+                <th>Dual gap</th>
+                <th>Residual</th>
+              </tr>
+            </thead>
+            <tbody id="landscape-data-rows">
+              <tr>
+                <td colspan="5">Data will load from site/data/switch_robustness_landscape.json.</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </section>
 

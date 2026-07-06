@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import json
 import re
+import csv
 from pathlib import Path
 
 import pytest
@@ -79,16 +80,46 @@ def test_citation_file_present_and_nonempty():
 def test_github_pages_site_is_present():
     index = REPO_ROOT / "site" / "index.html"
     css = REPO_ROOT / "site" / "styles.css"
+    app = REPO_ROOT / "site" / "app.js"
     workflow = REPO_ROOT / ".github" / "workflows" / "pages.yml"
     assert index.exists(), "GitHub Pages index missing"
     assert css.exists(), "GitHub Pages stylesheet missing"
+    assert app.exists(), "GitHub Pages JavaScript missing"
     assert workflow.exists(), "GitHub Pages workflow missing"
     html = index.read_text(encoding="utf-8")
     assert "R<sub>g</sub> = 0.545351" in html
     assert "run_switch_robustness_landscape.py" in html
+    assert "data/switch_robustness_landscape.json" in html
+    assert "data/switch_robustness_landscape.csv" in html
     assert "Control dephasing" in html
     assert "White visibility" in html
     assert "Order bias" in html
+
+
+def test_github_pages_landscape_data_is_complete_and_strict():
+    json_path = REPO_ROOT / "site" / "data" / "switch_robustness_landscape.json"
+    csv_path = REPO_ROOT / "site" / "data" / "switch_robustness_landscape.csv"
+    assert json_path.exists(), "published landscape JSON missing"
+    assert csv_path.exists(), "published landscape CSV missing"
+    text = json_path.read_text(encoding="utf-8")
+    assert "NaN" not in text
+    report = json.loads(text)
+    assert report["status"] == "switch_robustness_landscape"
+    rows = report["rows"]
+    assert len(rows) == 19
+    families = {row["family"] for row in rows}
+    assert families == {"control_dephasing", "white_visibility", "order_bias"}
+    lookup = {(row["family"], row["parameter"]): row for row in rows}
+    assert lookup[("control_dephasing", 0.0)]["generalized_robustness"] == pytest.approx(0.545351, abs=5e-4)
+    assert abs(lookup[("control_dephasing", 1.0)]["generalized_robustness"]) < 1e-6
+    assert lookup[("white_visibility", 1.0)]["generalized_robustness"] == pytest.approx(0.545351, abs=5e-4)
+    assert abs(lookup[("order_bias", 0.0)]["generalized_robustness"]) < 1e-6
+    assert abs(lookup[("order_bias", 1.0)]["generalized_robustness"]) < 1e-6
+    assert max(abs(row["witness_certificate_gap"]) for row in rows) < 1e-7
+
+    with csv_path.open(newline="", encoding="utf-8") as handle:
+        csv_rows = list(csv.DictReader(handle))
+    assert len(csv_rows) == len(rows)
 
 
 def test_docs_do_not_revert_switch_benchmark_status():
