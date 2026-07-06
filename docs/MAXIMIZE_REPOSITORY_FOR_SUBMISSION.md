@@ -25,10 +25,14 @@ To keep this submission-grade:
 6. Use `scripts/run_switch_robustness_landscape.py` for the stronger
    multi-family SDP landscape: control dephasing, white-noise visibility, and
    coherent order bias.
-7. Use `scripts/realistic_tomography_pipeline.py` for the heavier finite-count
+7. Use `scripts/run_certified_witness_landscape.py` for the E3+ fixed-witness
+   landscape: one dual-optimal witness extracted at the ideal switch, reused
+   across the three switch perturbation families with full-SDP lower-bound
+   checks.
+8. Use `scripts/realistic_tomography_pipeline.py` for the heavier finite-count
    simulated tomography bridge: multinomial/Poisson counts, reconstruction,
    covariance shrinkage, bootstrap, and power maps.
-8. Use `scripts/full_tomography_simulation.py` for the state-of-the-art
+9. Use `scripts/full_tomography_simulation.py` for the state-of-the-art
    simulated stress test: path-dependent loss, dephasing, crosstalk, temporal
    drift, interleaved controls, empirical LR calibration, and applicability map.
 
@@ -96,6 +100,9 @@ The article can safely say:
   generalized robustness reference near 0.5454.
 - sampled SDP robustness landscapes are available for control dephasing,
   white-noise visibility, and coherent order-bias perturbations.
+- a fixed certified dual witness lower-bounds SDP robustness across the three
+  switch perturbation families, with explicit certified regions and non-E4
+  guardrails.
 - finite-count simulated tomography now supports counts, reconstruction,
   covariance shrinkage, bootstrap, and power maps under visibility/crosstalk/drift.
 - full simulated tomography stress tests now include path losses, dephasing,
