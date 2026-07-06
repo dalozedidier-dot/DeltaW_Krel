@@ -130,9 +130,13 @@ def certified_robustness_interval(
     ok = [r for r in table if r.status in {"optimal", "optimal_inaccurate"}]
     if not ok:
         return CertifiedInterval(float("nan"), float("nan"), float("nan"), table)
-    # Tightest certified interval: highest verified LB, lowest verified UB.
-    R_lower = max(r.R_g_lower for r in ok)
-    R_upper = min(r.R_g_upper for r in ok)
+    # Tightest numerical bracket: highest verified LB, lowest verified UB.
+    # At high tolerance SCS can return a tiny negative primal-dual gap
+    # (lower > upper by ~1e-10).  Keep the raw values in the solver table and
+    # expose an ordered interval at the aggregate level.
+    raw_lower = max(r.R_g_lower for r in ok)
+    raw_upper = min(r.R_g_upper for r in ok)
+    R_lower, R_upper = sorted((raw_lower, raw_upper))
     uppers = [r.R_g_upper for r in ok]
     spread = float(max(uppers) - min(uppers))
-    return CertifiedInterval(R_lower, R_upper, abs(R_upper - R_lower), table, spread)
+    return CertifiedInterval(R_lower, R_upper, float(R_upper - R_lower), table, spread)
