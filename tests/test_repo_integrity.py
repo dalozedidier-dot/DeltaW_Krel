@@ -76,6 +76,21 @@ def test_citation_file_present_and_nonempty():
     assert "title" in text.lower()
 
 
+def test_github_pages_site_is_present():
+    index = REPO_ROOT / "site" / "index.html"
+    css = REPO_ROOT / "site" / "styles.css"
+    workflow = REPO_ROOT / ".github" / "workflows" / "pages.yml"
+    assert index.exists(), "GitHub Pages index missing"
+    assert css.exists(), "GitHub Pages stylesheet missing"
+    assert workflow.exists(), "GitHub Pages workflow missing"
+    html = index.read_text(encoding="utf-8")
+    assert "R<sub>g</sub> = 0.545351" in html
+    assert "run_switch_robustness_landscape.py" in html
+    assert "Control dephasing" in html
+    assert "White visibility" in html
+    assert "Order bias" in html
+
+
 def test_docs_do_not_revert_switch_benchmark_status():
     checked = [
         REPO_ROOT / "docs" / "CLAIM_EVIDENCE_MATRIX.md",

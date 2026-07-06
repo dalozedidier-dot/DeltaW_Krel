@@ -6,6 +6,9 @@ Its central purpose is to make the computational claims auditable: a reviewer
 should be able to clone the repository, run the documented commands, and verify
 which claims are supported by tests, SDP benchmarks, or exploratory simulations.
 
+Public results page after GitHub Pages deployment:
+`https://dalozedidier-dot.github.io/DeltaW_Krel/`.
+
 ## Scientific objective
 
 The project studies a decision architecture around process-matrix witnesses,
@@ -92,6 +95,8 @@ virtual environments should not be committed to GitHub.
 
 ```text
 .github/workflows/ci.yml              GitHub Actions tests
+.github/workflows/pages.yml           GitHub Pages deployment
+site/                                 static public results page
 src/deltawkrel/projectors.py          trace-replace maps and process projectors
 src/deltawkrel/sdp.py                 K_CS and switch robustness SDP routines
 src/deltawkrel/switch_models.py       white-noise/fixed-order targets + switch

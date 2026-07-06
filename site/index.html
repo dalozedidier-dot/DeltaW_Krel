@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DeltaW/K_rel Results</title>
+    <meta
+      name="description"
+      content="Submission-oriented SDP validation dashboard for the DeltaW/K_rel reproducibility repository."
+    >
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#top" aria-label="DeltaW/K_rel results home">DeltaW/K_rel</a>
+      <nav aria-label="Page sections">
+        <a href="#benchmark">Benchmark</a>
+        <a href="#landscape">Landscape</a>
+        <a href="#evidence">Evidence</a>
+        <a href="#reproduce">Reproduce</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow">Process-matrix SDP validation</p>
+          <h1>Quantum-switch robustness, mapped beyond one benchmark point.</h1>
+          <p>
+            The repository reproduces the published ideal-switch generalized
+            robustness and extends it with sampled SDP landscapes under control
+            dephasing, white-noise visibility, and coherent order bias.
+          </p>
+        </div>
+        <div class="hero-panel" aria-label="Main benchmark summary">
+          <span class="panel-label">Ideal switch</span>
+          <strong>R<sub>g</sub> = 0.545351</strong>
+          <span>Reference: 0.5454</span>
+          <span>Error: 4.9e-5</span>
+        </div>
+      </section>
+
+      <section id="benchmark" class="band">
+        <div class="section-title">
+          <p class="eyebrow">Benchmark layer</p>
+          <h2>Published value reproduced</h2>
+        </div>
+        <div class="metrics-grid">
+          <article class="metric">
+            <span>Generalized robustness</span>
+            <strong>0.545351</strong>
+            <p>Ideal quantum switch, SCS at tight tolerance.</p>
+          </article>
+          <article class="metric">
+            <span>Benchmark error</span>
+            <strong>4.9e-5</strong>
+            <p>Against the published 0.5454 reference.</p>
+          </article>
+          <article class="metric">
+            <span>Dephased control</span>
+            <strong>~0</strong>
+            <p>Negative control is causally separable.</p>
+          </article>
+          <article class="metric">
+            <span>Test suite</span>
+            <strong>149</strong>
+            <p>Passing tests with 93.77% coverage locally.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="landscape" class="band light">
+        <div class="section-title">
+          <p class="eyebrow">Falsification landscape</p>
+          <h2>Robustness across perturbation families</h2>
+        </div>
+
+        <div class="chart-grid">
+          <article class="chart-card">
+            <div class="chart-head">
+              <h3>Control dephasing</h3>
+              <span>lambda: coherent to classical</span>
+            </div>
+            <svg viewBox="0 0 640 260" role="img" aria-label="Control dephasing robustness curve">
+              <polyline class="grid-line" points="40,220 600,220"></polyline>
+              <polyline class="grid-line" points="40,140 600,140"></polyline>
+              <polyline class="grid-line" points="40,60 600,60"></polyline>
+              <polyline
+                class="curve"
+                points="40,40 180,101 320,161 404,188 432,195 460,201 600,220"
+              ></polyline>
+              <g class="points">
+                <circle cx="40" cy="40" r="5"></circle>
+                <circle cx="180" cy="101" r="5"></circle>
+                <circle cx="320" cy="161" r="5"></circle>
+                <circle cx="404" cy="188" r="5"></circle>
+                <circle cx="432" cy="195" r="5"></circle>
+                <circle cx="460" cy="201" r="5"></circle>
+                <circle cx="600" cy="220" r="5"></circle>
+              </g>
+              <text x="40" y="246">0</text>
+              <text x="584" y="246">1</text>
+              <text x="46" y="32">0.545</text>
+            </svg>
+            <table>
+              <thead>
+                <tr><th>lambda</th><th>R_g</th><th>dual gap</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>0.00</td><td>0.545351</td><td>5.3e-10</td></tr>
+                <tr><td>0.25</td><td>0.352626</td><td>1.3e-09</td></tr>
+                <tr><td>0.50</td><td>0.167483</td><td>2.0e-10</td></tr>
+                <tr><td>1.00</td><td>0.000000</td><td>7.5e-10</td></tr>
+              </tbody>
+            </table>
+          </article>
+
+          <article class="chart-card">
+            <div class="chart-head">
+              <h3>White visibility</h3>
+              <span>v: white noise to ideal switch</span>
+            </div>
+            <div class="bar-chart" aria-label="White visibility sampled robustness values">
+              <div class="bar-row">
+                <span>v=0.0</span>
+                <div><i style="width: 0%"></i></div>
+                <b>0.000000</b>
+              </div>
+              <div class="bar-row">
+                <span>v=0.5</span>
+                <div><i style="width: 14.3%"></i></div>
+                <b>0.077934</b>
+              </div>
+              <div class="bar-row">
+                <span>v=1.0</span>
+                <div><i style="width: 100%"></i></div>
+                <b>0.545351</b>
+              </div>
+            </div>
+          </article>
+
+          <article class="chart-card">
+            <div class="chart-head">
+              <h3>Order bias</h3>
+              <span>q: fixed order to balanced switch</span>
+            </div>
+            <div class="bar-chart" aria-label="Order bias sampled robustness values">
+              <div class="bar-row">
+                <span>q=0.0</span>
+                <div><i style="width: 0%"></i></div>
+                <b>0.000000</b>
+              </div>
+              <div class="bar-row">
+                <span>q=0.5</span>
+                <div><i style="width: 100%"></i></div>
+                <b>0.545351</b>
+              </div>
+              <div class="bar-row">
+                <span>q=1.0</span>
+                <div><i style="width: 0%"></i></div>
+                <b>0.000000</b>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="evidence" class="band">
+        <div class="section-title">
+          <p class="eyebrow">Evidence architecture</p>
+          <h2>What the repository claims</h2>
+        </div>
+        <div class="evidence-grid">
+          <article>
+            <h3>E3: SDP benchmark and landscapes</h3>
+            <p>
+              The ideal switch, dephased negative control, and perturbation
+              families are solved as semidefinite programs with residual and
+              dual-witness diagnostics.
+            </p>
+          </article>
+          <article>
+            <h3>E2: Process-matrix infrastructure</h3>
+            <p>
+              Trace-replace maps, fixed-order projectors, and causally
+              separable controls are executable and tested.
+            </p>
+          </article>
+          <article>
+            <h3>E1: Exploratory controls</h3>
+            <p>
+              Monte Carlo and micro-tomography scripts are methodological smoke
+              tests, not final experimental evidence.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section id="reproduce" class="band dark">
+        <div class="section-title">
+          <p class="eyebrow">Reproducibility</p>
+          <h2>Commands</h2>
+        </div>
+        <div class="commands">
+          <pre><code>python -m pip install -e .
+pytest -q
+python scripts/run_sdp_validation.py
+python scripts/run_switch_dephasing_scan.py --lambdas 0,0.25,0.5,0.65,0.7,0.75,1
+python scripts/run_switch_robustness_landscape.py
+python scripts/validate_manifest.py</code></pre>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

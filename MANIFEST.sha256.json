@@ -5,7 +5,7 @@
   ".gitignore": "3dac14e7c80bbaeee153df90959adf673a1dc70a6152cb7e61f2c2871e16fd64",
   "CITATION.cff": "387822d78ebb8f01ea94ad62f28081ee2d51000dbf3c70e1485f166595fa74a7",
   "Makefile": "65c0da449e2696955072ade7d56ce93091cb0a76473028a0a74169780e70c408",
-  "README.md": "b3f8f0904857f4b89d0d757ec3926068bb878b44bd0acde859612892941a008a",
+  "README.md": "7cde5878865cbd639528611005d29aee268a5a098f48e7f7b208e6314a864876",
   "SMOKE_OUTPUTS_VALIDATION_REPORT.md": "8a9bb1fb8a62767ce1b5de779836ce25b6ddeb9b32eb47420139261f1dd42b10",
   "config/config_preregistration.json": "21a6e4cce29fcc3069c43bc597a8101053fa6cba46aa6893dd4485af515d0a77",
   "docs/CLAIM_EVIDENCE_MATRIX.md": "740275ec2a8feb9e546bf051e044100c388e24bbe255be42bc0600da72b4c78c",
@@ -28,6 +28,7 @@
   "scripts/monte_carlo_control_supplement.py": "2789c8cf91aabd60d6744fb435a41d4762a51871d2aaff97be8a0d236bb34791",
   "scripts/run_sdp_validation.py": "f7551cee07a3b725729417dd627644bda082980db3474d42076ef5e40e9ce93c",
   "scripts/run_switch_dephasing_scan.py": "6fabf82b3f985f6b1b6c9be6379a749cf942a7b1ee2ccc02cfc142c1447610e3",
+  "scripts/run_switch_robustness_landscape.py": "1a45c85e7b208c181f7e6603999e7498a79541eb2654c50a5fd155e5b578b092",
   "scripts/validate_manifest.py": "40c9808fe4fd61068c82f879844254be3bb7972bbd4e042cd0d73ef8ece3415d",
   "src/deltawkrel/__init__.py": "dea0e0f5f6c9cb9d7e801c313b39f151d5af3d8eb2d39a4613b1e879749447ef",
   "src/deltawkrel/projectors.py": "a81f6389efb0e816ef54c26e488a88ff4357c27697ba069b310718e376a5f19c",
@@ -39,11 +40,12 @@
   "tests/test_projectors.py": "b46267d625c7972ba088fcc4628fcaf28710a4b9e077fbe2c78207cd3236d3b2",
   "tests/test_projectors_extended.py": "8ccae5e34802f6a29b60ff19ef57528c164a8a836cf5129e12d3c7bfc0d5040d",
   "tests/test_quantum_switch.py": "741b119f84a05377edbac0e02e9ae02cc1ce8bd2c9b9d1ecf07b52febb58c7fd",
-  "tests/test_repo_integrity.py": "c4b43281db69306b4de631af3f0fae84fc83f9cb114c6c8b70824132318c36a5",
+  "tests/test_repo_integrity.py": "e95b5c4a9f4806a419ed3a9781dc6765afb43c3b7d218e1cb7a99e79d083de9a",
   "tests/test_scripts_cli.py": "833c8bec2e12fe02d0e088d8cab58f5d165eccdd7f666b93f239a91a4c92a0db",
   "tests/test_sdp_extended.py": "787f90aac2e4dd7d9ae4d0ba2aa35cf27e5e0524396bad8f659e3ceff51a29c3",
   "tests/test_sdp_scaffold.py": "754f04a1f10be87fbae6bfd6730cedce2b2c47a9e0f2da60b952d3fda45cb072",
   "tests/test_switch_dephasing_scan.py": "24817a5f6444e39587dcb14c170d2d4bb6d2486f3070392ba07b159e7a041a3b",
   "tests/test_switch_models_and_projectors.py": "1f539f232c4f9590ae861cbf597a42afdaa770666fbed93de162b2a53d8433ab",
-  "tests/test_switch_models_extended.py": "1668c6abf35373f6412e178302685ca153350b03f86045e5ca891f47d13318bc"
+  "tests/test_switch_models_extended.py": "1668c6abf35373f6412e178302685ca153350b03f86045e5ca891f47d13318bc",
+  "tests/test_switch_robustness_landscape.py": "eb9d3a6cff756bfbe1d45241ecf528877402490cc31f8dbf19acd8e5a03aa563"
 }
