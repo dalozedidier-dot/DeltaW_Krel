@@ -17,6 +17,7 @@
       <nav aria-label="Page sections">
         <a href="#benchmark">Benchmark</a>
         <a href="#certified">Certified</a>
+        <a href="#finite">Finite</a>
         <a href="#advanced">Advanced</a>
         <a href="#landscape">Landscape</a>
         <a href="#evidence">Evidence</a>
@@ -206,6 +207,90 @@
             <tbody id="cert-data-rows">
               <tr>
                 <td colspan="5">Data will load from site/data/certified_witness/certified_witness_landscape.json.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="finite" class="band">
+        <div class="section-title">
+          <p class="eyebrow">Finite-count certificate</p>
+          <h2>One scalar, quantified under shot-noise and certified bounds</h2>
+          <p>
+            The A4/A5 layer turns the fixed witness into a finite-count scalar
+            estimator and a numerical primal/dual robustness interval. It is
+            deliberately narrower than full tomography: one preregistered
+            direction, explicit false-positive stress, and solver diagnostics.
+          </p>
+        </div>
+
+        <div class="metrics-grid validation-metrics">
+          <article class="metric">
+            <span>Measured scalars</span>
+            <strong id="finite-scalars">1</strong>
+            <p>Against 4096 process matrix entries.</p>
+          </article>
+          <article class="metric">
+            <span>1/N scaling</span>
+            <strong id="finite-scaling">pass</strong>
+            <p>Multinomial simulation agrees with the analytic shot-noise law.</p>
+          </article>
+          <article class="metric">
+            <span>K_rel max false positive</span>
+            <strong id="finite-krel-fp">1.25%</strong>
+            <p>Under calibrated nuisance drift at alpha = 1%.</p>
+          </article>
+          <article class="metric">
+            <span>R_g interval width</span>
+            <strong id="bounds-width">5.32e-10</strong>
+            <p>Primal/dual numerical bracket for the ideal switch.</p>
+          </article>
+        </div>
+
+        <div class="validation-layout">
+          <article class="validation-copy">
+            <h3>Single-direction statistics</h3>
+            <p id="finite-data-status">
+              Loading the finite-count witness report served with this GitHub
+              Pages site.
+            </p>
+            <p id="bounds-data-status">
+              Loading the certified primal/dual interval report.
+            </p>
+            <div class="data-links" aria-label="Download finite-count data">
+              <a href="data/finite_count/finite_count_report.json">A4 JSON</a>
+              <a href="data/finite_count/finite_count.png">A4 PNG</a>
+              <a href="data/certified_witness/certified_bounds_report.json">A5 JSON</a>
+            </div>
+          </article>
+          <figure class="power-figure">
+            <img
+              src="data/finite_count/finite_count.png"
+              alt="Finite-count single-direction estimator scaling, copy budget, and false-positive immunity"
+            >
+            <figcaption>
+              A4 result: one-parameter scaling, copies-to-certify surface, and
+              calibrated-drift false-positive contrast.
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="table-wrap" aria-label="Certified bounds solver table">
+          <table class="wide-table">
+            <thead>
+              <tr>
+                <th>Solver</th>
+                <th>Available</th>
+                <th>Status</th>
+                <th>Lower</th>
+                <th>Upper</th>
+                <th>Width</th>
+              </tr>
+            </thead>
+            <tbody id="bounds-data-rows">
+              <tr>
+                <td colspan="6">Data will load from site/data/certified_witness/certified_bounds_report.json.</td>
               </tr>
             </tbody>
           </table>
@@ -526,6 +611,8 @@ python scripts/run_sdp_validation.py
 python scripts/run_switch_dephasing_scan.py --lambdas 0,0.25,0.5,0.65,0.7,0.75,1
 python scripts/run_switch_robustness_landscape.py
 python scripts/run_certified_witness_landscape.py
+python scripts/run_certified_bounds.py
+python scripts/run_finite_count_analysis.py
 python scripts/realistic_tomography_pipeline.py --outdir results/realistic_tomography_smoke
 python scripts/full_realistic_tomography.py --outdir results/full_tomography_smoke
 python scripts/validate_manifest.py</code></pre>

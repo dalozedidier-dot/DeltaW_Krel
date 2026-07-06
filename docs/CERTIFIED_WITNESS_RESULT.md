@@ -9,6 +9,10 @@ Artifacts: `src/deltawkrel/certified_witness.py`,
 `scripts/run_certified_witness_analysis.py`,
 `tests/test_certified_witness.py`,
 `results/certified_witness_report.json`, `.csv`, `.png`.
+Supporting artifacts: `docs/CERTIFICATE_LEMMAS.md`,
+`src/deltawkrel/certified_bounds.py`, `scripts/run_certified_bounds.py`,
+`src/deltawkrel/finite_count.py`, and
+`scripts/run_finite_count_analysis.py`.
 
 ## Statement
 
@@ -85,10 +89,35 @@ requires a second, order-asymmetric witness.
 Artifacts: `scripts/run_certified_witness_landscape.py`,
 `site/data/certified_witness/certified_witness_landscape.json`, `.csv`, `.png`.
 
+## Certified interval and finite-count scalar
+
+The A5 certified-bounds layer reports the ideal-switch robustness as a
+primal/dual numerical bracket rather than a solver status:
+
+```text
+R_g in [0.545351058860, 0.545351059392]
+width = 5.32e-10
+```
+
+The solver table is explicit: SCS solves this D=64 instance reliably at tight
+tolerance; CLARABEL is recorded as failing on the instance; MOSEK is recorded as
+unavailable unless installed with a license. This is a reproducibility
+diagnostic, not an attempt to hide solver dependence.
+
+The A4 finite-count layer then treats the witness as one preregistered scalar.
+It confirms the analytic `1/N` shot-noise scaling, exports a
+`N_required(lambda, visibility)` surface, and stress-tests a calibrated nuisance
+drift. In the current report `K_rel` stays near the nominal alpha-level while
+the raw witness is driven to a false-positive rate of 1 under the same
+calibrated drift. This is the quantitative payoff of the admissible projection.
+
 ## Reproduce
 
 ```bash
 python scripts/run_certified_witness_analysis.py
 python scripts/run_certified_witness_landscape.py
+python scripts/run_certified_bounds.py
+python scripts/run_finite_count_analysis.py
 pytest tests/test_certified_witness.py -q
+pytest tests/test_finite_count.py -q
 ```

@@ -76,6 +76,17 @@ control with robustness near zero.
   applies the same fixed witness across control dephasing, white visibility,
   and order bias. See
   `docs/CERTIFIED_WITNESS_RESULT.md` for the E3+ result summary.
+- **Finite-count single-direction statistics available**:
+  `src/deltawkrel/finite_count.py` and `scripts/run_finite_count_analysis.py`
+  quantify the one-scalar shot-noise floor, copies-to-certify surface, and
+  false-positive immunity of `K_rel` against calibrated nuisance drift.
+- **Certified primal/dual robustness interval available**:
+  `src/deltawkrel/certified_bounds.py` and `scripts/run_certified_bounds.py`
+  bracket the ideal-switch robustness with explicit solver status reporting.
+- **Positioning and external-data inventory available**:
+  `docs/PROTOCOL_POSITIONING_AND_DATA_INVENTORY.md` records the protocol
+  positioning and the verified Procopio/Rubino/Goswami/Dourdent/Cao reference
+  targets for future external-data ingestion.
 - Full SDP diagnostics exported by `scripts/run_sdp_validation.py`: solver and
   package versions, iterations, solve time, residuals, minimal eigenvalues, and
   dual witness certificate.
@@ -118,6 +129,8 @@ src/deltawkrel/projectors.py          trace-replace maps and process projectors
 src/deltawkrel/sdp.py                 K_CS and switch robustness SDP routines
 src/deltawkrel/switch_models.py       white-noise/fixed-order targets + switch
 src/deltawkrel/certified_witness.py  certified dual witness + K_rel projection
+src/deltawkrel/certified_bounds.py   primal/dual robustness interval
+src/deltawkrel/finite_count.py       finite-count scalar estimator
 scripts/monte_carlo_control_supplement.py
 scripts/micro_tomography_simulation.py
 scripts/realistic_tomography_pipeline.py
@@ -126,12 +139,16 @@ scripts/full_realistic_tomography.py
 scripts/run_sdp_validation.py
 scripts/run_certified_witness_analysis.py
 scripts/run_certified_witness_landscape.py
+scripts/run_certified_bounds.py
+scripts/run_finite_count_analysis.py
 notebooks/projectors_definitions.ipynb
 notebooks/validation_switch_ideal.ipynb
 config/config_preregistration.json
 tests/
 docs/CLAIM_EVIDENCE_MATRIX.md
+docs/CERTIFICATE_LEMMAS.md
 docs/MAXIMIZE_REPOSITORY_FOR_SUBMISSION.md
+docs/PROTOCOL_POSITIONING_AND_DATA_INVENTORY.md
 docs/ULTIMATE_VISION_ROADMAP.md
 ```
 
@@ -198,7 +215,10 @@ Run the certified single-direction witness analysis:
 ```bash
 python scripts/run_certified_witness_analysis.py
 python scripts/run_certified_witness_landscape.py
+python scripts/run_certified_bounds.py
+python scripts/run_finite_count_analysis.py
 pytest tests/test_certified_witness.py -q
+pytest tests/test_finite_count.py -q
 ```
 
 
@@ -233,5 +253,8 @@ following are true:
 
 For a claim-by-claim audit trail, see `docs/CLAIM_EVIDENCE_MATRIX.md`.
 For the hardening roadmap, see `docs/MAXIMIZE_REPOSITORY_FOR_SUBMISSION.md`.
+For the certificate lemmas and external-data positioning, see
+`docs/CERTIFICATE_LEMMAS.md` and
+`docs/PROTOCOL_POSITIONING_AND_DATA_INVENTORY.md`.
 For the long-horizon research program, see
 `docs/ULTIMATE_VISION_ROADMAP.md`.

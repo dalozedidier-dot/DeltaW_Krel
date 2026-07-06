@@ -32,6 +32,9 @@ or an explicit blocker.
 | Partial control dephasing maps the falsification landscape between ideal and classical switch endpoints. | E3 | `partially_dephased_switch_process`, `scripts/run_switch_dephasing_scan.py` | Supported as a sampled SDP scan; continuum claims require an analytic proof or denser certified grid. |
 | Robustness can be scanned across multiple switch perturbation families. | E3 | `biased_coherent_switch_process`, `white_visibility_switch_process`, `scripts/run_switch_robustness_landscape.py` | Supported as sampled SDP landscape over control dephasing, white-noise visibility, and coherent order bias. |
 | One fixed dual witness certifies nonseparability regions across switch families. | E3+ | `src/deltawkrel/certified_witness.py`, `scripts/run_certified_witness_analysis.py`, `scripts/run_certified_witness_landscape.py`, `site/data/certified_witness/` | Supported as mathematical certification on the physical switch: a fixed dual-feasible witness lower-bounds SDP robustness on verification grids and instantiates the K_rel projection; not E4 experimental evidence. |
+| The ideal-switch robustness is reported as a primal/dual interval, not just a solver flag. | E3+ | `src/deltawkrel/certified_bounds.py`, `scripts/run_certified_bounds.py`, `site/data/certified_witness/certified_bounds_report.json` | Supported: current SCS interval width is `5.32e-10`, with CLARABEL/MOSEK status reported explicitly. |
+| The fixed witness admits finite-count one-scalar statistics. | E2+ | `src/deltawkrel/finite_count.py`, `scripts/run_finite_count_analysis.py`, `tests/test_finite_count.py`, `site/data/finite_count/` | Supported as a shot-noise floor and calibrated-drift stress test; not a replacement for full tomography or E4 data. |
+| Published quantum-switch datasets are ready for external reanalysis. | E0 | `docs/PROTOCOL_POSITIONING_AND_DATA_INVENTORY.md` | Inventory complete enough to prioritize ingestion, but no external raw data have been imported or analyzed. |
 | The package is ready for a formal confirmatory submission. | E3 plus editorial cleanup | `docs/SUBMISSION_CHECKLIST.md` | Technically close; final submission still requires synchronized manuscript/notebook wording and archive DOI. |
 
 ## Rules for using this matrix
@@ -54,6 +57,9 @@ or an explicit blocker.
 | Partial-dephasing switch scan | Stronger E3 | JSON/CSV curve exported with monotonicity, endpoint, residual, and witness-gap diagnostics. |
 | Multi-family switch landscape | Stronger E3 | Control-dephasing, white-visibility, and order-bias families exported with SDP diagnostics. |
 | Certified witness landscape | E3+ toward E4 | Fixed S* witness exported with lower-bound verification grids, certified regions, and explicit non-E4 guardrails. |
+| Certified robustness interval | Stronger E3+ | Primal/dual bracket exported with solver availability and failure status. |
+| Finite-count scalar statistics | Stronger E2+ | 1/N scaling, copies-to-certify surface, and calibrated-drift false-positive contrast exported. |
+| External data inventory | Future E4 path | Exact references, DOI/arXiv identifiers, and ingestion guardrails documented without claiming external analysis. |
 | Realistic tomography bridge | Stronger E2 toward E4 | Multinomial/Poisson counts, linear/MLE reconstruction, Fisher/shrinkage covariance, bootstrap, and power maps are executable. |
 | Full tomography stress test | Stronger E2+ toward E4 | Physical-noise knobs, interleaved controls, empirical LR calibration, false-positive drift checks, and applicability map are executable. |
 | Solver diagnostics export | Required for E3 | Status, objective, dual gap if available, residuals, omega_white, complementarity checks. |

@@ -12,6 +12,13 @@
   const certFamilyCountNode = document.getElementById("cert-family-count");
   const certAffineCountNode = document.getElementById("cert-affine-count");
   const certBoundCountNode = document.getElementById("cert-bound-count");
+  const finiteStatusNode = document.getElementById("finite-data-status");
+  const finiteScalarsNode = document.getElementById("finite-scalars");
+  const finiteScalingNode = document.getElementById("finite-scaling");
+  const finiteKrelFpNode = document.getElementById("finite-krel-fp");
+  const boundsStatusNode = document.getElementById("bounds-data-status");
+  const boundsRowsNode = document.getElementById("bounds-data-rows");
+  const boundsWidthNode = document.getElementById("bounds-width");
 
   function formatNumber(value, digits) {
     const number = Number(value);
@@ -159,6 +166,59 @@
       .join("");
   }
 
+  function renderFiniteCount(data) {
+    if (!finiteStatusNode) {
+      return;
+    }
+    const scaling = data.one_over_N_scaling || {};
+    const fp = data.false_positive_under_calibrated_drift || {};
+    const maxKrelFp = Math.max(...(fp.fp_rate_krel || [0]).map(Number));
+    const rawFp = Math.max(...(fp.fp_rate_raw_witness || [0]).map(Number));
+    const ratios = scaling.empirical_over_analytic_ratio || [];
+
+    if (finiteScalarsNode) {
+      finiteScalarsNode.textContent = String(data.scalars_measured || 1);
+    }
+    if (finiteScalingNode) {
+      finiteScalingNode.textContent = scaling.scaling_confirmed ? "pass" : "review";
+    }
+    if (finiteKrelFpNode) {
+      finiteKrelFpNode.textContent = formatPercent(maxKrelFp);
+    }
+
+    finiteStatusNode.textContent =
+      `${data.scalars_measured || 1} scalar measured against ` +
+      `${Number(data.process_free_parameters || 4096).toFixed(0)} process entries; ` +
+      `1/N empirical/analytic ratios ${ratios.map((x) => Number(x).toFixed(2)).join(", ")}. ` +
+      `K_rel max false positive ${formatPercent(maxKrelFp)} versus raw witness ${formatPercent(rawFp)}.`;
+  }
+
+  function renderCertifiedBounds(data) {
+    if (!boundsStatusNode || !boundsRowsNode) {
+      return;
+    }
+    const interval = data.R_g_interval || {};
+    if (boundsWidthNode) {
+      boundsWidthNode.textContent = formatScientific(interval.width || 0);
+    }
+    boundsStatusNode.textContent =
+      `Certified interval [${formatNumber(interval.lower || 0, 12)}, ` +
+      `${formatNumber(interval.upper || 0, 12)}], width ${formatScientific(interval.width || 0)}.`;
+
+    boundsRowsNode.innerHTML = (data.solver_table || [])
+      .map((row) => `
+        <tr>
+          <td>${row.solver}</td>
+          <td>${row.available ? "yes" : "no"}</td>
+          <td>${row.status}</td>
+          <td>${row.R_g_lower === null ? "-" : formatNumber(row.R_g_lower, 12)}</td>
+          <td>${row.R_g_upper === null ? "-" : formatNumber(row.R_g_upper, 12)}</td>
+          <td>${row.interval_width === null ? "-" : formatScientific(row.interval_width)}</td>
+        </tr>
+      `)
+      .join("");
+  }
+
   fetch("data/switch_robustness_landscape.json")
     .then((response) => {
       if (!response.ok) {
@@ -196,6 +256,34 @@
     .catch((error) => {
       if (fullStatusNode) {
         fullStatusNode.textContent = `Full tomography data could not be loaded: ${error.message}.`;
+      }
+    });
+
+  fetch("data/finite_count/finite_count_report.json")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(renderFiniteCount)
+    .catch((error) => {
+      if (finiteStatusNode) {
+        finiteStatusNode.textContent = `Finite-count data could not be loaded: ${error.message}.`;
+      }
+    });
+
+  fetch("data/certified_witness/certified_bounds_report.json")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(renderCertifiedBounds)
+    .catch((error) => {
+      if (boundsStatusNode) {
+        boundsStatusNode.textContent = `Certified bounds data could not be loaded: ${error.message}.`;
       }
     });
 })();

@@ -18,9 +18,12 @@ import freeze_preregistration
 import generate_manifest
 import generate_reproducibility_report
 import micro_tomography_simulation as micro
+import run_certified_bounds as certified_bounds_cli
 import run_certified_witness_analysis as certified_analysis
 import run_certified_witness_landscape as certified_landscape
+import run_finite_count_analysis as finite_count_cli
 import validate_manifest
+from deltawkrel.certified_bounds import CertifiedInterval, SolverResult
 
 
 # ------------------------------------------------------------------
@@ -298,6 +301,90 @@ def test_certified_witness_landscape_cli_with_fakes(tmp_path, monkeypatch):
     report = json.loads((tmp_path / "certified_witness_landscape.json").read_text(encoding="utf-8"))
     assert report["status"] == "certified_witness_landscape"
     assert set(report["families"]) == {"control_dephasing", "white_visibility", "order_bias"}
+
+
+def test_certified_bounds_cli_with_fakes(tmp_path, monkeypatch):
+    fake_interval = CertifiedInterval(
+        R_g_lower=0.49,
+        R_g_upper=0.51,
+        width=0.02,
+        solver_table=[
+            SolverResult(
+                solver="SCS",
+                available=True,
+                status="optimal",
+                R_g_lower=0.49,
+                R_g_upper=0.51,
+                interval_width=0.02,
+                equality_residual=1e-9,
+                dual_subspace_residual=1e-9,
+                min_eig_primal=-1e-10,
+                note="fake",
+            )
+        ],
+        consensus_spread=0.0,
+    )
+    monkeypatch.setattr(certified_bounds_cli, "ideal_quantum_switch_process", lambda: np.eye(4))
+    monkeypatch.setattr(
+        certified_bounds_cli,
+        "certified_robustness_interval",
+        lambda *a, **k: fake_interval,
+    )
+    monkeypatch.setattr(
+        "sys.argv",
+        ["run_certified_bounds.py", "--outdir", str(tmp_path), "--solvers", "SCS"],
+    )
+    assert certified_bounds_cli.main() == 0
+    report = json.loads((tmp_path / "certified_bounds_report.json").read_text(encoding="utf-8"))
+    assert report["status"] == "certified_bounds"
+    assert report["R_g_interval"]["width"] == 0.02
+    assert report["solver_table"][0]["solver"] == "SCS"
+
+
+def test_finite_count_analysis_cli_with_fakes(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(finite_count_cli, "ideal_quantum_switch_process", lambda: np.eye(4))
+    monkeypatch.setattr(finite_count_cli, "dephased_switch_process", lambda: np.zeros((4, 4)))
+    monkeypatch.setattr(finite_count_cli, "switch_white_noise_process", lambda: 0.5 * np.eye(4))
+    monkeypatch.setattr(finite_count_cli, "partially_dephased_switch_process", _toy_process)
+    monkeypatch.setattr(
+        finite_count_cli,
+        "switch_generalized_robustness_witness",
+        lambda *a, **k: SimpleNamespace(R_g=0.5, S=np.diag([1.0, 0.0, 0.0, 0.0])),
+    )
+    monkeypatch.setattr(
+        finite_count_cli,
+        "admissible_direction",
+        lambda *a, **k: SimpleNamespace(K_rel=np.eye(4), cos_angle_to_S=0.5),
+    )
+    monkeypatch.setattr(
+        finite_count_cli,
+        "lambda_estimator_scaling",
+        lambda *a, **k: SimpleNamespace(
+            N_grid=np.array([100, 1000]),
+            var_lambda_analytic=np.array([1e-3, 1e-4]),
+            var_lambda_empirical=np.array([1.1e-3, 0.9e-4]),
+            slope_rho=-0.2,
+            per_copy_variance_ref=0.01,
+        ),
+    )
+    monkeypatch.setattr(finite_count_cli, "copies_to_certify", lambda *a, **k: 5.0)
+    monkeypatch.setattr(
+        finite_count_cli,
+        "false_positive_under_drift",
+        lambda *a, **k: SimpleNamespace(
+            drift_grid=np.array([0.0, 1.0]),
+            fp_rate_krel=np.array([0.01, 0.01]),
+            fp_rate_raw=np.array([0.0, 1.0]),
+            krel_signal_shift=np.array([0.0, 0.0]),
+            raw_signal_shift=np.array([-0.1, 0.1]),
+        ),
+    )
+    finite_count_cli.main()
+    report = json.loads((tmp_path / "results" / "finite_count_report.json").read_text(encoding="utf-8"))
+    assert report["scalars_measured"] == 1
+    assert report["one_over_N_scaling"]["scaling_confirmed"] is True
+    assert (tmp_path / "results" / "finite_count.png").exists()
 
 
 # ------------------------------------------------------------------

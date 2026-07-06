@@ -29,10 +29,15 @@ To keep this submission-grade:
    landscape: one dual-optimal witness extracted at the ideal switch, reused
    across the three switch perturbation families with full-SDP lower-bound
    checks.
-8. Use `scripts/realistic_tomography_pipeline.py` for the heavier finite-count
+8. Use `scripts/run_certified_bounds.py` for the A5 certified interval:
+   primal/dual robustness bounds, solver status, and numerical bracket width.
+9. Use `scripts/run_finite_count_analysis.py` for A4: one-scalar shot-noise
+   scaling, copies-to-certify surfaces, and calibrated-drift false-positive
+   contrast between `K_rel` and the raw witness.
+10. Use `scripts/realistic_tomography_pipeline.py` for the heavier finite-count
    simulated tomography bridge: multinomial/Poisson counts, reconstruction,
    covariance shrinkage, bootstrap, and power maps.
-9. Use `scripts/full_tomography_simulation.py` for the state-of-the-art
+11. Use `scripts/full_tomography_simulation.py` for the state-of-the-art
    simulated stress test: path-dependent loss, dephasing, crosstalk, temporal
    drift, interleaved controls, empirical LR calibration, and applicability map.
 
@@ -61,7 +66,8 @@ Recommended additions:
 1. Keep the preregistration lock green: `python scripts/freeze_preregistration.py`.
 2. Keep the manifest validation command green: `python scripts/validate_manifest.py`.
 3. Keep `make reproduce-full` green; it runs preregistration lock, tests, SDP,
-   micro-tomography smoke, Monte Carlo smoke, and manifest validation.
+   certified witness/bounds, finite-count statistics, micro-tomography smoke,
+   Monte Carlo smoke, and manifest validation.
 4. Store generated smoke outputs under the canonical directories `results/micro_smoke/` and `results/mc_smoke/` with deterministic seeds.
 5. Keep `CITATION.cff` ready for the archive.
 6. Archive a release through Zenodo and add the DOI to the README and article.
@@ -103,6 +109,10 @@ The article can safely say:
 - a fixed certified dual witness lower-bounds SDP robustness across the three
   switch perturbation families, with explicit certified regions and non-E4
   guardrails.
+- the ideal-switch robustness is bracketed by a primal/dual certified interval,
+  not only a solver `optimal` status.
+- the fixed witness admits a finite-count one-scalar estimator with 1/N
+  shot-noise scaling and calibrated-drift false-positive controls.
 - finite-count simulated tomography now supports counts, reconstruction,
   covariance shrinkage, bootstrap, and power maps under visibility/crosstalk/drift.
 - full simulated tomography stress tests now include path losses, dephasing,
@@ -126,8 +136,10 @@ pyproject.toml
 config/
   config_preregistration.json
 docs/
+  CERTIFICATE_LEMMAS.md
   CLAIM_EVIDENCE_MATRIX.md
   MAXIMIZE_REPOSITORY_FOR_SUBMISSION.md
+  PROTOCOL_POSITIONING_AND_DATA_INVENTORY.md
   REPRODUCIBILITY_NOTES.md
   SDP_VALIDATION_STATUS.md
   SUBMISSION_CHECKLIST.md
@@ -155,5 +167,7 @@ from a clean clone, run one documented command, and see:
 5. the SDP validates known CS targets;
 6. the ideal quantum switch benchmark is reproduced and the dephased-switch
    negative control remains near zero;
-7. every manuscript claim maps to an artifact in
+7. the fixed-witness layer exports A2 lemmas, A4 finite-count statistics, and
+   A5 certified intervals;
+8. every manuscript claim maps to an artifact in
    `docs/CLAIM_EVIDENCE_MATRIX.md`.

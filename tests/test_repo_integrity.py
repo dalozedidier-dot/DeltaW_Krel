@@ -99,6 +99,10 @@ def test_github_pages_site_is_present():
     assert "data/certified_witness/certified_witness_landscape.json" in html
     assert "data/certified_witness/certified_witness_landscape.csv" in html
     assert "data/certified_witness/certified_witness_landscape.png" in html
+    assert "Finite-count certificate" in html
+    assert "data/finite_count/finite_count_report.json" in html
+    assert "data/finite_count/finite_count.png" in html
+    assert "data/certified_witness/certified_bounds_report.json" in html
     assert "Ultimate roadmap" in html
     assert "docs/ULTIMATE_VISION_ROADMAP.md" in html
     assert "Control dephasing" in html
@@ -119,11 +123,15 @@ def test_github_pages_and_ci_reference_realistic_tomography_bridge():
     assert "fetch(\"data/switch_robustness_landscape.json\")" in app
     assert "fetch(\"data/certified_witness/certified_witness_landscape.json\")" in app
     assert "fetch(\"data/full_tomography/full_tomography_report.json\")" in app
+    assert "fetch(\"data/finite_count/finite_count_report.json\")" in app
+    assert "fetch(\"data/certified_witness/certified_bounds_report.json\")" in app
     for text in (ci, extended, makefile):
         assert "realistic_tomography_pipeline.py" in text
         assert "realistic_tomography_smoke" in text
         assert "full_realistic_tomography.py" in text
         assert "full_tomography_smoke" in text
+    assert "run_finite_count_analysis.py" in makefile
+    assert "run_certified_bounds.py" in makefile
 
 
 def test_github_pages_landscape_data_is_complete_and_strict():
@@ -216,6 +224,41 @@ def test_github_pages_full_tomography_data_is_complete_and_strict():
     assert len(csv_rows) == len(rows)
 
 
+def test_github_pages_finite_count_and_bounds_data_are_complete():
+    finite_json = REPO_ROOT / "site" / "data" / "finite_count" / "finite_count_report.json"
+    finite_png = REPO_ROOT / "site" / "data" / "finite_count" / "finite_count.png"
+    bounds_json = (
+        REPO_ROOT / "site" / "data" / "certified_witness" / "certified_bounds_report.json"
+    )
+    assert finite_json.exists(), "published finite-count JSON missing"
+    assert finite_png.exists(), "published finite-count PNG missing"
+    assert bounds_json.exists(), "published certified-bounds JSON missing"
+    assert finite_png.stat().st_size > 10_000
+
+    finite_text = finite_json.read_text(encoding="utf-8")
+    bounds_text = bounds_json.read_text(encoding="utf-8")
+    assert "NaN" not in finite_text
+    assert "NaN" not in bounds_text
+
+    finite = json.loads(finite_text)
+    assert finite["scalars_measured"] == 1
+    assert finite["process_free_parameters"] == 4096
+    assert finite["one_over_N_scaling"]["scaling_confirmed"] is True
+    ratios = finite["one_over_N_scaling"]["empirical_over_analytic_ratio"]
+    assert all(0.7 < ratio < 1.3 for ratio in ratios)
+    fp = finite["false_positive_under_calibrated_drift"]
+    assert max(fp["fp_rate_krel"]) <= 0.02
+    assert max(fp["fp_rate_raw_witness"]) >= 0.9
+
+    bounds = json.loads(bounds_text)
+    interval = bounds["R_g_interval"]
+    assert bounds["status"] == "certified_bounds"
+    assert interval["lower"] <= interval["upper"]
+    assert interval["width"] < 1e-6
+    assert interval["contains_published_reference"] is True
+    assert any(row["solver"] == "SCS" and row["status"] == "optimal" for row in bounds["solver_table"])
+
+
 def test_ultimate_vision_roadmap_is_present_but_not_overclaimed():
     roadmap = REPO_ROOT / "docs" / "ULTIMATE_VISION_ROADMAP.md"
     assert roadmap.exists(), "ultimate vision roadmap missing"
@@ -235,6 +278,8 @@ def test_docs_do_not_revert_switch_benchmark_status():
         REPO_ROOT / "docs" / "SDP_VALIDATION_STATUS.md",
         REPO_ROOT / "docs" / "MAXIMIZE_REPOSITORY_FOR_SUBMISSION.md",
         REPO_ROOT / "docs" / "INSTALL_AND_TEST_REPORT.md",
+        REPO_ROOT / "docs" / "CERTIFICATE_LEMMAS.md",
+        REPO_ROOT / "docs" / "PROTOCOL_POSITIONING_AND_DATA_INVENTORY.md",
         REPO_ROOT / "src" / "deltawkrel" / "__init__.py",
         REPO_ROOT / "src" / "deltawkrel" / "sdp.py",
     ]

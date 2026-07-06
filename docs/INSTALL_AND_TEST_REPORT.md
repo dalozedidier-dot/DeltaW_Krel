@@ -21,6 +21,9 @@ clarabel, pytest, pytest-cov, jupyterlab, nbformat, and tqdm.
 pytest -q tests
 pytest tests --cov=src/deltawkrel --cov=scripts --cov-fail-under=90
 python scripts/run_sdp_validation.py
+python scripts/run_certified_witness_landscape.py
+python scripts/run_certified_bounds.py
+python scripts/run_finite_count_analysis.py
 python scripts/micro_tomography_simulation.py --n-sim 50 --n-config 32 --outdir results/micro_smoke
 python scripts/monte_carlo_control_supplement.py --n-sim 50 --n-null 200 --lambda-values 0,0.005 --n-values 1000 --no-plots --output-dir results/mc_smoke
 python scripts/validate_manifest.py
@@ -35,6 +38,8 @@ python scripts/validate_manifest.py
 - The ideal quantum switch is implemented with an explicit future/control
   convention and reproduces the published generalized robustness benchmark near
   0.5454.
+- The certified witness layer exports fixed-witness landscapes, an A5
+  primal/dual interval, and an A4 finite-count single-scalar report.
 - The control-dephased switch acts as a negative control with robustness near
   zero.
 - Micro-tomography and Monte Carlo outputs are methodological stress tests, not
