@@ -263,5 +263,7 @@ For the hardening roadmap, see `docs/MAXIMIZE_REPOSITORY_FOR_SUBMISSION.md`.
 For the certificate lemmas and external-data positioning, see
 `docs/CERTIFICATE_LEMMAS.md` and
 `docs/PROTOCOL_POSITIONING_AND_DATA_INVENTORY.md`.
+For detailed prior-work positioning and public-data triage, see
+`docs/RELATION_TO_PRIOR_WORK.md` and `docs/PUBLIC_DATA_INVENTORY.md`.
 For the long-horizon research program, see
 `docs/ULTIMATE_VISION_ROADMAP.md`.

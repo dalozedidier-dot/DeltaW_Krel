@@ -310,6 +310,21 @@ def test_ultimate_vision_roadmap_is_present_but_not_overclaimed():
     assert "ambition tracker" in text
 
 
+def test_prior_work_and_public_data_inventory_docs_are_present():
+    relation = REPO_ROOT / "docs" / "RELATION_TO_PRIOR_WORK.md"
+    inventory = REPO_ROOT / "docs" / "PUBLIC_DATA_INVENTORY.md"
+    assert relation.exists(), "prior-work positioning document missing"
+    assert inventory.exists(), "public-data inventory document missing"
+
+    relation_text = relation.read_text(encoding="utf-8")
+    inventory_text = inventory.read_text(encoding="utf-8")
+    assert "does not add detection power beyond the full causal SDP" in relation_text
+    assert "calibrated-noise-robust decision protocol" in relation_text
+    assert "verified public file" in inventory_text
+    assert "35,127,880" in inventory_text
+    assert "not yet an E4 DeltaW/K_rel claim" in inventory_text
+
+
 def test_docs_do_not_revert_switch_benchmark_status():
     checked = [
         REPO_ROOT / "docs" / "CLAIM_EVIDENCE_MATRIX.md",
