@@ -1,4 +1,4 @@
-.PHONY: install test coverage smoke micro realistic fulltomography montecarlo sdp certified finitecount prereg report manifest manifest-update reproduce reproduce-full reproduce-core clean
+.PHONY: install test coverage smoke micro realistic fulltomography montecarlo sdp certified finitecount external prereg report manifest manifest-update reproduce reproduce-full reproduce-core clean
 
 SMOKE_MICRO_DIR ?= results/micro_smoke
 SMOKE_REALISTIC_DIR ?= results/realistic_tomography_smoke
@@ -39,6 +39,9 @@ certified:
 finitecount:
 	python scripts/run_finite_count_analysis.py
 
+external:
+	python scripts/ingest_external_cao2023_sdi.py
+
 prereg:
 	python scripts/freeze_preregistration.py
 
@@ -56,7 +59,7 @@ smoke: test micro realistic fulltomography montecarlo
 reproduce: smoke manifest
 
 # Chaîne complète (requiert cvxpy + un solveur SDP : SCS/CLARABEL).
-reproduce-full: prereg test sdp certified finitecount micro realistic fulltomography montecarlo report manifest
+reproduce-full: prereg test sdp certified finitecount external micro realistic fulltomography montecarlo report manifest
 
 # Chaîne sans SDP, pour les environnements où cvxpy n'est pas installable.
 # Les tests SDP sont automatiquement sautés (pytest.importorskip).

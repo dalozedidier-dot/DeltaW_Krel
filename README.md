@@ -87,6 +87,12 @@ control with robustness near zero.
   `docs/PROTOCOL_POSITIONING_AND_DATA_INVENTORY.md` records the protocol
   positioning and the verified Procopio/Rubino/Goswami/Dourdent/Cao reference
   targets for future external-data ingestion.
+- **Public external-data pilot available**:
+  `scripts/ingest_external_cao2023_sdi.py` downloads or reads the hash-pinned
+  Cao et al. 2023 semi-device-independent quantum-switch MATLAB file, verifies
+  35,127,880 experimental counts, and recomputes the published inequality
+  value. This is an external-data pilot, not a DeltaW/K_rel tomography
+  reanalysis.
 - Full SDP diagnostics exported by `scripts/run_sdp_validation.py`: solver and
   package versions, iterations, solve time, residuals, minimal eigenvalues, and
   dual witness certificate.
@@ -113,6 +119,7 @@ This package has been installed and smoke-tested in the sandbox using:
 python -m pip install -e .
 pytest -q
 python scripts/run_sdp_validation.py
+python scripts/ingest_external_cao2023_sdi.py
 ```
 
 See `docs/INSTALL_AND_TEST_REPORT.md` for the exact validation commands and

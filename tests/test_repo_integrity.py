@@ -103,6 +103,8 @@ def test_github_pages_site_is_present():
     assert "data/finite_count/finite_count_report.json" in html
     assert "data/finite_count/finite_count.png" in html
     assert "data/certified_witness/certified_bounds_report.json" in html
+    assert "External public data pilot" in html
+    assert "data/external/cao2023_sdi_report.json" in html
     assert "Ultimate roadmap" in html
     assert "docs/ULTIMATE_VISION_ROADMAP.md" in html
     assert "Control dephasing" in html
@@ -125,6 +127,7 @@ def test_github_pages_and_ci_reference_realistic_tomography_bridge():
     assert "fetch(\"data/full_tomography/full_tomography_report.json\")" in app
     assert "fetch(\"data/finite_count/finite_count_report.json\")" in app
     assert "fetch(\"data/certified_witness/certified_bounds_report.json\")" in app
+    assert "fetch(\"data/external/cao2023_sdi_report.json\")" in app
     for text in (ci, extended, makefile):
         assert "realistic_tomography_pipeline.py" in text
         assert "realistic_tomography_smoke" in text
@@ -136,10 +139,12 @@ def test_github_pages_and_ci_reference_realistic_tomography_bridge():
         "run_certified_witness_landscape.py",
         "run_certified_bounds.py",
         "run_finite_count_analysis.py",
+        "ingest_external_cao2023_sdi.py",
     ):
         assert script in extended
     assert "run_finite_count_analysis.py" in makefile
     assert "run_certified_bounds.py" in makefile
+    assert "ingest_external_cao2023_sdi.py" in makefile
 
 
 def test_github_pages_landscape_data_is_complete_and_strict():
@@ -265,6 +270,31 @@ def test_github_pages_finite_count_and_bounds_data_are_complete():
     assert interval["width"] < 1e-6
     assert interval["contains_published_reference"] is True
     assert any(row["solver"] == "SCS" and row["status"] == "optimal" for row in bounds["solver_table"])
+
+
+def test_github_pages_external_cao2023_public_data_is_complete():
+    report_path = REPO_ROOT / "site" / "data" / "external" / "cao2023_sdi_report.json"
+    assert report_path.exists(), "published Cao 2023 external-data report missing"
+    text = report_path.read_text(encoding="utf-8")
+    assert "NaN" not in text
+    report = json.loads(text)
+    assert report["status"] == "public_experimental_counts_verified"
+    assert report["source_id"] == "cao2023_sdi"
+    assert report["doi"] == "10.1364/OPTICA.483876"
+    assert report["arxiv"] == "2202.05346"
+    assert report["raw_sha256"] == "dfe2739d794ccbb699861fb18640b815ebd175604f26d4781b1a21fb672d8a30"
+    assert report["source_commit"] == "956a5ed3c8dcf00a7049acf3486ec8b391598863"
+    assert report["total_counts"] == 35127880
+    assert report["variables"]["experimental_counts"] == [2, 2, 4, 2, 2, 2]
+    assert report["variables"]["alpha_abcxyz"] == [2, 2, 4, 2, 2, 2]
+    assert report["probability_norm_min"] == pytest.approx(1.0)
+    assert report["probability_norm_max"] == pytest.approx(1.0)
+    assert report["max_probability_delta_from_counts"] == pytest.approx(0.0)
+    assert report["s_experiment_recomputed"] == pytest.approx(-0.0673482583497189)
+    assert report["s_experiment_abs_delta"] < 1e-12
+    assert report["inequality_violated"] is True
+    assert report["statistical_z_score"] > 300.0
+    assert "not a DeltaW/K_rel process-matrix tomography reanalysis" in report["interpretation"]
 
 
 def test_ultimate_vision_roadmap_is_present_but_not_overclaimed():

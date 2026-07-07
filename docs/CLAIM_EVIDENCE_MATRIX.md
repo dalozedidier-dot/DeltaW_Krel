@@ -34,7 +34,8 @@ or an explicit blocker.
 | One fixed dual witness certifies nonseparability regions across switch families. | E3+ | `src/deltawkrel/certified_witness.py`, `scripts/run_certified_witness_analysis.py`, `scripts/run_certified_witness_landscape.py`, `site/data/certified_witness/` | Supported as mathematical certification on the physical switch: a fixed dual-feasible witness lower-bounds SDP robustness on verification grids and instantiates the K_rel projection; not E4 experimental evidence. |
 | The ideal-switch robustness is reported as a primal/dual interval, not just a solver flag. | E3+ | `src/deltawkrel/certified_bounds.py`, `scripts/run_certified_bounds.py`, `site/data/certified_witness/certified_bounds_report.json` | Supported: current SCS interval width is `5.32e-10`, with CLARABEL/MOSEK status reported explicitly. |
 | The fixed witness admits finite-count one-scalar statistics. | E2+ | `src/deltawkrel/finite_count.py`, `scripts/run_finite_count_analysis.py`, `tests/test_finite_count.py`, `site/data/finite_count/` | Supported as a shot-noise floor and calibrated-drift stress test; not a replacement for full tomography or E4 data. |
-| Published quantum-switch datasets are ready for external reanalysis. | E0 | `docs/PROTOCOL_POSITIONING_AND_DATA_INVENTORY.md` | Inventory complete enough to prioritize ingestion, but no external raw data have been imported or analyzed. |
+| One public semi-DI quantum-switch count file can be verified reproducibly. | External E4 source, not DeltaW/K_rel E4 | `src/deltawkrel/external_cao2023.py`, `scripts/ingest_external_cao2023_sdi.py`, `site/data/external/cao2023_sdi_report.json` | Cao et al. 2023 public counts are downloaded/hash-checked, parsed, and the published semi-DI inequality value is recomputed. This is not yet a process-matrix tomography reanalysis. |
+| Published quantum-switch datasets are ready for external reanalysis. | E0/E1 | `docs/PROTOCOL_POSITIONING_AND_DATA_INVENTORY.md` | Inventory plus one verified public-data pilot; full DeltaW/K_rel reanalysis remains future work. |
 | The package is ready for a formal confirmatory submission. | E3 plus editorial cleanup | `docs/SUBMISSION_CHECKLIST.md` | Technically close; final submission still requires synchronized manuscript/notebook wording and archive DOI. |
 
 ## Rules for using this matrix
@@ -46,8 +47,10 @@ or an explicit blocker.
 3. E3 claims about the ideal switch must cite the implemented convention,
    benchmark tolerance, solver diagnostics, and the control-dephased negative
    control.
-4. No claim should be promoted to E4 until calibrated experimental/tomographic
-   data are available with the preregistered thresholds locked.
+4. No DeltaW/K_rel claim should be promoted to E4 until calibrated
+   experimental/tomographic data are available with the preregistered thresholds
+   locked. Public counts from another protocol may be described only as an
+   external-data pilot unless converted through the DeltaW/K_rel convention.
 
 ## Immediate upgrade targets
 
@@ -59,7 +62,7 @@ or an explicit blocker.
 | Certified witness landscape | E3+ toward E4 | Fixed S* witness exported with lower-bound verification grids, certified regions, and explicit non-E4 guardrails. |
 | Certified robustness interval | Stronger E3+ | Primal/dual bracket exported with solver availability and failure status. |
 | Finite-count scalar statistics | Stronger E2+ | 1/N scaling, copies-to-certify surface, and calibrated-drift false-positive contrast exported. |
-| External data inventory | Future E4 path | Exact references, DOI/arXiv identifiers, and ingestion guardrails documented without claiming external analysis. |
+| External data pilot | Future E4 path | Cao et al. 2023 public counts verified from a hash-pinned file; next step is a convention-mapped DeltaW/K_rel adapter. |
 | Realistic tomography bridge | Stronger E2 toward E4 | Multinomial/Poisson counts, linear/MLE reconstruction, Fisher/shrinkage covariance, bootstrap, and power maps are executable. |
 | Full tomography stress test | Stronger E2+ toward E4 | Physical-noise knobs, interleaved controls, empirical LR calibration, false-positive drift checks, and applicability map are executable. |
 | Solver diagnostics export | Required for E3 | Status, objective, dual gap if available, residuals, omega_white, complementarity checks. |

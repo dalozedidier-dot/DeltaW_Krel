@@ -485,6 +485,12 @@ def test_report_with_present_artifacts(tmp_path, monkeypatch):
         json.dumps({"status": "full_tomography_simulation"}),
         encoding="utf-8",
     )
+    external = results / "external" / "cao2023_sdi"
+    external.mkdir(parents=True)
+    (external / "cao2023_sdi_report.json").write_text(
+        json.dumps({"status": "public_experimental_counts_verified"}),
+        encoding="utf-8",
+    )
     monkeypatch.setattr("sys.argv", ["generate_reproducibility_report.py"])
     assert generate_reproducibility_report.main() == 0
     report = (results / "reproducibility_report.md").read_text(encoding="utf-8")
@@ -493,6 +499,7 @@ def test_report_with_present_artifacts(tmp_path, monkeypatch):
     assert "white_noise: optimal" in report
     assert "Realistic tomography bridge output: present" in report
     assert "Full tomography stress output: present" in report
+    assert "Cao 2023 public-count verification: present" in report
     assert "manifest entries: 1" in report
 
 

@@ -19,6 +19,7 @@
         <a href="#certified">Certified</a>
         <a href="#finite">Finite</a>
         <a href="#advanced">Advanced</a>
+        <a href="#external">External</a>
         <a href="#landscape">Landscape</a>
         <a href="#evidence">Evidence</a>
         <a href="#roadmap">Roadmap</a>
@@ -58,11 +59,11 @@
         </article>
         <article>
           <span>Repository artifacts</span>
-          <strong>SDP + simulated data</strong>
+          <strong>SDP + simulations + public counts</strong>
         </article>
         <article>
           <span>Evidence ceiling</span>
-          <strong>E3+ certified, not E4</strong>
+          <strong>E3+ DeltaW, external pilot</strong>
         </article>
       </section>
 
@@ -391,6 +392,58 @@
         </div>
       </section>
 
+      <section id="external" class="band light">
+        <div class="section-title">
+          <p class="eyebrow">External public data pilot</p>
+          <h2>Cao 2023 semi-DI quantum-switch counts verified from a public file</h2>
+          <p>
+            The repository now includes one real public-data ingestion check:
+            the Cao et al. Optica 2023 semi-device-independent quantum-switch
+            file. It verifies experimental counts and reproduces the published
+            inequality value. This is external experimental evidence for that
+            semi-DI inequality, not yet a DeltaW/K_rel process-matrix
+            tomography reanalysis.
+          </p>
+        </div>
+
+        <div class="metrics-grid validation-metrics">
+          <article class="metric">
+            <span>Public counts</span>
+            <strong id="external-counts">35.1M</strong>
+            <p>Experimental outcomes from the authors' public MATLAB file.</p>
+          </article>
+          <article class="metric">
+            <span>S_experiment</span>
+            <strong id="external-s">-0.067348</strong>
+            <p>Recomputed from alpha_abcxyz and p_experiment.</p>
+          </article>
+          <article class="metric">
+            <span>Hash pinned</span>
+            <strong id="external-hash">SHA-256</strong>
+            <p>The raw public file is checked before analysis.</p>
+          </article>
+          <article class="metric">
+            <span>DeltaW status</span>
+            <strong>not reanalyzed</strong>
+            <p>Counts are not a full process-matrix tomography dataset.</p>
+          </article>
+        </div>
+
+        <div class="data-panel">
+          <div>
+            <h3>Public-data verification</h3>
+            <p id="external-data-status">
+              Loading the Cao 2023 public-data verification report served with
+              this GitHub Pages site.
+            </p>
+          </div>
+          <div class="data-links" aria-label="Download external public-data report">
+            <a href="data/external/cao2023_sdi_report.json">JSON</a>
+            <a href="https://github.com/jessicabavaresco/experimental-SDI-causality">Source</a>
+          </div>
+        </div>
+      </section>
+
       <section id="landscape" class="band light">
         <div class="section-title">
           <p class="eyebrow">Falsification landscape</p>
@@ -534,8 +587,9 @@
           <article>
             <h3>External data status</h3>
             <p>
-              Experimental datasets from the literature are inventoried for future
-              ingestion; no raw laboratory dataset is claimed on this page.
+              One public semi-DI count file from Cao et al. 2023 is verified as
+              an external-data pilot. No full DeltaW/K_rel laboratory
+              reanalysis is claimed on this page.
             </p>
           </article>
         </div>
@@ -620,6 +674,7 @@ python scripts/run_switch_robustness_landscape.py
 python scripts/run_certified_witness_landscape.py
 python scripts/run_certified_bounds.py
 python scripts/run_finite_count_analysis.py
+python scripts/ingest_external_cao2023_sdi.py
 python scripts/realistic_tomography_pipeline.py --outdir results/realistic_tomography_smoke
 python scripts/full_realistic_tomography.py --outdir results/full_tomography_smoke
 python scripts/validate_manifest.py</code></pre>

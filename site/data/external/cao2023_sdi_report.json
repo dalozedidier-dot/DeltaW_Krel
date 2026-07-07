@@ -1,0 +1,95 @@
+{
+  "article": "Cao et al., Semi-device-independent certification of indefinite causal order in a photonic quantum switch, Optica 10, 561 (2023)",
+  "arxiv": "2202.05346",
+  "data_url": "https://raw.githubusercontent.com/jessicabavaresco/experimental-SDI-causality/956a5ed3c8dcf00a7049acf3486ec8b391598863/inequality_coefficients.mat",
+  "doi": "10.1364/OPTICA.483876",
+  "inequality_bound": 0.0,
+  "inequality_violated": true,
+  "interpretation": "Public semi-device-independent quantum-switch counts from Cao et al. are verified and reproduce the published inequality value. This is external experimental evidence for that semi-DI inequality, not a DeltaW/K_rel process-matrix tomography reanalysis.",
+  "max_probability_delta_from_counts": 0.0,
+  "max_setting_counts": 4646408,
+  "min_setting_counts": 3896027,
+  "multinomial_standard_error": 0.0002146747188315846,
+  "probability_norm_max": 1.0,
+  "probability_norm_min": 1.0,
+  "raw_sha256": "dfe2739d794ccbb699861fb18640b815ebd175604f26d4781b1a21fb672d8a30",
+  "raw_size_bytes": 2833,
+  "repository_url": "https://github.com/jessicabavaresco/experimental-SDI-causality",
+  "retrieved_at": "2026-07-07",
+  "s_experiment_abs_delta": 8.326672684688674e-17,
+  "s_experiment_recomputed": -0.0673482583497189,
+  "s_experiment_reported": -0.06734825834971882,
+  "s_theory_abs_delta": 6.38378239159465e-16,
+  "s_theory_recomputed": -0.07935469537674764,
+  "s_theory_reported": -0.079354695376747,
+  "setting_counts": [
+    [
+      [
+        4288847,
+        4287226
+      ],
+      [
+        4646408,
+        4628562
+      ]
+    ],
+    [
+      [
+        4628852,
+        4507233
+      ],
+      [
+        4244725,
+        3896027
+      ]
+    ]
+  ],
+  "source_commit": "956a5ed3c8dcf00a7049acf3486ec8b391598863",
+  "source_id": "cao2023_sdi",
+  "statistical_z_score": 313.72235499492876,
+  "status": "public_experimental_counts_verified",
+  "total_counts": 35127880,
+  "variables": {
+    "S_experiment": [
+      1,
+      1
+    ],
+    "S_theory": [
+      1,
+      1
+    ],
+    "alpha_abcxyz": [
+      2,
+      2,
+      4,
+      2,
+      2,
+      2
+    ],
+    "experimental_counts": [
+      2,
+      2,
+      4,
+      2,
+      2,
+      2
+    ],
+    "p_experiment": [
+      2,
+      2,
+      4,
+      2,
+      2,
+      2
+    ],
+    "p_theory": [
+      2,
+      2,
+      4,
+      2,
+      2,
+      2
+    ]
+  },
+  "violation_margin": 0.0673482583497189
+}

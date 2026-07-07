@@ -114,6 +114,9 @@ jobs:
       - name: Run finite-count single-direction estimator
         run: python scripts/run_finite_count_analysis.py
 
+      - name: Verify Cao 2023 public experimental counts
+        run: python scripts/ingest_external_cao2023_sdi.py
+
       - name: Run micro-tomography stress test
         run: python scripts/micro_tomography_simulation.py --outdir results/micro_smoke --n-sim 200 --n-null 500
 

@@ -72,6 +72,10 @@ def main() -> int:
             "Full tomography stress output",
             Path("results/full_tomography_smoke/full_tomography_report.json"),
         ),
+        status_line(
+            "Cao 2023 public-count verification",
+            Path("results/external/cao2023_sdi/cao2023_sdi_report.json"),
+        ),
         status_line("Claim/evidence matrix", Path("docs/CLAIM_EVIDENCE_MATRIX.md")),
         "",
         "## Preregistration lock",
@@ -134,7 +138,9 @@ def main() -> int:
             "control bench, NOT experimental validation), the micro-tomography",
             "proof of concept, a finite-count realistic tomography simulation",
             "bridge, a full simulated tomography stress test, process-matrix",
-            "projector tests, and K_CS SDP validation.",
+            "projector tests, K_CS SDP validation, and one public semi-DI",
+            "external count-file verification. The external public-data pilot is",
+            "not yet a DeltaW/K_rel process-matrix reanalysis.",
             "The ideal quantum switch is implemented in the",
             "Araújo et al. (NJP 17, 102001 (2015)) convention; its generalized",
             "robustness benchmark (reference 0.5454) is "

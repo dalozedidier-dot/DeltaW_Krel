@@ -19,6 +19,10 @@
   const boundsStatusNode = document.getElementById("bounds-data-status");
   const boundsRowsNode = document.getElementById("bounds-data-rows");
   const boundsWidthNode = document.getElementById("bounds-width");
+  const externalStatusNode = document.getElementById("external-data-status");
+  const externalCountsNode = document.getElementById("external-counts");
+  const externalSNode = document.getElementById("external-s");
+  const externalHashNode = document.getElementById("external-hash");
 
   function formatNumber(value, digits) {
     const number = Number(value);
@@ -219,6 +223,26 @@
       .join("");
   }
 
+  function renderExternalData(data) {
+    if (!externalStatusNode) {
+      return;
+    }
+    if (externalCountsNode) {
+      externalCountsNode.textContent = `${(Number(data.total_counts) / 1e6).toFixed(1)}M`;
+    }
+    if (externalSNode) {
+      externalSNode.textContent = Number(data.s_experiment_recomputed).toFixed(6);
+    }
+    if (externalHashNode) {
+      externalHashNode.textContent = String(data.raw_sha256 || "").slice(0, 8);
+    }
+    externalStatusNode.textContent =
+      `${Number(data.total_counts).toLocaleString()} public experimental counts verified; ` +
+      `S_experiment=${Number(data.s_experiment_recomputed).toFixed(12)}, ` +
+      `multinomial-only z=${Number(data.statistical_z_score).toFixed(1)}. ` +
+      "This remains a semi-DI public-data pilot, not a DeltaW/K_rel tomography claim.";
+  }
+
   fetch("data/switch_robustness_landscape.json")
     .then((response) => {
       if (!response.ok) {
@@ -284,6 +308,20 @@
     .catch((error) => {
       if (boundsStatusNode) {
         boundsStatusNode.textContent = `Certified bounds data could not be loaded: ${error.message}.`;
+      }
+    });
+
+  fetch("data/external/cao2023_sdi_report.json")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(renderExternalData)
+    .catch((error) => {
+      if (externalStatusNode) {
+        externalStatusNode.textContent = `External public-data report could not be loaded: ${error.message}.`;
       }
     });
 })();
