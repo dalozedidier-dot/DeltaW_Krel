@@ -130,6 +130,14 @@ def test_github_pages_and_ci_reference_realistic_tomography_bridge():
         assert "realistic_tomography_smoke" in text
         assert "full_realistic_tomography.py" in text
         assert "full_tomography_smoke" in text
+    for script in (
+        "run_switch_dephasing_scan.py",
+        "run_switch_robustness_landscape.py",
+        "run_certified_witness_landscape.py",
+        "run_certified_bounds.py",
+        "run_finite_count_analysis.py",
+    ):
+        assert script in extended
     assert "run_finite_count_analysis.py" in makefile
     assert "run_certified_bounds.py" in makefile
 

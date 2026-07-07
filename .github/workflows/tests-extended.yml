@@ -76,6 +76,44 @@ jobs:
       - name: Run K_CS SDP validation suite
         run: python scripts/run_sdp_validation.py
 
+      - name: Run switch dephasing SDP smoke landscape
+        run: >
+          python scripts/run_switch_dephasing_scan.py
+          --outdir results/switch_dephasing_ci
+          --lambdas 0,0.5,1
+          --eps 1e-7
+          --max-iters 100000
+
+      - name: Run multi-family switch SDP smoke landscape
+        run: >
+          python scripts/run_switch_robustness_landscape.py
+          --outdir results/switch_landscape_ci
+          --families control_dephasing,white_visibility,order_bias
+          --grid 0,0.5,1
+          --eps 1e-7
+          --max-iters 100000
+
+      - name: Run certified fixed-witness landscape
+        run: >
+          python scripts/run_certified_witness_landscape.py
+          --outdir results/certified_witness_ci
+          --dense-grid 21
+          --verify-mode endpoints
+          --eps 1e-8
+          --verify-eps 1e-6
+          --max-iters 100000
+
+      - name: Run certified primal-dual robustness interval
+        run: >
+          python scripts/run_certified_bounds.py
+          --outdir results/certified_bounds_ci
+          --solvers SCS,CLARABEL,MOSEK
+          --eps 1e-8
+          --max-iters 100000
+
+      - name: Run finite-count single-direction estimator
+        run: python scripts/run_finite_count_analysis.py
+
       - name: Run micro-tomography stress test
         run: python scripts/micro_tomography_simulation.py --outdir results/micro_smoke --n-sim 200 --n-null 500
 
