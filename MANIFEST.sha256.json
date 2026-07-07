@@ -54,7 +54,7 @@
   "site/data/full_tomography/full_tomography_report.json": "042e61a8cf788019d1ec9d6719780e48374286b8d86c198342a91962cbac1e88",
   "site/data/switch_robustness_landscape.csv": "01ccc7221d1a7edaef9e3f6dc116be3a06bab3e9d7c8633a9caa99f4757fda60",
   "site/data/switch_robustness_landscape.json": "501d8fbf0ac6645589823665fb6517057627934ec21a6945fc69d260798afde2",
-  "site/index.html": "8a9d7ae63b5eaafdebf4ad53c75b4a7d782b340bf23d9a355b426f437815c44b",
+  "site/index.html": "0729231ec962fe9d793093d4282decde32844e092c884f2216a0b92c113c7fb0",
   "site/styles.css": "a24ecc637b3a073a1ea063af67b32ae85587d87aa3f149dca5f2fa8ef16c05a8",
   "src/deltawkrel/__init__.py": "5f64fe44bdb9a12923d694a22bb32609daa89a30c247ef1d82ddece62221da8d",
   "src/deltawkrel/certified_bounds.py": "41e45048edb3df10fbf9e195e56d5ccf802ef9e809f2e3c4501bd9976aa7a6de",
